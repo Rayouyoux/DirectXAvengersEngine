@@ -327,7 +327,7 @@ namespace ave {
 		wc.hCursor = LoadCursor(0, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
 		wc.lpszMenuName = 0;
-		wc.lpszClassName = L"Main Window";
+		wc.lpszClassName = L"MainWnd";
 
 		if (RegisterClass(&wc) == false)
 		{
@@ -343,9 +343,9 @@ namespace ave {
 
 		m_oMainWnd = CreateWindow(L"MainWnd", m_sMainWndCaption.c_str(),
 			WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_oAppInst, 0);
-		if (!m_oMainWnd)
+		if (m_oMainWnd == nullptr)
 		{
-			MessageBox(0, L"CreateWindow Failed.", 0, 0);
+			MessageBox(0, std::to_wstring(GetLastError()).c_str(), 0, 0);
 			return false;
 		}
 
