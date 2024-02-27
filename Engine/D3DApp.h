@@ -6,8 +6,6 @@
 #include <crtdbg.h>
 #endif
 
-#include "pch.h"
-
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -17,6 +15,21 @@ class IDXGIFactory4;
 namespace ave {
 	class D3DApp {
 	protected:
+		// Singleton Instance
+		static D3DApp* m_poApp;
+
+		HINSTANCE m_oAppInst;
+		HWND m_oMainWnd;
+		bool m_bAppPaused;
+		bool m_bMinimized;
+		bool m_bMaximized;
+		bool m_bResizing;
+		bool m_bFullscreenState;
+
+		// Set true to use 4X MSAA (§4.1.8).  The default is false.
+		bool m_b4xMsaaState;    // 4X MSAA enabled
+		UINT m_i4xMsaaQuality;  // quality level of 4X MSAA
+
 		IDXGIFactory4* m_poFactory;
 		IDXGISwapChain* m_poSwapChain;
 		ID3D12Device* m_poDevice;
@@ -24,17 +37,17 @@ namespace ave {
 		ID3D12Fence* m_poFence;
 		UINT64 m_iCurrentFence;
 
-		ID3D12CommandQueue* m_oCommandQueue;
-		ID3D12CommandAllocator* m_oDirectCmdListAlloc;
-		ID3D12GraphicsCommandList* m_oCommandList;
+		ID3D12CommandQueue* m_poCommandQueue;
+		ID3D12CommandAllocator* m_poDirectCmdListAlloc;
+		ID3D12GraphicsCommandList* m_poCommandList;
 
-		static const int M_ISWAP_CHAIN_BUFFER_COUNT = 2;
+		static const int SWAP_CHAIN_BUFFER_COUNT = 2;
 		int m_iCurrBackBuffer;
-		ID3D12Resource* m_rSwapChainBuffer[M_ISWAP_CHAIN_BUFFER_COUNT];
-		ID3D12Resource* m_rDepthStencilBuffer;
+		ID3D12Resource* m_prSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT];
+		ID3D12Resource* m_prDepthStencilBuffer;
 
-		ID3D12DescriptorHeap* m_oRtvHeap;
-		ID3D12DescriptorHeap* m_oDsvHeap;
+		ID3D12DescriptorHeap* m_poRtvHeap;
+		ID3D12DescriptorHeap* m_poDsvHeap;
 
 		D3D12_VIEWPORT m_oScreenViewport;
 		D3D12_RECT m_oScissorRect;
@@ -42,12 +55,45 @@ namespace ave {
 		UINT m_iRtvDescriptorSize;
 		UINT m_iDsvDescriptorSize;
 
-		UINT m_i4xMsaaQuality;
-
-		DXGI_FORMAT m_fBackBufferFormat;
+		std::wstring m_sMainWndCaption;
+		D3D_DRIVER_TYPE m_eDriverType;
+		DXGI_FORMAT m_eBackBufferFormat;
+		DXGI_FORMAT m_eDepthStencilFormat;
+		int m_iClientWidth;
+		int m_iClientHeight;
 
 	protected:
-		void CreateRtvAndDsvDescriptorHeaps();
+		D3DApp(HINSTANCE hInstance);
+		D3DApp(const D3DApp& rhs) = delete;
+		D3DApp& operator=(const D3DApp& rhs) = delete;
+		virtual ~D3DApp();
+
+	public:
+		static D3DApp* GetApp();
+
+		HINSTANCE AppInst() const;
+		HWND MainWnd() const;
+		float AspectRatio() const;
+
+		bool Get4xMsaaState() const;
+		void Set4xMsaaState(bool value);
+
+		int Run();
+
+		virtual bool Initialize();
+		virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	protected:
+		virtual void CreateRtvAndDsvDescriptorHeaps();
+		virtual void OnResize();
+		virtual void Update() = 0;
+		virtual void Render() = 0;
+
+		// TODO: TEMPORARY should be replaced with the Input class
+		// Convenience overrides for handling mouse input.
+		virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
+		virtual void OnMouseUp(WPARAM btnState, int x, int y) { }
+		virtual void OnMouseMove(WPARAM btnState, int x, int y) { }
 
 	protected:
 		bool InitMainWindow();
@@ -57,37 +103,10 @@ namespace ave {
 
 		void FlushCommandQueue();
 
-		ID3D12Resource* CurrentBackBuffer()const;
-		D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView()const;
-		D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView()const;
+		ID3D12Resource* CurrentBackBuffer() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
 
 		void CalculateFrameStats();
-
-	public:
-		D3DApp();
-		D3DApp(const D3DApp& rhs) = delete;
-		D3DApp& operator=(const D3DApp& rhs) = delete;
-		virtual ~D3DApp();
-
-		virtual bool Initialize(HINSTANCE hInstance);
-		// Getter 
-		static D3DApp* GetApp();
-		HINSTANCE AppInst()const;
-		HWND      MainWnd()const;
-
-		void Init(HINSTANCE hInstance);
-		bool InitMainWindow();
-		bool InitDirect3D();
-
-	protected:
-
-		static D3DApp* mApp;
-
-		HINSTANCE mhAppInst = nullptr;
-		HWND      mhMainWnd = nullptr;
-
-		std::wstring mMainWndCaption = L"d3d App";
-		int mClientWidth = 800;
-		int mClientHeight = 600;
 	};
 }

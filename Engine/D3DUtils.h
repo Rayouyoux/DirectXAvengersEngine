@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 
 namespace ave {
     inline std::wstring AnsiToWString(const std::string& str) {
