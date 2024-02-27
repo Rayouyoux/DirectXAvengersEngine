@@ -7,10 +7,18 @@
 #ifndef PCH_H
 #define PCH_H
 
-#include "framework.h"
-#pragma comment(lib,"d3dcompiler.lib")
-#pragma comment(lib, "D3D12.lib")
-#pragma comment(lib, "dxgi.lib")
 #include <windows.h>
+#include <dxgi1_4.h>
+#include <d3d12.h>
+#include <D3Dcompiler.h>
+#include <DirectXMath.h>
+#include <DirectXColors.h>
+#include <d3d12sdklayers.h>
+#include <comdef.h>
+#include <winerror.h>
+#include <string>
+#include <vector>
+#include "framework.h"
+#include "D3DUtils.h"
 
 #endif //PCH_H
