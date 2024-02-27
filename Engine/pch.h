@@ -7,7 +7,10 @@
 #ifndef PCH_H
 #define PCH_H
 
-// ajouter les en-têtes à précompiler ici
 #include "framework.h"
+#pragma comment(lib,"d3dcompiler.lib")
+#pragma comment(lib, "D3D12.lib")
+#pragma comment(lib, "dxgi.lib")
+#include <windows.h>
 
 #endif //PCH_H
