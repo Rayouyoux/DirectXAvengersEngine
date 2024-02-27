@@ -33,7 +33,20 @@ namespace ave {
 		qQuaternion *= XMQuaternionRotationAxis(XMLoadFloat3(&m_vRight), fPitch);
 		qQuaternion *= XMQuaternionRotationAxis(XMLoadFloat3(&m_vUp), fYaw);
 
-		XMStoreFloat4(&m_qRotation, qQuaternion);
+		XMStoreFloat4(&m_qRotation, XMLoadFloat4(&m_qRotation) * qQuaternion);
+		
+		XMFLOAT4X4 mRotation;
+		XMStoreFloat4x4(&mRotation, XMMatrixRotationQuaternion(XMLoadFloat4(&m_qRotation)));
+		m_vRight.x = mRotation._11;
+		m_vRight.y = mRotation._12;
+		m_vRight.z = mRotation._13;
+		m_vUp.x = mRotation._21;
+		m_vUp.y = mRotation._22;
+		m_vUp.z = mRotation._23;
+		m_vDir.x = mRotation._31;
+		m_vDir.y = mRotation._32;
+		m_vDir.z = mRotation._33;
+
 	}
 
 	void Transform::UpdateMatrice() {
