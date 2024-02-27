@@ -26,6 +26,32 @@ namespace ave {
 		m_mTransformation = maths::MatriceIdentity();
 	}
 
+	void Transform::Move(XMFLOAT3* pvPosition) {
+		Move(pvPosition->x, pvPosition->y, pvPosition->z);
+	}
+
+	void Transform::Move(float fX, float fY, float fZ){
+		m_vPosition.x = fX;
+		m_vPosition.y = fY;
+		m_vPosition.z = fZ;
+		XMStoreFloat4x4(&m_mRotation, XMMatrixTranslation(m_vPosition.x, m_vPosition.y, m_vPosition.z));
+	}
+
+	void Transform::Scale(XMFLOAT3* pvScale) {
+		Scale(pvScale->x, pvScale->y, pvScale->z);
+	}
+
+	void Transform::Scale(float fX, float fY, float fZ) {
+		m_vScale.x = fX;
+		m_vScale.y = fY;
+		m_vScale.z = fZ;
+		XMStoreFloat4x4(&m_mScale, XMMatrixTranslation(m_vScale.x, m_vScale.y, m_vScale.z));
+	}
+
+	void Transform::Rotate(XMFLOAT3* pvRotate) {
+		Rotate(pvRotate->x, pvRotate->y, pvRotate->z);
+	}
+
 	void Transform::Rotate(float fPitch, float fRoll, float fYaw) {
 
 		XMVECTOR qQuaternion;

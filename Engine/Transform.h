@@ -13,6 +13,11 @@ namespace ave{
 
 		Transform();
 		void Identity();
+		void Move(XMFLOAT3* pvPosition);
+		void Move(float fX, float fY, float fZ);
+		void Scale(XMFLOAT3* pvScale);
+		void Scale(float fX, float fY, float fZ);
+		void Rotate(XMFLOAT3* pvRoate);
 		void Rotate(float fPitch, float fRoll, float fYaw);
 		void UpdateMatrice();
 		~Transform();
