@@ -62,6 +62,20 @@ namespace ave {
 	D3DApp::~D3DApp() {
 		if (m_poDevice != nullptr)
 			FlushCommandQueue();
+
+		// m_oAppInst; HOW TO DESTROY ?
+		DestroyWindow(m_oMainWnd);
+		m_poFactory->Release();
+		m_poDirectCmdListAlloc->Release();
+		m_poCommandList->Release();
+
+		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
+			m_prSwapChainBuffer[i]->Release();
+		}
+		m_prDepthStencilBuffer->Release();
+
+		m_poRtvHeap->Release();
+		m_poDsvHeap->Release();
 	}
 
 	HINSTANCE D3DApp::AppInst() const {
@@ -223,9 +237,12 @@ namespace ave {
 		ThrowIfFailed(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr));
 
 		// Clear the previous resources we will be recreating.
-		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
-			m_prSwapChainBuffer[i] = nullptr;
-		m_prDepthStencilBuffer = nullptr;
+		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
+			if (m_prSwapChainBuffer[i] != nullptr)
+				m_prSwapChainBuffer[i]->Release();
+		}
+		if(m_prDepthStencilBuffer != nullptr)
+			m_prDepthStencilBuffer->Release();
 
 		// Resize the swap chain.
 		ThrowIfFailed(m_poSwapChain->ResizeBuffers(
@@ -323,8 +340,8 @@ namespace ave {
 		wc.cbClsExtra = 0;
 		wc.cbWndExtra = 0;
 		wc.hInstance = m_oAppInst;
-		wc.hIcon = LoadIcon(0, IDI_APPLICATION);
-		wc.hCursor = LoadCursor(0, IDC_ARROW);
+		wc.hIcon = LoadIcon(m_oAppInst, IDI_APPLICATION);
+		wc.hCursor = LoadCursor(m_oAppInst, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
 		wc.lpszMenuName = 0;
 		wc.lpszClassName = L"MainWnd";

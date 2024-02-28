@@ -16,8 +16,8 @@ public:
 
 	virtual void Render() override {
 		// Reuse the memory associated with command recording.
-			// We can only reset when the associated command lists have finished execution on the GPU.
-		m_poDirectCmdListAlloc = nullptr;
+		// We can only reset when the associated command lists have finished execution on the GPU.
+		m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);
 
 		// A command list can be reset after it has been added to the command queue via ExecuteCommandList.
 		// Reusing the command list reuses memory.
@@ -30,7 +30,7 @@ public:
 		m_poCommandList->ResourceBarrier(1, &transition);
 
 		// Clear the back buffer and depth buffer.
-		m_poCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
+		m_poCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::RoyalBlue, 0, nullptr);
 		m_poCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 		// Specify the buffers we are going to render to.

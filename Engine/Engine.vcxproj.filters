@@ -27,6 +27,15 @@
     <ClInclude Include="D3DApp.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="AvengersEngine.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Fichiers de ressources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -41,5 +50,20 @@
     <ClCompile Include="D3DApp.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cursor1.cur">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc">
+      <Filter>Fichiers de ressources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
   </ItemGroup>
 </Project>
