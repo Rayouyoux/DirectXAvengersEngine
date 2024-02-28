@@ -24,7 +24,6 @@ namespace ave {
         double      TotalTime() const;
         double      DeltaTime() const;
 
-
     private:
 
         // Private Members
