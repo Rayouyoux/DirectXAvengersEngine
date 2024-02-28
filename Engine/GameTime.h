@@ -1,37 +1,39 @@
 #pragma once
 
-class GameTime {
+namespace ave {
+    class GameTime {
 
-public:
+    public:
 
-    // Constructor
-    GameTime();
+        // Constructor
+        GameTime();
 
-    // Deconstructor
-    ~GameTime();
+        // Deconstructor
+        ~GameTime();
 
-    // Sets Seconds Per Time Unit & Starting Time
-    void        Initialize();
+        // Sets Seconds Per Time Unit & Starting Time
+        void        Initialize();
 
-    // Updates Delta Time & Total Time
-    void        Tick();
+        // Updates Delta Time & Total Time
+        void        Tick();
 
-    // Resets All Times & Initializes App Again
-    void        Reset();
+        // Resets All Times & Initializes App Again
+        void        Reset();
 
-    // Get Methods
-    double      TotalTime() const;
-    double      DeltaTime() const;
+        // Get Methods
+        double      TotalTime() const;
+        double      DeltaTime() const;
 
 
-private:
+    private:
 
-    // Private Members
-    __int64     m_iStartTime;
-    __int64     m_iPreviousTime;
-    __int64     m_iCurrentTime;
-    __int64     m_iSecondsPerCount;
-    __int64     m_iDeltaTime;
-    __int64     m_iTotalTime;
+        // Private Members
+        __int64     m_iStartTime;
+        __int64     m_iPreviousTime;
+        __int64     m_iCurrentTime;
+        __int64     m_iSecondsPerCount;
+        __int64     m_iDeltaTime;
+        __int64     m_iTotalTime;
 
-};
+    };
+}

@@ -36,6 +36,9 @@
     <ClInclude Include="resource.h">
       <Filter>Fichiers de ressources</Filter>
     </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -48,6 +51,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="D3DApp.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTime.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

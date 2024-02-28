@@ -23,5 +23,6 @@
 #include "framework.h"
 #include "d3dx12.h"
 #include "D3DUtils.h"
+#include "GameTime.h"
 
 #endif //PCH_H

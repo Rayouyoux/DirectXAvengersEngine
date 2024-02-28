@@ -15,4 +15,4 @@
 #include "framework.h"
 #include "d3dx12.h"
 #include "D3DUtils.h"
-#include "D3DApp.h"
+#include "GameTime.h"
