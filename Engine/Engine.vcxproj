@@ -160,7 +160,6 @@
     <ClCompile Include="D3DApp.cpp" />
     <ClCompile Include="D3DUtils.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Maths.cpp" />

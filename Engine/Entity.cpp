@@ -1,8 +1,5 @@
 #include "pch.h"
-#include "Entity.h"
-#include "Transform.h"
-#include "Component.h"
-#include <typeinfo>
+
 
 namespace ave {
 
@@ -15,7 +12,7 @@ namespace ave {
 
 	}
 
-	void Entity::Start(Transform* poTransform, Entity* poParent = nullptr) {
+	void Entity::Start(Transform* poTransform, Entity* poParent) {
 		m_poTransform = poTransform;
 		m_poParent = poParent;
 	}
@@ -36,29 +33,29 @@ namespace ave {
 		}
 	}
 
-	template <typename Comp>
-	void Entity::AddComponent() {
-		Comp* poComponent = new Comp();
-		m_loComponent.push_back(poComponent);
-		poComponent->BindEntity();
-		poComponent->Start();
-	}
+	//template <typename Comp>
+	//void Entity::AddComponent() {
+	//	Comp* poComponent = new Comp();
+	//	m_loComponent.push_back(poComponent);
+	//	poComponent->BindEntity();
+	//	poComponent->Start();
+	//}
 
-	template <typename Comp>
-	Component* Entity::GetComponent() {
-		for (int i = 0; i < m_loComponent.size(); i++) {
-			if (typeid(m_loComponent[i]).name() == Comp) {
-				return m_loComponent[i];
-			}
-		}
-	}
+	//template <typename Comp>
+	//Component* Entity::GetComponent() {
+	//	for (int i = 0; i < m_loComponent.size(); i++) {
+	//		if (typeid(m_loComponent[i]).name() == Comp) {
+	//			return m_loComponent[i];
+	//		}
+	//	}
+	//}
 
-	template <typename Comp>
-	void Entity::RemoveComponent() {
-		for (auto it = m_loComponent.begin(); i < m_loComponent.end(); i++) {
-			if (typeid(*it).name() == Comp) {
-				m_loComponent.erase(it);
-			}
-		}
-	}
+	//template <typename Comp>
+	//void Entity::RemoveComponent() {
+	//	for (auto it = m_loComponent.begin(); i < m_loComponent.end(); i++) {
+	//		if (typeid(*it).name() == Comp) {
+	//			m_loComponent.erase(it);
+	//		}
+	//	}
+	//}
 };

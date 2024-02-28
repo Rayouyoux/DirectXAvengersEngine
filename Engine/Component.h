@@ -1,7 +1,8 @@
 #pragma once
-class Entity;
 
 namespace ave {
+	
+	class Entity;
 
 	class Component {
 	private :

@@ -25,5 +25,8 @@
 #include "d3dx12.h"
 #include "D3DUtils.h"
 #include "GameTime.h"
+#include "Entity.h"
+#include "Transform.h"
+#include "Component.h"
 
 #endif //PCH_H
