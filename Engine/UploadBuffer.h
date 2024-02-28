@@ -1,7 +1,9 @@
 #pragma once
-#include "D3DUtils.h"
+#include "d3d12.h"
 
-class UploadBuffer
+
+template<typename T>
+class UploadBuffer : public UploadBufferBase
 {
 public:
     UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) :
@@ -17,7 +19,7 @@ public:
         // UINT   SizeInBytes;   // multiple of 256
         // } D3D12_CONSTANT_BUFFER_VIEW_DESC;
         if (isConstantBuffer)
-            mElementByteSize = D3DUtils::CalcConstantBufferByteSize(sizeof(T));
+            mElementByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(T));
 
         ThrowIfFailed(device->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -33,7 +35,8 @@ public:
         // the resource while it is in use by the GPU (so we must use synchronization techniques).
     }
 
-
+    UploadBuffer(const UploadBuffer& rhs) = delete;
+    UploadBuffer& operator=(const UploadBuffer& rhs) = delete;
     ~UploadBuffer()
     {
         if (mUploadBuffer != nullptr)

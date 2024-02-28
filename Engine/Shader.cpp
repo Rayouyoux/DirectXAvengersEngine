@@ -18,7 +18,7 @@ namespace ave {
         pList->SetGraphicsRootSignature(m_poRootSignature);
 
         //Pass
-        pList->SetGraphicsRootConstantBufferView(1, );
+        pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
 
         //Pipeline
         pList->SetPipelineState(m_poPso);
@@ -84,8 +84,27 @@ namespace ave {
 
     }
 
+    void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
+
+        //D3D12_VERTEX_BUFFER_VIEW = //on récupere le VBV;
+        //D3D12_INDEX_BUFFER_VIEW = //on récupere l'IBV;
+
+        if (m_iRootTexture != -1 && pTexture)
+            pList->SetGraphicsRootDescriptorTable(m_iRootTexture, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */ );
+
+        if (m_iRootTexture2 != -1 && pTexture2)
+            pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
+
+        //Manque du code ici pour recuperer l'index de l'objet en question
+        //pList->SetGraphicsRootConstantBufferView(m_iRootObject, l'index dans le tableau de vecteur m_voObjects->Ressource()->GetGPUVirtualAdress();
+        //pList->DrawIndexedInstanced(pMesh->GetIndexCount(),1,0,0,0);
+        // on incremente l'index d'object
+        //  et on l'ajoute au vecteur
+    }
+
     void Shader::UpdateObject() {
-        
+        //int index =  //Get l'index de l objet;
+        //m_voObjects[1]->CopyData()
     }
 
     ID3DBlob* Shader::Compile(BYTE* oBuffer, int iSize, std::string oEntryPoint, std::string oTarget) {
@@ -227,6 +246,28 @@ namespace ave {
                 return false;
             }
         }
+    }
+    void Shader::AddObject() {
+        S
+        m_voObjects.push_back(m_poPass);
+    }
+    void Shader::Destroy() {
+        m_poPso->Release();
+        delete m_poPass;
+        for (int i = 0; i < m_voObjects.size(); i++) {
+            delete m_voObjects[i];
+        }
+        m_voObjects.clear();
+        m_poRootSignature->Release();
+        m_poSerializedRootSig->Release();
+        m_poVS->Release();
+        m_poPS->Release();
+
+        m_poDevice = nullptr;
+    }
+
+    void Shader::End() {
+        
     }
 
     Shader::~Shader() {

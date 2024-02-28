@@ -7,6 +7,9 @@
 #include <string>
 
 namespace ave {
+	class Texture;
+	class Mesh;
+
 	class Shader
 	{
 	public:
@@ -15,10 +18,12 @@ namespace ave {
 		void Destroy();
 		void Reset();
 		void Begin(ID3D12GraphicsCommandList* pList);
-		void Draw();
+		void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
+		void AddObject();
 		bool Create(BYTE* oSrc, int iSize );
 		void UpdateObject();
+
 
 	protected:
 		~Shader();
@@ -32,8 +37,8 @@ namespace ave {
 		ID3D12Device* m_poDevice;
 		ID3D12DescriptorHeap* m_poCbvHeap;
 		ID3DBlob* m_poSerializedRootSig;
-		UploadBuffer* m_poPass;
-		std::vector<UploadBuffer*> m_voObjects;
+		UploadBuffer<int>* m_poPass;
+		std::vector<UploadBuffer<int>*> m_voObjects;
 		ID3D12RootSignature* m_poRootSignature;
 		ID3DBlob* m_poVS;
 		ID3DBlob* m_poPS;
