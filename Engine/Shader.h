@@ -5,11 +5,10 @@
 #include "UploadBuffer.h"
 #include <cstring>
 #include <string>
-
 namespace ave {
-	class Texture;
 	class Mesh;
 	class D3DApp;
+	class Texture;
 	class Shader
 	{
 	public:
