@@ -4,8 +4,8 @@
 #include <D3Dcompiler.h>
 #include <cstring>
 #include <string>
-
-#include <d3dx12.h>
+#include "D3DApp.h"
+#include "Vertex.h"
 
 namespace ave {
     Shader::Shader() {
@@ -29,7 +29,7 @@ namespace ave {
 
     bool Shader::Create(BYTE* oSrc, int iSize) {
 
-        //m_poDevice = //Get Device 
+        m_poDevice = m_poApp->GetDevice();
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -72,8 +72,8 @@ namespace ave {
         oPestoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         oPestoDesc.NumRenderTargets = 1;
         oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UINT;
-        oPestoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
-        oPestoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
+        oPestoDesc.SampleDesc.Count = m_poApp->Get4xMsaaState() ? 4 : 1;
+        oPestoDesc.SampleDesc.Quality = m_poApp->Get4xMsaaState() ? (m_poApp->Get4xMsaaQuality() - 1) : 0;
         oPestoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         if (m_poDevice->CreateGraphicsPipelineState(&oPestoDesc, IID_PPV_ARGS(&m_poPso)) != S_OK)
         {
@@ -89,11 +89,11 @@ namespace ave {
         //D3D12_VERTEX_BUFFER_VIEW = //on récupere le VBV;
         //D3D12_INDEX_BUFFER_VIEW = //on récupere l'IBV;
 
-        if (m_iRootTexture != -1 && pTexture)
-            pList->SetGraphicsRootDescriptorTable(m_iRootTexture, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */ );
+        //if (m_iRootTexture != -1 && pTexture)
+        //    pList->SetGraphicsRootDescriptorTable(m_iRootTexture, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */ );
 
-        if (m_iRootTexture2 != -1 && pTexture2)
-            pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
+        //if (m_iRootTexture2 != -1 && pTexture2)
+        //    pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
 
         //Manque du code ici pour recuperer l'index de l'objet en question
         //pList->SetGraphicsRootConstantBufferView(m_iRootObject, l'index dans le tableau de vecteur m_voObjects->Ressource()->GetGPUVirtualAdress();
@@ -248,7 +248,6 @@ namespace ave {
         }
     }
     void Shader::AddObject() {
-        S
         m_voObjects.push_back(m_poPass);
     }
     void Shader::Destroy() {

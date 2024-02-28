@@ -9,7 +9,7 @@
 namespace ave {
 	class Texture;
 	class Mesh;
-
+	class D3DApp;
 	class Shader
 	{
 	public:
@@ -34,6 +34,7 @@ namespace ave {
 
 	protected:
 
+		D3DApp* m_poApp;
 		ID3D12Device* m_poDevice;
 		ID3D12DescriptorHeap* m_poCbvHeap;
 		ID3DBlob* m_poSerializedRootSig;

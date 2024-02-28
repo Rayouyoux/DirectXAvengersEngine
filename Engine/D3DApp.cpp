@@ -92,6 +92,12 @@ namespace ave {
 	bool D3DApp::Get4xMsaaState() const {
 		return m_b4xMsaaState;
 	}
+	UINT D3DApp::Get4xMsaaQuality() const {
+		return m_i4xMsaaQuality;
+	}
+	ID3D12Device* D3DApp::GetDevice()const {
+		return m_poDevice;
+	}
 
 	void D3DApp::Set4xMsaaState(bool value) {
 		if (m_b4xMsaaState != value) {

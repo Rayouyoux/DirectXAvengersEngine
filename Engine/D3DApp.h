@@ -75,8 +75,10 @@ namespace ave {
 		HINSTANCE AppInst() const;
 		HWND MainWnd() const;
 		float AspectRatio() const;
+		ID3D12Device* GetDevice()const; 
 
 		bool Get4xMsaaState() const;
+		UINT Get4xMsaaQuality() const;
 		void Set4xMsaaState(bool value);
 
 		int Run();

@@ -60,7 +60,9 @@
     <ClInclude Include="UploadBuffer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    
+    <ClInclude Include="Vertex.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
