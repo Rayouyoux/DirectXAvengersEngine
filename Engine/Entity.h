@@ -18,12 +18,12 @@ namespace ave {
 		void Update();
 		void Render();
 
-		//template <typename Comp>
-		//void AddComponent();
-		//template <typename Comp>
-		//Component* GetComponent();
-		//template <typename Comp>
-		//void RemoveComponent();
+		template <typename Comp>
+		void AddComponent();
+		template <typename Comp>
+		Component* GetComponent();
+		template <typename Comp>
+		void RemoveComponent();
 
 		Transform* m_poTransform;
 		std::vector<Component*> m_loComponent;
