@@ -6,17 +6,16 @@
 #include <crtdbg.h>
 #endif
 
+#include "GameTime.h"
+
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-class IDXGIFactory4;
-
 namespace ave {
 	class D3DApp {
 	protected:
-		// Singleton Instance
-		static D3DApp* m_poApp;
+		static D3DApp* m_poApp; // Singleton Instance
 
 		HINSTANCE m_oAppInst;
 		HWND m_oMainWnd;
@@ -29,6 +28,8 @@ namespace ave {
 		// Set true to use 4X MSAA (§4.1.8).  The default is false.
 		bool m_b4xMsaaState;    // 4X MSAA enabled
 		UINT m_i4xMsaaQuality;  // quality level of 4X MSAA
+
+		GameTime m_oTimer;
 
 		IDXGIFactory4* m_poFactory;
 		IDXGISwapChain* m_poSwapChain;

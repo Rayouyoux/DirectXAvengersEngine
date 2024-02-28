@@ -15,6 +15,7 @@ public:
 	}
 
 	virtual void Render() override {
+		
 		// Reuse the memory associated with command recording.
 		// We can only reset when the associated command lists have finished execution on the GPU.
 		m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);

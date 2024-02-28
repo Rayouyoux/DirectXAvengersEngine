@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "D3DApp.h"
 
 namespace ave {
 	LRESULT CALLBACK
@@ -109,13 +108,12 @@ namespace ave {
 			// We pause the game when the window is deactivated and unpause it 
 			// when it becomes active.  
 		case WM_ACTIVATE:
-			if (LOWORD(wParam) == WA_INACTIVE) {
-				m_bAppPaused = true;
-				//mTimer.Stop();
-			} else {
-				m_bAppPaused = false;
-				//mTimer.Start();
-			}
+			//if (LOWORD(wParam) == WA_INACTIVE) {
+			//	m_bAppPaused = true;
+			//} else {
+			//	m_bAppPaused = false;
+			//	//mTimer.Start();
+			//}
 			return 0;
 
 			// WM_SIZE is sent when the user resizes the window.  
@@ -328,6 +326,7 @@ namespace ave {
 		if (InitDirect3D() == false)
 			return false;
 
+		m_oTimer.Initialize();
 		OnResize();
 
 		return true;
@@ -360,8 +359,7 @@ namespace ave {
 
 		m_oMainWnd = CreateWindow(L"MainWnd", m_sMainWndCaption.c_str(),
 			WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_oAppInst, 0);
-		if (m_oMainWnd == nullptr)
-		{
+		if (m_oMainWnd == nullptr) {
 			MessageBox(0, std::to_wstring(GetLastError()).c_str(), 0, 0);
 			return false;
 		}
@@ -441,6 +439,7 @@ namespace ave {
 			}
 			// Otherwise, do animation/game stuff.
 			else {
+				m_oTimer.Tick();
 
 				if (m_bAppPaused == false) {
 					CalculateFrameStats();
@@ -572,24 +571,24 @@ namespace ave {
 
 		frameCnt++;
 
-		//// Compute averages over one second period.
-		//if ((mTimer.TotalTime() - timeElapsed) >= 1.0f)
-		//{
-		//	float fps = (float)frameCnt; // fps = frameCnt / 1
-		//	float mspf = 1000.0f / fps;
+		// Compute averages over one second period.
+		if ((m_oTimer.TotalTime() - timeElapsed) >= 1.0f)
+		{
+			float fps = (float)frameCnt; // fps = frameCnt / 1
+			float mspf = 1000.0f / fps;
 
-		//	wstring fpsStr = to_wstring(fps);
-		//	wstring mspfStr = to_wstring(mspf);
+			std::wstring fpsStr = std::to_wstring(fps);
+			std::wstring mspfStr = std::to_wstring(mspf);
 
-		//	wstring windowText = mMainWndCaption +
-		//		L"    fps: " + fpsStr +
-		//		L"   mspf: " + mspfStr;
+			std::wstring windowText = m_sMainWndCaption +
+				L"    fps: " + fpsStr +
+				L"   mspf: " + mspfStr;
 
-		//	SetWindowText(mhMainWnd, windowText.c_str());
+			SetWindowText(m_oMainWnd, windowText.c_str());
 
-		//	// Reset for next average.
-		//	frameCnt = 0;
-		//	timeElapsed += 1.0f;
-		//}
+			// Reset for next average.
+			frameCnt = 0;
+			timeElapsed += 1.0f;
+		}
 	}
 }

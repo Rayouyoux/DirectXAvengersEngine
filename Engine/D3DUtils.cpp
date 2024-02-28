@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "D3DUtils.h"
 
 namespace ave {
     DxException::DxException(HRESULT hr, const std::wstring& functionName, const std::wstring& filename, int lineNumber) :
