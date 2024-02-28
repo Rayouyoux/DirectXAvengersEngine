@@ -7,6 +7,7 @@ using namespace DirectX;
 namespace ave {
 
 	Transform::Transform(){
+		m_bHandleChange = false;
 		Identity();
 	}
 
@@ -28,6 +29,7 @@ namespace ave {
 
 	void Transform::Move(XMFLOAT3* pvPosition) {
 		Move(pvPosition->x, pvPosition->y, pvPosition->z);
+		m_bHandleChange = true;
 	}
 
 	void Transform::Move(float fX, float fY, float fZ){
@@ -39,6 +41,7 @@ namespace ave {
 
 	void Transform::Scale(XMFLOAT3* pvScale) {
 		Scale(pvScale->x, pvScale->y, pvScale->z);
+		m_bHandleChange = true;
 	}
 
 	void Transform::Scale(float fX, float fY, float fZ) {
@@ -50,6 +53,7 @@ namespace ave {
 
 	void Transform::Rotate(XMFLOAT3* pvRotate) {
 		Rotate(pvRotate->x, pvRotate->y, pvRotate->z);
+		m_bHandleChange = true;
 	}
 
 	void Transform::Rotate(float fPitch, float fRoll, float fYaw) {

@@ -24,6 +24,8 @@ namespace ave{
 
 		XMFLOAT4X4 m_mTransformation;
 
+		bool m_bHandleChange;
+
 	private:
 		
 		XMFLOAT3 m_vScale;
