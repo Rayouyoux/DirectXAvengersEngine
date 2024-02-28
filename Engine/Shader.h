@@ -5,6 +5,7 @@
 #include "UploadBuffer.h"
 #include <cstring>
 #include <string>
+#include "Texture.h"
 namespace ave {
 	class Mesh;
 	class D3DApp;

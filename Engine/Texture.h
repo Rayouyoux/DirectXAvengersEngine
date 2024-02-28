@@ -44,6 +44,7 @@
 #define _Use_decl_annotations_
 #endif
 
+
 namespace DirectX
 {
     enum DDS_ALPHA_MODE

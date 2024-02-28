@@ -5,6 +5,7 @@
 #include "D3DApp.h"
 #include "Vertex.h"
 #include "Texture.h"
+#include "Mesh.h"
 namespace ave {
 
     Shader::Shader() {
@@ -85,11 +86,11 @@ namespace ave {
 
     void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
 
-        //D3D12_VERTEX_BUFFER_VIEW = //on récupere le VBV;
-        //D3D12_INDEX_BUFFER_VIEW = //on récupere l'IBV;
+        D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();
+        D3D12_INDEX_BUFFER_VIEW ibv = pMesh->IndexBufferView();
 
-        if (m_iRootTexture != -1 && pTexture)
-            pList->SetGraphicsRootDescriptorTable(m_iRootTexture, pTexture->GetGPU());
+ /*       if (m_iRootTexture != -1 && pTexture)
+            pList->SetGraphicsRootDescriptorTable(m_iRootTexture, );*/
 
         //if (m_iRootTexture2 != -1 && pTexture2)
         //    pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
