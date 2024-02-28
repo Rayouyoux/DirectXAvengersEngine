@@ -27,11 +27,11 @@ public:
 private:
 
     // Private Members
-    __int64     m_startTime;
-    __int64     m_previousTime;
-    __int64     m_currentTime;
-    __int64     m_secondsPerCount;
-    __int64     m_deltaTime;
-    __int64     m_totalTime;
+    __int64     m_iStartTime;
+    __int64     m_iPreviousTime;
+    __int64     m_iCurrentTime;
+    __int64     m_iSecondsPerCount;
+    __int64     m_iDeltaTime;
+    __int64     m_iTotalTime;
 
 };

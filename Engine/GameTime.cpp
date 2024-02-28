@@ -2,12 +2,12 @@
 #include <windows.h>
 
 GameTime::GameTime() : 
-    m_startTime(0), 
-    m_previousTime(0), 
-    m_currentTime(0), 
-    m_secondsPerCount(0), 
-    m_deltaTime(0), 
-    m_totalTime(0) 
+    m_iStartTime(0), 
+    m_iPreviousTime(0), 
+    m_iCurrentTime(0), 
+    m_iSecondsPerCount(0), 
+    m_iDeltaTime(0), 
+    m_iTotalTime(0) 
 {}
 
 GameTime::~GameTime()
@@ -15,31 +15,31 @@ GameTime::~GameTime()
 
 void GameTime::Initialize() {
 
-    QueryPerformanceFrequency((LARGE_INTEGER*)&m_secondsPerCount);
+    QueryPerformanceFrequency((LARGE_INTEGER*)&m_iSecondsPerCount);
 
-    QueryPerformanceCounter((LARGE_INTEGER*)&m_startTime);
-    m_previousTime = m_startTime;
+    QueryPerformanceCounter((LARGE_INTEGER*)&m_iStartTime);
+    m_iPreviousTime = m_iStartTime;
 
 }
 
 void GameTime::Tick() {
 
-    QueryPerformanceCounter((LARGE_INTEGER*)&m_currentTime);
+    QueryPerformanceCounter((LARGE_INTEGER*)&m_iCurrentTime);
 
-    m_deltaTime = m_currentTime - m_previousTime;
-    m_previousTime = m_currentTime;
-    m_totalTime += m_deltaTime;
+    m_iDeltaTime = m_iCurrentTime - m_iPreviousTime;
+    m_iPreviousTime = m_iCurrentTime;
+    m_iTotalTime += m_iDeltaTime;
 
 }
 
 void GameTime::Reset() {
 
-    m_startTime = 0;
-    m_previousTime = 0;
-    m_currentTime = 0;
-    m_secondsPerCount = 0;
-    m_deltaTime = 0;
-    m_totalTime = 0;
+    m_iStartTime = 0;
+    m_iPreviousTime = 0;
+    m_iCurrentTime = 0;
+    m_iSecondsPerCount = 0;
+    m_iDeltaTime = 0;
+    m_iTotalTime = 0;
 
     Initialize();
 
@@ -47,12 +47,12 @@ void GameTime::Reset() {
 
 double GameTime::TotalTime() const {
 
-    return static_cast<double>(m_totalTime) / m_secondsPerCount;
+    return static_cast<double>(m_iTotalTime) / m_iSecondsPerCount;
 
 }
 
 double GameTime::DeltaTime() const {
 
-    return static_cast<double>(m_deltaTime) / m_secondsPerCount;
+    return static_cast<double>(m_iDeltaTime) / m_iSecondsPerCount;
 
 }
