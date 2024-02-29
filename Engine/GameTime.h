@@ -1,7 +1,10 @@
 #pragma once
 
-namespace ave {
-    class GameTime {
+namespace ave 
+{
+
+    class GameTime 
+    {
 
     public:
 

@@ -20,6 +20,7 @@
 #include <winerror.h>
 #include <string>
 #include <vector>
+#include "Maths.h"
 #include "D3DApp.h"
 #include "framework.h"
 #include "d3dx12.h"
