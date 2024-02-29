@@ -6,6 +6,7 @@
 #include "Vertex.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include <iostream>
 
 namespace ave {
 
@@ -17,6 +18,14 @@ namespace ave {
     }
     ID3D12PipelineState* Shader::GetPso() {
         return m_poPso;
+    }
+
+    UINT Shader::GetRootObject() {
+        return m_iRootObject;
+    }
+
+    D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
+        return m_poPass->Resource()->GetGPUVirtualAddress();
     }
 
     void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
@@ -37,26 +46,27 @@ namespace ave {
         pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     }
 
-    bool Shader::Create(BYTE* oSrc, int iSize) {
+    bool Shader::Create(const std::wstring& oSrc) {
 
         m_poDevice = D3DApp::GetApp()->GetDevice();
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
-        m_poVS = Compile(oSrc, iSize, "VS", "vs_5_0");
+        m_poVS = CompileShader(oSrc, "VS", "vs_5_0");
         if (m_poVS == nullptr) {
             Destroy();
             return false;
         }
 
         //On compile le Pixel Shader
-        m_poPS = Compile(oSrc, iSize, "PS", "ps_5_0");
+        m_poPS = CompileShader(oSrc, "PS", "ps_5_0");
         if (m_poPS == nullptr) {
             Destroy();
             return false;
         }
 
-        if (m_poDevice->CreateRootSignature(0, m_poSerializedRootSig->GetBufferPointer(), m_poSerializedRootSig->GetBufferSize(), IID_PPV_ARGS(&m_poRootSignature))) {
+
+        if (m_poDevice->CreateRootSignature((UINT)0, m_poSerializedRootSig->GetBufferPointer(), m_poSerializedRootSig->GetBufferSize(), IID_PPV_ARGS(&m_poRootSignature))) {
             Destroy();
             return false;
         }
@@ -94,48 +104,62 @@ namespace ave {
 
     }
 
-    void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
+ //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
 
-        D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();
-        D3D12_INDEX_BUFFER_VIEW ibv = pMesh->IndexBufferView();
+ //       D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();
+ //       D3D12_INDEX_BUFFER_VIEW ibv = pMesh->IndexBufferView();
 
- /*       if (m_iRootTexture != -1 && pTexture)
-            pList->SetGraphicsRootDescriptorTable(m_iRootTexture, );*/
+ ///*       if (m_iRootTexture != -1 && pTexture)
+ //           pList->SetGraphicsRootDescriptorTable(m_iRootTexture, );*/
 
-        //if (m_iRootTexture2 != -1 && pTexture2)
-        //    pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
+ //       //if (m_iRootTexture2 != -1 && pTexture2)
+ //       //    pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
 
-        //Manque du code ici pour recuperer l'index de l'objet en question
-        //pList->SetGraphicsRootConstantBufferView(m_iRootObject, l'index dans le tableau de vecteur m_voObjects->Ressource()->GetGPUVirtualAdress();
-        //pList->DrawIndexedInstanced(pMesh->GetIndexCount(),1,0,0,0);
-        // on incremente l'index d'object
-        //  et on l'ajoute au vecteur
-    }
+ //       //Manque du code ici pour recuperer l'index de l'objet en question
+ //       //pList->SetGraphicsRootConstantBufferView(m_iRootObject, l'index dans le tableau de vecteur m_voObjects->Ressource()->GetGPUVirtualAdress();
+ //       //pList->DrawIndexedInstanced(pMesh->GetIndexCount(),1,0,0,0);
+ //       // on incremente l'index d'object
+ //       //  et on l'ajoute au vecteur
+ //   }
 
     void Shader::UpdateObject() {
         //int index =  //Get l'index de l objet;
         //m_voObjects[1]->CopyData()
     }
 
-    ID3DBlob* Shader::Compile(BYTE* oBuffer, int iSize, std::string oEntryPoint, std::string oTarget) {
+    ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {
         
         ID3DBlob* poByteCode = nullptr;
 #ifdef _DEBUG
         
         UINT oflags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
         ID3DBlob* poErrors = nullptr;
-        HRESULT hr = S_OK;
+        HRESULT hr = D3DCompileFromFile(oBuffer.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+            oEntryPoint.c_str(), oTarget.c_str(), oflags, 0, &poByteCode, &poErrors);
         
-        hr = D3DCompile(oBuffer, iSize, "",nullptr, nullptr, oEntryPoint.c_str(), oTarget.c_str(), oflags,0,&poByteCode,&poErrors);
-
+        
         if (poErrors) {
+            LPCVOID pErrorMsg = poErrors->GetBufferPointer();
+
+            // Récupérer la taille du message d'erreur
+            SIZE_T size = poErrors->GetBufferSize();
+
+            // Imprimer le message d'erreur dans la sortie du débogueur
+            OutputDebugStringA(static_cast<LPCSTR>(pErrorMsg));
+
+            // Imprimer le message d'erreur dans la console (pour une application de console)
+            std::cerr << static_cast<const char*>(pErrorMsg) << std::endl;
+
+            // Libérer la mémoire du buffer d'erreur
+            poErrors->Release();
             OutputDebugStringA((char*)poErrors->GetBufferPointer());
         }
         if (hr != S_OK) {
             return nullptr;
         }
 #else
-        hr = D3DCompile(oBuffer, iSize, "", nullptr, nullptr, oEntryPoint.c_str(), oTarget.c_str(), oflags, 0, &poByteCode, &poErrors);
+        hr = D3DCompileFromFile(oBuffer.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+            oEntryPoint.c_str(), oTarget.c_str(), oflags, 0, &poByteCode, &poErrors); 
         if (hr != S_OK) {
             return nullptr;
         }
@@ -260,6 +284,7 @@ namespace ave {
     void Shader::AddObject() {
         m_voObjects.push_back(m_poPass);
     }
+
     void Shader::Destroy() {
         m_poPso->Release();
         delete m_poPass;

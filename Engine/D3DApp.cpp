@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MeshRenderer.h"
+#include "Shader.h"
 
 namespace ave {
 	LRESULT CALLBACK
@@ -338,9 +339,11 @@ namespace ave {
 		if (InitDirect3D() == false)
 			return false;
 
+
 		m_oTimer.Initialize();
 		OnResize();
-
+		m_poShader = new Shader();
+		m_poShader->Create(L"..\\Engine\\shader.hlsl");
 		return true;
 	}
 

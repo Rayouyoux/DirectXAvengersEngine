@@ -13,26 +13,6 @@ namespace ave {
 	class Texture;
 	class Shader
 	{
-	public:
-		Shader();
-
-		ID3D12PipelineState* GetPso();
-		void Destroy();
-		void Reset();
-		void Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice);
-		void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
-		void End();
-		void AddObject();
-		bool Create(BYTE* oSrc, int iSize );
-		void UpdateObject();
-		~Shader();
-
-	protected:
-		bool CreateRootSignature(int id);
-
-	public:
-		ID3DBlob* Compile(BYTE* oBuffer, int iSize, std::string oEntryPoint, std::string oTarget);
-
 	protected:
 
 		D3DApp* m_poApp;
@@ -54,6 +34,30 @@ namespace ave {
 		int m_iRootObject;
 		int m_iRootPass;
 		int m_iTextureCount;
+
+	public:
+		Shader();
+
+		ID3D12PipelineState* GetPso();
+		void Destroy();
+		void Reset();
+		void Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice);
+		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
+		void End();
+		void AddObject();
+		bool Create(const std::wstring& oSrc);
+		void UpdateObject();
+
+		UINT GetRootObject();
+		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
+
+		~Shader();
+
+	protected:
+		bool CreateRootSignature(int id);
+
+	public:
+		ID3DBlob* CompileShader(const std::wstring& oBuffer,const std::string& oEntryPoint,const std::string& oTarget);
 	};
 }
 

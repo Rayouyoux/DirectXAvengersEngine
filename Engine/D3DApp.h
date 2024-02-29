@@ -14,10 +14,12 @@
 
 namespace ave {
 	class MeshRenderer;
+	class Shader;
 	class D3DApp {
 	protected:
 		static D3DApp* m_poApp; // Singleton Instance
 
+		Shader* m_poShader;
 		MeshRenderer* m_poMeshRenderer;
 		HINSTANCE m_oAppInst;
 		HWND m_oMainWnd;
