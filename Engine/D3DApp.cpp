@@ -48,8 +48,6 @@ namespace ave {
 		m_iRtvDescriptorSize = 0;
 		m_iDsvDescriptorSize = 0;
 
-		m_i4xMsaaQuality = 0;
-		
 		m_sMainWndCaption = L"Avengers App";
 		m_eDriverType = D3D_DRIVER_TYPE_HARDWARE;
 		m_eBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -172,7 +170,7 @@ namespace ave {
 				}
 			}
 			return 0;
-
+			
 			// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
 		case WM_ENTERSIZEMOVE:
 			m_bAppPaused = true;

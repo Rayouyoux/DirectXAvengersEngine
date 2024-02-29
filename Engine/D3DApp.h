@@ -7,6 +7,7 @@
 #endif
 
 #include "GameTime.h"
+#include "Graphics.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -30,6 +31,7 @@ namespace ave {
 		UINT m_i4xMsaaQuality;  // quality level of 4X MSAA
 
 		GameTime m_oTimer;
+		GraphicsHandler m_oGraphics;
 
 		IDXGIFactory4* m_poFactory;
 		IDXGISwapChain* m_poSwapChain;

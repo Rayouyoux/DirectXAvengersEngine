@@ -1,0 +1,409 @@
+#include "pch.h"
+#include "GraphicsHandler.h"
+#include "WindowHandler.h"
+
+namespace ave {
+	GraphicsHandler::GraphicsHandler() {
+		m_b4xMsaaState = false;
+		m_i4xMsaaQuality = 0;
+
+		m_poFactory = nullptr;
+		m_poSwapChain = nullptr;
+		m_poDevice = nullptr;
+
+		m_poFence = nullptr;
+		m_iCurrentFence = 0;
+
+		m_poCommandQueue = nullptr;
+		m_poDirectCmdListAlloc = nullptr;
+		m_poCommandList = nullptr;
+
+		m_iCurrBackBuffer = 0;
+		m_prDepthStencilBuffer = nullptr;
+
+		m_poRtvHeap = nullptr;
+		m_poDsvHeap = nullptr;
+
+		m_iRtvDescriptorSize = 0;
+		m_iDsvDescriptorSize = 0;
+		m_cFillColor = DirectX::Colors::IndianRed;
+		m_eDriverType = D3D_DRIVER_TYPE_HARDWARE;
+		m_eBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+		m_eDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	}
+
+	GraphicsHandler::~GraphicsHandler() {
+		if (m_poDevice != nullptr)
+			FlushCommandQueue();
+	}
+
+	GraphicsHandler* GraphicsHandler::Create() {
+		return new GraphicsHandler();
+	}
+
+	bool GraphicsHandler::Initialize(AvengersEngine* poAve) {
+#if defined(DEBUG) || defined(_DEBUG) // Enable the D3D12 debug layer.
+		{
+			ID3D12Debug* debugController;
+			ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
+			debugController->EnableDebugLayer();
+		}
+#endif
+
+		m_poAve = poAve;
+
+		CreateFactory();
+		CreateDevice();
+		CreateFence();
+		RequestMsaaQuality();
+		CreateCommandObjects();
+		CreateSwapChain();
+		CreateRtvAndDsvDescriptorHeaps();
+
+		return true;
+	}
+
+	void GraphicsHandler::OnResize() {
+		assert(m_poDevice);
+		assert(m_poSwapChain);
+		assert(m_poDirectCmdListAlloc);
+
+		FlushCommandQueue();
+
+		ThrowIfFailed(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr));
+
+		// Clear the previous resources we will be recreating.
+		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
+			if (m_prSwapChainBuffer[i] != nullptr)
+				m_prSwapChainBuffer[i]->Release();
+		}
+		if (m_prDepthStencilBuffer != nullptr)
+			m_prDepthStencilBuffer->Release();
+
+		// Resize the swap chain.
+		ThrowIfFailed(m_poSwapChain->ResizeBuffers(
+			SWAP_CHAIN_BUFFER_COUNT,
+			m_poAve->GetWindowWidth(),
+			m_poAve->GetWindowHeight(),
+			m_eBackBufferFormat,
+			DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
+
+		m_iCurrBackBuffer = 0;
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_poRtvHeap->GetCPUDescriptorHandleForHeapStart());
+		for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
+		{
+			ThrowIfFailed(m_poSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_prSwapChainBuffer[i])));
+			m_poDevice->CreateRenderTargetView(m_prSwapChainBuffer[i], nullptr, rtvHeapHandle);
+			rtvHeapHandle.Offset(1, m_iRtvDescriptorSize);
+		}
+
+		// Create the depth/stencil buffer and view.
+		D3D12_RESOURCE_DESC depthStencilDesc;
+		depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		depthStencilDesc.Alignment = 0;
+		depthStencilDesc.Width = m_poAve->GetWindowWidth();
+		depthStencilDesc.Height = m_poAve->GetWindowHeight();
+		depthStencilDesc.DepthOrArraySize = 1;
+		depthStencilDesc.MipLevels = 1;
+		depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+
+		depthStencilDesc.SampleDesc.Count = m_b4xMsaaState ? 4 : 1;
+		depthStencilDesc.SampleDesc.Quality = m_b4xMsaaState ? (m_i4xMsaaQuality - 1) : 0;
+		depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+		depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+		D3D12_CLEAR_VALUE optClear;
+		optClear.Format = m_eDepthStencilFormat;
+		optClear.DepthStencil.Depth = 1.0f;
+		optClear.DepthStencil.Stencil = 0;
+		CD3DX12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		ThrowIfFailed(m_poDevice->CreateCommittedResource(
+			&heapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&depthStencilDesc,
+			D3D12_RESOURCE_STATE_COMMON,
+			&optClear,
+			IID_PPV_ARGS(&m_prDepthStencilBuffer)));
+
+		// Create descriptor to mip level 0 of entire resource using the format of the resource.
+		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Format = m_eDepthStencilFormat;
+		dsvDesc.Texture2D.MipSlice = 0;
+		m_poDevice->CreateDepthStencilView(m_prDepthStencilBuffer, &dsvDesc, DepthStencilView());
+
+		// Transition the resource from its initial state to be used as a depth buffer.
+		CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_prDepthStencilBuffer,
+			D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+		m_poCommandList->ResourceBarrier(1, &resourceBarrier);
+
+		// Execute the resize commands.
+		ThrowIfFailed(m_poCommandList->Close());
+		ID3D12CommandList* cmdsLists[] = { m_poCommandList };
+		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+		// Wait until resize is complete.
+		FlushCommandQueue();
+
+		// Update the viewport transform to cover the client area.
+		m_oScreenViewport.TopLeftX = 0;
+		m_oScreenViewport.TopLeftY = 0;
+		m_oScreenViewport.Width = static_cast<float>(m_poAve->GetWindowWidth());
+		m_oScreenViewport.Height = static_cast<float>(m_poAve->GetWindowHeight());
+		m_oScreenViewport.MinDepth = 0.0f;
+		m_oScreenViewport.MaxDepth = 1.0f;
+
+		m_oScissorRect = { 0, 0, m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight()};
+	}
+
+	void GraphicsHandler::Update() {
+		// Do with the Objects
+	}
+
+	void GraphicsHandler::LateUpdate() { // Which should be called first ?
+		// Do with the Objects
+	}
+
+	void GraphicsHandler::Render() {
+		RenderBegin();
+
+
+
+		RenderCease();
+	}
+
+#pragma region Initializers
+
+	void GraphicsHandler::CreateFactory() {
+		ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&m_poFactory)));
+	}
+
+	void GraphicsHandler::CreateDevice() {
+		// Try to create hardware device.
+		HRESULT hardwareResult = D3D12CreateDevice(
+			nullptr, // default adapter
+			D3D_FEATURE_LEVEL_11_0,
+			IID_PPV_ARGS(&m_poDevice));
+
+		// Fallback to WARP device.
+		if (FAILED(hardwareResult))
+		{
+			IDXGIAdapter* oWarpAdapter;
+			ThrowIfFailed(m_poFactory->EnumWarpAdapter(IID_PPV_ARGS(&oWarpAdapter)));
+
+			ThrowIfFailed(D3D12CreateDevice(
+				oWarpAdapter,
+				D3D_FEATURE_LEVEL_11_0,
+				IID_PPV_ARGS(&m_poDevice)));
+		}
+
+		m_iRtvDescriptorSize = m_poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		m_iDsvDescriptorSize = m_poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		// CBV is used only for textures
+	}
+
+	void GraphicsHandler::CreateFence() {
+		ThrowIfFailed(m_poDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+			IID_PPV_ARGS(&m_poFence)));
+	}
+
+	void GraphicsHandler::RequestMsaaQuality() {
+		D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
+		msQualityLevels.Format = m_eBackBufferFormat;
+		msQualityLevels.SampleCount = 4;
+		msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
+		msQualityLevels.NumQualityLevels = 0;
+		ThrowIfFailed(m_poDevice->CheckFeatureSupport(
+			D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
+			&msQualityLevels,
+			sizeof(msQualityLevels)));
+
+		m_i4xMsaaQuality = msQualityLevels.NumQualityLevels;
+		assert(m_i4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
+	}
+
+	void GraphicsHandler::CreateCommandObjects() {
+		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		ThrowIfFailed(m_poDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_poCommandQueue)));
+
+		ThrowIfFailed(m_poDevice->CreateCommandAllocator(
+			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			IID_PPV_ARGS(&m_poDirectCmdListAlloc)));
+
+		ThrowIfFailed(m_poDevice->CreateCommandList(
+			0,
+			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			m_poDirectCmdListAlloc, // Associated command allocator
+			nullptr,                // Initial PipelineStateObject
+			IID_PPV_ARGS(&m_poCommandList)));
+
+		// Start off in a closed state.
+		m_poCommandList->Close();
+	}
+
+	void GraphicsHandler::CreateSwapChain() {
+		// Release the previous swapchain we will be recreating.
+		m_poSwapChain->Release();
+
+		DXGI_SWAP_CHAIN_DESC sd;
+		sd.BufferDesc.Width = m_poAve->GetWindowWidth();
+		sd.BufferDesc.Height = m_poAve->GetWindowHeight();
+		sd.BufferDesc.RefreshRate.Numerator = 60;
+		sd.BufferDesc.RefreshRate.Denominator = 1;
+		sd.BufferDesc.Format = m_eBackBufferFormat;
+		sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		sd.SampleDesc.Count = m_b4xMsaaState ? 4 : 1;
+		sd.SampleDesc.Quality = m_b4xMsaaState ? (m_i4xMsaaQuality - 1) : 0;
+		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		sd.BufferCount = SWAP_CHAIN_BUFFER_COUNT;
+		sd.OutputWindow = m_poAve->GetWindow();
+		sd.Windowed = true;
+		sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+		// Note: Swap chain uses queue to perform flush.
+		ThrowIfFailed(m_poFactory->CreateSwapChain(
+			m_poCommandQueue,
+			&sd,
+			&m_poSwapChain));
+	}
+
+	void GraphicsHandler::CreateRtvAndDsvDescriptorHeaps() {
+		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
+		rtvHeapDesc.NumDescriptors = SWAP_CHAIN_BUFFER_COUNT;
+		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		rtvHeapDesc.NodeMask = 0;
+		ThrowIfFailed(m_poDevice->CreateDescriptorHeap(
+			&rtvHeapDesc, IID_PPV_ARGS(&m_poRtvHeap)));
+
+		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
+		dsvHeapDesc.NumDescriptors = 1;
+		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+		dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		dsvHeapDesc.NodeMask = 0;
+		ThrowIfFailed(m_poDevice->CreateDescriptorHeap(
+			&dsvHeapDesc, IID_PPV_ARGS(&m_poDsvHeap)));
+	}
+
+#pragma endregion;
+
+#pragma region Generic Render Composite Methods
+
+	void GraphicsHandler::RenderBegin() {
+		ResetCommandList();
+		TransitionFromPresentToRenderTarget();
+		ClearRenderTargetAndDepthStencil();
+	}
+
+	void GraphicsHandler::RenderCease() {
+		TransitionFromRenderTargetToPresent();
+		CloseCommandList();
+		QueueCommandList();
+		Present();
+		FlushCommandQueue();
+	}
+
+#pragma endregion
+
+#pragma region Rendering
+
+	void GraphicsHandler::ResetCommandList() {
+		m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);
+		m_poCommandList->RSSetViewports(1, &m_oScreenViewport);
+		m_poCommandList->RSSetScissorRects(1, &m_oScissorRect);
+	}
+
+	void GraphicsHandler::TransitionFromPresentToRenderTarget() {
+		CD3DX12_RESOURCE_BARRIER transition = CD3DX12_RESOURCE_BARRIER::Transition(
+			CurrentBackBuffer(),
+			D3D12_RESOURCE_STATE_PRESENT,
+			D3D12_RESOURCE_STATE_RENDER_TARGET);
+		m_poCommandList->ResourceBarrier(1, &transition);
+	}
+
+	void GraphicsHandler::TransitionFromRenderTargetToPresent() {
+		CD3DX12_RESOURCE_BARRIER transition = CD3DX12_RESOURCE_BARRIER::Transition(
+			CurrentBackBuffer(),
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_STATE_PRESENT);
+		m_poCommandList->ResourceBarrier(1, &transition);
+	}
+
+	void GraphicsHandler::ClearRenderTargetAndDepthStencil() {
+		m_poCommandList->ClearRenderTargetView(CurrentBackBufferView(), m_cFillColor, 0, nullptr);
+		m_poCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	
+		// Specify the buffers we are going to render to.
+		auto currentBuffer = CurrentBackBufferView();
+		auto depthStencil = DepthStencilView();
+		m_poCommandList->OMSetRenderTargets(1, &currentBuffer, true, &depthStencil);
+	}
+
+	void GraphicsHandler::CloseCommandList() {
+		ThrowIfFailed(m_poCommandList->Close());
+	}
+
+	void GraphicsHandler::QueueCommandList() {
+		ID3D12CommandList* cmdsLists[] = { m_poCommandList };
+		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+	}
+
+	void GraphicsHandler::Present() {
+		ThrowIfFailed(m_poSwapChain->Present(0, 0));
+		m_iCurrBackBuffer = (m_iCurrBackBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
+	}
+
+	void GraphicsHandler::FlushCommandQueue() {
+		m_iCurrentFence++;
+
+		// Add an instruction to the command queue to set a new fence point.  Because we 
+		// are on the GPU timeline, the new fence point won't be set until the GPU finishes
+		// processing all the commands prior to this Signal().
+		ThrowIfFailed(m_poCommandQueue->Signal(m_poFence, m_iCurrentFence));
+
+		// Wait until the GPU has completed commands up to this fence point.
+		if (m_poFence->GetCompletedValue() < m_iCurrentFence)
+		{
+			HANDLE eventHandle = CreateEventEx(nullptr, L"false", false, EVENT_ALL_ACCESS);
+
+			// Fire event when GPU hits current fence.  
+			ThrowIfFailed(m_poFence->SetEventOnCompletion(m_iCurrentFence, eventHandle));
+
+			// Wait until the GPU hits current fence event is fired.
+			WaitForSingleObject(eventHandle, INFINITE);
+			CloseHandle(eventHandle);
+		}
+	}
+
+	void GraphicsHandler::Release() {
+		delete this;
+	}
+
+#pragma endregion
+
+#pragma region Getters
+
+	ID3D12Resource* GraphicsHandler::CurrentBackBuffer() const {
+		return m_prSwapChainBuffer[m_iCurrBackBuffer];
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GraphicsHandler::CurrentBackBufferView() const {
+		return CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			m_poRtvHeap->GetCPUDescriptorHandleForHeapStart(),
+			m_iCurrBackBuffer,
+			m_iRtvDescriptorSize);
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GraphicsHandler::DepthStencilView() const {
+		return m_poDsvHeap->GetCPUDescriptorHandleForHeapStart();
+	}
+
+#pragma endregion
+
+}
