@@ -1,11 +1,18 @@
 #include "pch.h"
 #include "WindowHandler.h"
 #include "GraphicsHandler.h"
+#include "GameTime.h"
 
 namespace ave {
-	AvengersEngine::AvengersEngine(HINSTANCE hInstance) {
+	AvengersEngine::AvengersEngine() {
 		m_ohInstance = nullptr;
 		m_oMainWnd = nullptr;
+
+		m_bAppPaused = false;
+		m_bMinimized = false;
+		m_bMaximized = false;
+		m_bResizing = false;
+		m_bFullscreenState = false;
 
 		m_poGraphics = nullptr;
 		m_poTimer = nullptr;
@@ -23,11 +30,13 @@ namespace ave {
 		delete m_poTimer;
 	}
 
-	AvengersEngine* AvengersEngine::Create(HINSTANCE hInstance) {
-		return new AvengersEngine(hInstance);
+	AvengersEngine* AvengersEngine::Create() {
+		return new AvengersEngine();
 	}
 
-	bool AvengersEngine::Initialize() {
+	bool AvengersEngine::Initialize(HINSTANCE hInstance) {
+		m_ohInstance = hInstance;
+
 		if (RegisterWndClass() == false) {
 			return false;
 		}
@@ -42,7 +51,35 @@ namespace ave {
 		m_poTimer = new GameTime();
 		m_poTimer->Initialize();
 
+		m_poGraphics->OnResize();
+
 		return true;
+	}
+
+	int AvengersEngine::Run() {
+		MSG msg = { 0 };
+
+		while (msg.message != WM_QUIT) {
+			if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE)) {
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			else {
+				m_poTimer->Tick();
+
+				if (m_bAppPaused == false) {
+					//CalculateFrameStats();
+					m_poGraphics->Update();
+					m_poGraphics->LateUpdate();
+					m_poGraphics->Render();
+				}
+				else {
+					Sleep(100);
+				}
+			}
+		}
+
+		return static_cast<int>(msg.wParam);
 	}
 
 	bool AvengersEngine::RegisterWndClass() {
@@ -78,14 +115,15 @@ namespace ave {
 			return false;
 		}
 
+		SetWindowLongPtr(m_oMainWnd, GWLP_USERDATA, (LONG_PTR)this);
+
 		ShowWindow(m_oMainWnd, SW_SHOW);
 		UpdateWindow(m_oMainWnd);
 	}
 
-	LRESULT AvengersEngine::MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-	{
+	LRESULT AvengersEngine::MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		AvengersEngine* poAve = (AvengersEngine*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-	
+
 		switch (msg) {
 			// WM_ACTIVATE is sent when the window is activated or deactivated.  
 			// We pause the game when the window is deactivated and unpause it 
@@ -98,40 +136,39 @@ namespace ave {
 			//	//mTimer.Start();
 			//}
 			return 0;
-
-			// WM_SIZE is sent when the user resizes the window.  
 		case WM_SIZE:
+			// WM_SIZE is sent when the user resizes the window
 			// Save the new client area dimensions.
-			m_iClientWidth = LOWORD(lParam);
-			m_iClientHeight = HIWORD(lParam);
-			if (m_poDevice) {
+			poAve->m_iClientWidth = LOWORD(lParam);
+			poAve->m_iClientHeight = HIWORD(lParam);
+			if (poAve->m_poGraphics && poAve->m_poGraphics->GetDevice()) {
 				if (wParam == SIZE_MINIMIZED) {
-					m_bAppPaused = true;
-					m_bMinimized = true;
-					m_bMaximized = false;
+					poAve->m_bAppPaused = true;
+					poAve->m_bMinimized = true;
+					poAve->m_bMaximized = false;
 				}
 				else if (wParam == SIZE_MAXIMIZED) {
-					m_bAppPaused = false;
-					m_bMinimized = false;
-					m_bMaximized = true;
-					OnResize();
+					poAve->m_bAppPaused = false;
+					poAve->m_bMinimized = false;
+					poAve->m_bMaximized = true;
+					poAve->m_poGraphics->OnResize();
 				}
 				else if (wParam == SIZE_RESTORED) {
 					// Restoring from minimized state?
-					if (m_bMinimized) {
-						m_bAppPaused = false;
-						m_bMinimized = false;
-						OnResize();
+					if (poAve->m_bMinimized) {
+						poAve->m_bAppPaused = false;
+						poAve->m_bMinimized = false;
+						poAve->m_poGraphics->OnResize();
 					}
 
 					// Restoring from maximized state?
-					else if (m_bMaximized)
+					else if (poAve->m_bMaximized)
 					{
-						m_bAppPaused = false;
-						m_bMaximized = false;
-						OnResize();
+						poAve->m_bAppPaused = false;
+						poAve->m_bMaximized = false;
+						poAve->m_poGraphics->OnResize();
 					}
-					else if (m_bResizing)
+					else if (poAve->m_bResizing)
 					{
 						// If user is dragging the resize bars, we do not resize 
 						// the buffers here because as the user continuously 
@@ -144,7 +181,7 @@ namespace ave {
 					}
 					else // API call such as SetWindowPos or mSwapChain->SetFullscreenState.
 					{
-						OnResize();
+						poAve->m_poGraphics->OnResize();
 					}
 				}
 			}
@@ -152,18 +189,18 @@ namespace ave {
 
 			// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
 		case WM_ENTERSIZEMOVE:
-			m_bAppPaused = true;
-			m_bResizing = true;
+			poAve->m_bAppPaused = true;
+			poAve->m_bResizing = true;
 			//mTimer.Stop();
 			return 0;
 
 			// WM_EXITSIZEMOVE is sent when the user releases the resize bars.
 			// Here we reset everything based on the new window dimensions.
 		case WM_EXITSIZEMOVE:
-			m_bAppPaused = false;
-			m_bResizing = false;
+			poAve->m_bAppPaused = false;
+			poAve->m_bResizing = false;
 			//mTimer.Start();
-			OnResize();
+			poAve->m_poGraphics->OnResize();
 			return 0;
 
 			// WM_DESTROY is sent when the window is being destroyed.
@@ -186,26 +223,29 @@ namespace ave {
 		case WM_LBUTTONDOWN:
 		case WM_MBUTTONDOWN:
 		case WM_RBUTTONDOWN:
-			OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			//OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			return 0;
 		case WM_LBUTTONUP:
 		case WM_MBUTTONUP:
 		case WM_RBUTTONUP:
-			OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			//OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			return 0;
 		case WM_MOUSEMOVE:
-			OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			//OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			return 0;
 		case WM_KEYUP:
 			if (wParam == VK_ESCAPE)
 				PostQuitMessage(0);
 			else if ((int)wParam == VK_F2)
-				Set4xMsaaState(!m_b4xMsaaState);
-
+				poAve->m_poGraphics->Set4xMsaaState(!poAve->m_poGraphics->Get4xMsaaState());
 			return 0;
 		}
 
 		return DefWindowProc(hwnd, msg, wParam, lParam);
+	}
+
+	float AvengersEngine::GetAspectRatio() const {
+		return static_cast<float>(m_iClientWidth / m_iClientHeight);
 	}
 
 	void AvengersEngine::Release() {

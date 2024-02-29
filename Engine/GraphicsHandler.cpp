@@ -1,9 +1,17 @@
 #include "pch.h"
+#include <dxgi1_4.h>
+#include <dxgi.h>
 #include "GraphicsHandler.h"
 #include "WindowHandler.h"
 
+#pragma comment(lib,"d3dcompiler.lib")
+#pragma comment(lib, "D3D12.lib")
+#pragma comment(lib, "dxgi.lib")
+
 namespace ave {
 	GraphicsHandler::GraphicsHandler() {
+		m_poAve = nullptr;
+
 		m_b4xMsaaState = false;
 		m_i4xMsaaQuality = 0;
 
@@ -19,13 +27,17 @@ namespace ave {
 		m_poCommandList = nullptr;
 
 		m_iCurrBackBuffer = 0;
-		m_prDepthStencilBuffer = nullptr;
+		//m_prDepthStencilBuffer = nullptr;
 
 		m_poRtvHeap = nullptr;
 		m_poDsvHeap = nullptr;
 
 		m_iRtvDescriptorSize = 0;
 		m_iDsvDescriptorSize = 0;
+
+		m_oScreenViewport = D3D12_VIEWPORT();
+		m_oScissorRect = D3D12_RECT();
+
 		m_cFillColor = DirectX::Colors::IndianRed;
 		m_eDriverType = D3D_DRIVER_TYPE_HARDWARE;
 		m_eBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -35,6 +47,18 @@ namespace ave {
 	GraphicsHandler::~GraphicsHandler() {
 		if (m_poDevice != nullptr)
 			FlushCommandQueue();
+
+		m_poFactory->Release();
+		m_poDirectCmdListAlloc->Release();
+		m_poCommandList->Release();
+
+		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
+			m_prSwapChainBuffer[i]->Release();
+		}
+		m_prDepthStencilBuffer->Release();
+
+		m_poRtvHeap->Release();
+		m_poDsvHeap->Release();
 	}
 
 	GraphicsHandler* GraphicsHandler::Create() {
@@ -169,7 +193,7 @@ namespace ave {
 	void GraphicsHandler::Render() {
 		RenderBegin();
 
-
+		// Add your coubeh
 
 		RenderCease();
 	}
@@ -247,7 +271,8 @@ namespace ave {
 
 	void GraphicsHandler::CreateSwapChain() {
 		// Release the previous swapchain we will be recreating.
-		m_poSwapChain->Release();
+		if(m_poSwapChain != nullptr)
+			m_poSwapChain->Release();
 
 		DXGI_SWAP_CHAIN_DESC sd;
 		sd.BufferDesc.Width = m_poAve->GetWindowWidth();
@@ -267,10 +292,10 @@ namespace ave {
 		sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 		// Note: Swap chain uses queue to perform flush.
-		ThrowIfFailed(m_poFactory->CreateSwapChain(
+		HRESULT res = m_poFactory->CreateSwapChain(
 			m_poCommandQueue,
 			&sd,
-			&m_poSwapChain));
+			&m_poSwapChain);
 	}
 
 	void GraphicsHandler::CreateRtvAndDsvDescriptorHeaps() {
@@ -291,7 +316,7 @@ namespace ave {
 			&dsvHeapDesc, IID_PPV_ARGS(&m_poDsvHeap)));
 	}
 
-#pragma endregion;
+#pragma endregion
 
 #pragma region Generic Render Composite Methods
 
@@ -381,10 +406,6 @@ namespace ave {
 		}
 	}
 
-	void GraphicsHandler::Release() {
-		delete this;
-	}
-
 #pragma endregion
 
 #pragma region Getters
@@ -406,4 +427,7 @@ namespace ave {
 
 #pragma endregion
 
+	void GraphicsHandler::Release() {
+		delete this;
+	}
 }

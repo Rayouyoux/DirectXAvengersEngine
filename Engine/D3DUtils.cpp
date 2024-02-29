@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <comdef.h>
 
 namespace ave {
     DxException::DxException(HRESULT hr, const std::wstring& functionName, const std::wstring& filename, int lineNumber) :

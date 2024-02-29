@@ -18,6 +18,12 @@ namespace ave {
 		HINSTANCE m_ohInstance;
 		HWND m_oMainWnd;
 
+		bool m_bAppPaused;
+		bool m_bMinimized;
+		bool m_bMaximized;
+		bool m_bResizing;
+		bool m_bFullscreenState;
+
 		GraphicsHandler* m_poGraphics;
 		GameTime* m_poTimer;
 
@@ -26,7 +32,7 @@ namespace ave {
 		int m_iClientHeight;
 
 	protected:
-		AvengersEngine(HINSTANCE hInstance);
+		AvengersEngine();
 		AvengersEngine(const AvengersEngine& ave) = delete;
 		AvengersEngine& operator=(const AvengersEngine& ave) = delete;
 		~AvengersEngine();
@@ -39,8 +45,11 @@ namespace ave {
 		static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
-		static AvengersEngine* Create(HINSTANCE hInstance);
-		bool Initialize();
+		static AvengersEngine* Create();
+		bool Initialize(HINSTANCE hInstance);
+		int Run();
+
+		float GetAspectRatio() const;
 
 		virtual void Release();
 

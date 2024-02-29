@@ -2,6 +2,7 @@
 #include <d3d12.h>
 #include <wrl.h>
 #include <DirectXColors.h>
+#include <DirectXMath.h>
 
 #pragma region Direct3D Forward Declarations
 class IDXGIFactory4;
@@ -43,7 +44,7 @@ namespace ave {
 		UINT m_iRtvDescriptorSize;
 		UINT m_iDsvDescriptorSize;
 
-		XMVECTORF32 m_cFillColor;
+		DirectX::XMVECTORF32 m_cFillColor;
 		D3D_DRIVER_TYPE m_eDriverType;
 		DXGI_FORMAT m_eBackBufferFormat;
 		DXGI_FORMAT m_eDepthStencilFormat;
@@ -71,7 +72,6 @@ namespace ave {
 		/// Generic close steps of the Render method.
 		/// </summary>
 		virtual void RenderCease();
-
 		/// <summary>
 		/// Reset the command list. Must be called at the begining of Rendering.
 		/// </summary>
@@ -121,8 +121,14 @@ namespace ave {
 		virtual void Render();
 
 		// Set & Getters
-		virtual XMVECTORF32 GetFillColor() const { return m_cFillColor; }
-		virtual void SetFillColor(XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
+		virtual DirectX::XMVECTORF32 GetFillColor() const { return m_cFillColor; }
+		virtual void SetFillColor(DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
+
+		virtual ID3D12Device* GetDevice() const { return m_poDevice; }
+
+		bool Get4xMsaaState() const { return m_b4xMsaaState; }
+		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }
+		void Set4xMsaaState(bool value) { m_b4xMsaaState = value; }
 
 		virtual void Release();
 	};

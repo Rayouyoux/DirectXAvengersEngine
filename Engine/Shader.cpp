@@ -1,16 +1,15 @@
+#include <string>
+#include <cstring>
+#include <D3Dcompiler.h>
 #include "pch.h"
 #include "Shader.h"
+#include "GraphicsHandler.h"
 #include "UploadBuffer.h"
-#include <D3Dcompiler.h>
-#include <cstring>
-#include <string>
-#include "D3DApp.h"
 #include "Vertex.h"
 
 namespace ave {
-    Shader::Shader() {
-
-    }
+    Shader::Shader()
+    {}
 
     void Shader::Begin(ID3D12GraphicsCommandList* pList) {
 
@@ -29,7 +28,7 @@ namespace ave {
 
     bool Shader::Create(BYTE* oSrc, int iSize) {
 
-        m_poDevice = m_poApp->GetDevice();
+        m_poDevice = m_poGraphics->GetDevice();
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -72,8 +71,8 @@ namespace ave {
         oPestoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         oPestoDesc.NumRenderTargets = 1;
         oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UINT;
-        oPestoDesc.SampleDesc.Count = m_poApp->Get4xMsaaState() ? 4 : 1;
-        oPestoDesc.SampleDesc.Quality = m_poApp->Get4xMsaaState() ? (m_poApp->Get4xMsaaQuality() - 1) : 0;
+        oPestoDesc.SampleDesc.Count = m_poGraphics->Get4xMsaaState() ? 4 : 1;
+        oPestoDesc.SampleDesc.Quality = m_poGraphics->Get4xMsaaState() ? (m_poGraphics->Get4xMsaaQuality() - 1) : 0;
         oPestoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         if (m_poDevice->CreateGraphicsPipelineState(&oPestoDesc, IID_PPV_ARGS(&m_poPso)) != S_OK)
         {
