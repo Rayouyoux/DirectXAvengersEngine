@@ -1,11 +1,11 @@
 #include <AvengersEngine.h>
 #include "d3dUtils.h"
+#include "MeshRenderer.h"
 
 using namespace DirectX;
-
 class AppTest : public ave::D3DApp {
 protected:
-
+	ave::MeshRenderer* m_poRenderer;
 public:
     AppTest(HINSTANCE hInstance) : D3DApp(hInstance)
     {}
@@ -19,6 +19,11 @@ public:
 		// Reuse the memory associated with command recording.
 		// We can only reset when the associated command lists have finished execution on the GPU.
 		m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);
+
+
+		m_poRenderer = new ave::MeshRenderer();
+
+		m_poRenderer->Init(m_poCommandList,m_poDevice);
 
 		// A command list can be reset after it has been added to the command queue via ExecuteCommandList.
 		// Reusing the command list reuses memory.
@@ -39,6 +44,7 @@ public:
 		auto depthStencil = DepthStencilView();
 		m_poCommandList->OMSetRenderTargets(1, &currentBuffer, true, &depthStencil);
 
+		m_poRenderer->Draw(m_poCommandList, m_poDevice);
 		// Indicate a state transition on the resource usage.
 		auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

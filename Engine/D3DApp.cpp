@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "MeshRenderer.h"
 
 namespace ave {
 	LRESULT CALLBACK
@@ -98,6 +99,10 @@ namespace ave {
 	}
 	ID3D12Device* D3DApp::GetDevice()const {
 		return m_poDevice;
+	}
+
+	MeshRenderer* D3DApp::GetMesh()const {
+		return m_poMeshRenderer;
 	}
 
 	void D3DApp::Set4xMsaaState(bool value) {

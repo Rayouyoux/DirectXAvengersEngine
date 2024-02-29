@@ -6,6 +6,7 @@
 #include <cstring>
 #include <string>
 #include "Texture.h"
+
 namespace ave {
 	class Mesh;
 	class D3DApp;
@@ -15,18 +16,18 @@ namespace ave {
 	public:
 		Shader();
 
+		ID3D12PipelineState* GetPso();
 		void Destroy();
 		void Reset();
-		void Begin(ID3D12GraphicsCommandList* pList);
+		void Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice);
 		void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		void AddObject();
 		bool Create(BYTE* oSrc, int iSize );
 		void UpdateObject();
-
+		~Shader();
 
 	protected:
-		~Shader();
 		bool CreateRootSignature(int id);
 
 	public:
@@ -38,8 +39,8 @@ namespace ave {
 		ID3D12Device* m_poDevice;
 		ID3D12DescriptorHeap* m_poCbvHeap;
 		ID3DBlob* m_poSerializedRootSig;
-		UploadBuffer<int>* m_poPass;
-		std::vector<UploadBuffer<int>*> m_voObjects;
+		UploadBuffer* m_poPass;
+		std::vector<UploadBuffer*> m_voObjects;
 		ID3D12RootSignature* m_poRootSignature;
 		ID3DBlob* m_poVS;
 		ID3DBlob* m_poPS;

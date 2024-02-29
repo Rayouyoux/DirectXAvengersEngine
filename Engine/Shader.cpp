@@ -6,19 +6,29 @@
 #include "Vertex.h"
 #include "Texture.h"
 #include "Mesh.h"
+
 namespace ave {
 
+    struct Pass {
+
+    };
     Shader::Shader() {
 
     }
+    ID3D12PipelineState* Shader::GetPso() {
+        return m_poPso;
+    }
 
-    void Shader::Begin(ID3D12GraphicsCommandList* pList) {
+    void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
 
         //Root
         pList->SetGraphicsRootSignature(m_poRootSignature);
 
+        m_poPass = new UploadBuffer(poDevice, 100, false, sizeof(Pass));
         //Pass
         pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
+
+        //Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
         //Pipeline
         pList->SetPipelineState(m_poPso);
@@ -29,7 +39,7 @@ namespace ave {
 
     bool Shader::Create(BYTE* oSrc, int iSize) {
 
-        m_poDevice = m_poApp->GetDevice();
+        m_poDevice = D3DApp::GetApp()->GetDevice();
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -145,8 +155,8 @@ namespace ave {
                 };
                 const int count = 2;
                 CD3DX12_ROOT_PARAMETER slotRootParameters[count];
-                slotRootParameters[0].InitAsConstantBufferView(0);
-                slotRootParameters[1].InitAsConstantBufferView(1);
+                slotRootParameters[0].InitAsConstantBufferView(0); //b0 for object
+                slotRootParameters[1].InitAsConstantBufferView(1); //b1 for pass
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
                 break;
             };
@@ -270,6 +280,6 @@ namespace ave {
     }
 
     Shader::~Shader() {
-
+        Destroy();
     }
 }
