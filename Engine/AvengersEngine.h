@@ -1,2 +1,10 @@
 #pragma once
 #include "pch.h"
+#include "WindowHandler.h"
+#include "GraphicsHandler.h"
+#include "GameTime.h"
+#include "Entity.h"
+#include "Component.h"
+#include "Transform.h"
+#include "Shader.h"
+#include "Vertex.h"
