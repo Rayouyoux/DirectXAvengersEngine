@@ -8,9 +8,9 @@ cbuffer cbPerObject : register(b0)
 
 cbuffer cbPerPass : register(b1)
 {
-    float4x4 gViewProj;
+    float4x4 gView;
+    float4x4 gProj;
 }
-
 struct VertexIn
 {
     float3 pos : POSITION;
@@ -29,8 +29,7 @@ VertexOut VS(VertexIn vin)
     
     //Transform to homogeneous to space
     float4 pos = mul(float4(vin.pos, 1.0f), gWorld);
-    vout.pos = mul(pos, gViewProj);
-    
+    vout.pos = mul(pos, gView * gProj);
     vout.uv = vin.uv;
     
     return vout;
