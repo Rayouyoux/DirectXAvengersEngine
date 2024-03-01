@@ -16,7 +16,7 @@ namespace ave {
 
             auto oHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
             auto RessourceBuffer = CD3DX12_RESOURCE_DESC::Buffer(mElementByteSize * elementCount);
-            ThrowIfFailed(device->CreateCommittedResource(
+            if(FAILED(device->CreateCommittedResource(
                 &oHeapProperties,
                 D3D12_HEAP_FLAG_NONE,
                 &RessourceBuffer,

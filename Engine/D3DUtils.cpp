@@ -14,25 +14,28 @@ namespace ave {
         auto HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
         auto Ressource = CD3DX12_RESOURCE_DESC::Buffer(byteSize);
         // Create the actual default buffer resource.
-        ThrowIfFailed(device->CreateCommittedResource(
+        if (FAILED(device->CreateCommittedResource(
             &HeapProperties,
             D3D12_HEAP_FLAG_NONE,
             &Ressource,
             D3D12_RESOURCE_STATE_COMMON,
             nullptr,
-            IID_PPV_ARGS(&defaultBuffer)));
+            IID_PPV_ARGS(&defaultBuffer)))) {
+            return nullptr;
+        }
 
         // In order to copy CPU memory data into our default buffer, we need to create
         // an intermediate upload heap.
         auto oHeapPropertiesUpload = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-        ThrowIfFailed(device->CreateCommittedResource(
+        if (FAILED(device->CreateCommittedResource(
             &oHeapPropertiesUpload,
             D3D12_HEAP_FLAG_NONE,
             &Ressource,
             D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr,
-            IID_PPV_ARGS(&uploadBuffer)));
-
+            IID_PPV_ARGS(&uploadBuffer)))) {
+            return nullptr;
+        }
 
         // Describe the data we want to copy into the default buffer.
         D3D12_SUBRESOURCE_DATA subResourceData = {};
@@ -55,8 +58,6 @@ namespace ave {
         // the command list has not been executed yet that performs the actual copy.
         // The caller can Release the uploadBuffer after it knows the copy has been executed.
 
-
         return defaultBuffer;
     }
-   
 }

@@ -81,10 +81,14 @@ namespace ave {
 		const UINT vbByteSize = (UINT)vertices.size() * sizeof(VERTEX_COLOR);
 		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
-		ThrowIfFailed(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU));
+		if (FAILED(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU))) {
+			return;
+		}
 		CopyMemory(m_poVertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
 
-		ThrowIfFailed(D3DCreateBlob(ibByteSize, &m_poIndexBufferCPU));
+		if (FAILED(D3DCreateBlob(ibByteSize, &m_poIndexBufferCPU))) {
+			return;
+		}
 		CopyMemory(m_poIndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
 
 		m_poVertexBufferGPU = D3DUtils::CreateDefaultBuffer(poDevice,
