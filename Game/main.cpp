@@ -11,8 +11,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 #endif
 
     ave::AvengersEngine* gameInstance = ave::AvengersEngine::Create();
-    if (gameInstance->Initialize(hInstance) == false)
+    if (gameInstance->Initialize(hInstance) == false) {
+        MessageBoxA(NULL, "Euh ça bug ?", "ALED", 0);
         return 0;
+    }
 
     int res = gameInstance->Run();
 #ifdef _DEBUG

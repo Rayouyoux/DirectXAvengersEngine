@@ -5,6 +5,9 @@
 #include "WindowHandler.h"
 #include "Shader.h"
 #include "MeshRenderer.h"
+#include "Mesh.h"
+#include "Entity.h"
+#include "Component.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -12,7 +15,7 @@
 
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
-	ID3D12Device* GraphicsHandler::m_poDevice;
+
 
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
@@ -22,14 +25,14 @@ namespace ave {
 
 		m_poFactory = nullptr;
 		m_poSwapChain = nullptr;
-		m_poDevice = nullptr;
+		GraphicsHandler::m_poDevice = nullptr;
 
 		m_poFence = nullptr;
 		m_iCurrentFence = 0;
 
 		m_poCommandQueue = nullptr;
 		m_poDirectCmdListAlloc = nullptr;
-		m_poCommandList = nullptr;
+		GraphicsHandler::m_poCommandList = nullptr;
 
 		m_iCurrBackBuffer = 0;
 		//m_prDepthStencilBuffer = nullptr;
@@ -81,9 +84,21 @@ namespace ave {
 			debugController->EnableDebugLayer();
 		}
 #endif
-
 		m_poAve = poAve;
+
+		m_poEntity = new Entity();
 		m_poShader = new Shader();
+		m_poMesh = new Mesh();;
+		
+		m_poEntity->Start(nullptr);
+
+		auto m_poMeshRenderer = m_poEntity->AddComponent<MeshRenderer>();
+
+		//m_poEntity->GetComponent<MeshRenderer>(); 
+
+		//m_poMeshRenderer->SetMesh(m_poMesh);
+		//m_poMeshRenderer->SetShader(m_poShader);
+
 
 		return CreateFactory()
 			&& CreateDevice()
@@ -92,7 +107,8 @@ namespace ave {
 			&& CreateCommandObjects()
 			&& CreateSwapChain()
 			&& CreateRtvAndDsvDescriptorHeaps()
-			&& m_poShader->CreateShader(this);
+			&& m_poShader->CreateShader(this)
+			&& m_poMesh->BuildBoxGeometry(GetDevice(),GetCommandList());
 			//&& m_poShader->CreateRootSignature(1);
 	}
 
@@ -204,6 +220,7 @@ namespace ave {
 
 	void GraphicsHandler::Update() {
 		// Do with the Objects
+		m_poEntity->Update();
 	}
 
 	void GraphicsHandler::LateUpdate() { // Which should be called first ?
@@ -212,7 +229,8 @@ namespace ave {
 
 	void GraphicsHandler::Render() {
 		RenderBegin();
-		m_poMeshRenderer->Render();
+
+		m_poEntity->Render();
 		// Add your coubeh
 
 		RenderCease();
@@ -230,7 +248,6 @@ namespace ave {
 			nullptr, // default adapter
 			D3D_FEATURE_LEVEL_11_0,
 			IID_PPV_ARGS(&m_poDevice));
-
 		// Fallback to WARP device.
 		if (FAILED(hardwareResult))
 		{

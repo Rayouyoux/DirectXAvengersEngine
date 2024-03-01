@@ -56,7 +56,7 @@ namespace ave {
     //A appeler dans l'init
     bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
 
-        m_poDevice = GraphicsHandler::GetDevice();
+        m_poDevice = poGraphicsHandler->GetDevice();
         CreateUploadBuffer();
         CreateRootSignature(1);
         //m_poCbvHeap =  //Get heap 

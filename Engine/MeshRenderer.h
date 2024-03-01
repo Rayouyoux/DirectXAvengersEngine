@@ -14,7 +14,6 @@ namespace ave {
 		void SetMesh(Mesh* poMesh);
 		void SetShader(Shader* SetShader);
 
-		void Start() override;
 		void Render();
 		void Destroy();
 		~MeshRenderer();

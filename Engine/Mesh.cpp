@@ -37,7 +37,7 @@ namespace ave {
 		return ibv;
 	}
 
-	void Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList){
+	bool Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList){
 
 		std::array<VERTEX_COLOR, 8> vertices =
 		{
@@ -82,12 +82,12 @@ namespace ave {
 		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
 		if (FAILED(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU))) {
-			return;
+			return false;
 		}
 		CopyMemory(m_poVertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
 
 		if (FAILED(D3DCreateBlob(ibByteSize, &m_poIndexBufferCPU))) {
-			return;
+			return false;
 		}
 		CopyMemory(m_poIndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
 
@@ -104,6 +104,7 @@ namespace ave {
 
 		m_oIndexCount = (UINT)indices.size();
 
+		return true;
 	}
 
 	void Mesh::Destroy() {

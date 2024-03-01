@@ -14,8 +14,8 @@ namespace ave {
 
 	}
 
-	void Entity::Start(Transform* poTransform, Entity* poParent) {
-		m_poTransform = poTransform;
+	void Entity::Start(Entity* poParent) {
+		m_poTransform = new Transform();
 		m_poParent = poParent;
 	}
 
@@ -36,11 +36,12 @@ namespace ave {
 	}
 
 	template <typename Comp>
-	void Entity::AddComponent() {
+	Comp* Entity::AddComponent() {
 		Comp* poComponent = new Comp();
 		m_loComponent.push_back(poComponent);
 		poComponent->BindEntity();
 		poComponent->Start();
+		return poComponent;
 	}
 
 	template <typename Comp>

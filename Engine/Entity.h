@@ -14,12 +14,12 @@ namespace ave {
 		Entity();
 		~Entity();
 
-		void Start(Transform* poTransform, Entity* poParent = nullptr);
+		void Start(Entity* poParent = nullptr);
 		void Update();
 		void Render();
 
 		template <typename Comp>
-		void AddComponent();
+		Comp* AddComponent();
 		template <typename Comp>
 		Component* GetComponent();
 		template <typename Comp>

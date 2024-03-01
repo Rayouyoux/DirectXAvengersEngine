@@ -11,6 +11,7 @@ namespace ave {
 	class Mesh;
 	class GraphicsHandler;
 	class Texture;
+	
 	class Shader
 	{
 
