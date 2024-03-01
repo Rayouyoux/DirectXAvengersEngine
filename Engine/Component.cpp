@@ -4,28 +4,39 @@
 
 namespace ave {
 
-	Component::Component() {
+	Component::Component() 
+	{
 		m_poEntity = nullptr;
 	}
 
 	
-	Component::~Component() {
+	Component::~Component() 
+	{
 
 	}
 
-	void Component::BindEntity(Entity* poEntity) {
+	void Component::BindEntity(Entity* poEntity) 
+	{
 		m_poEntity = poEntity;
 	}
 
-	void Component::Start() {
+	void Component::Start() 
+	{
 
 	}
 
-	void Component::Update() {
+	void Component::Update(float deltaTime)
+	{
 
 	}
 
-	void Component::Render() {
+	void Component::LateUpdate(float deltaTime)
+	{
+
+	}
+
+	void Component::Render() 
+	{
 
 	}
 };

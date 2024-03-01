@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "Maths.h"
-namespace ave {
 
-	namespace maths{
+namespace ave 
+{
+
+	namespace maths
+	{
 
 		XMFLOAT4X4 maths::MatriceIdentity(){
 

@@ -4,19 +4,29 @@ namespace ave {
 	
 	class Entity;
 
-	class Component {
-	private :
-		Entity* m_poEntity;
+	class Component 
+	{
 
 	public :
 
+		Entity*			m_poEntity;
+
+	public :
+
+		// Constructor
 		Component();
+
+		// Deconstructor
 		~Component();
 
-		void BindEntity(Entity* poEntity);
+		// Set Method
+		void			BindEntity(Entity* poEntity);
 
-		virtual void Start();
-		virtual void Update();
-		virtual void Render();
+		// Main components methods
+		virtual void	Start() = 0;
+		virtual void	Update(float deltaTime) = 0;
+		virtual void	LateUpdate(float deltaTime) = 0;
+		virtual void	Render() = 0;
+
 	};
 };
