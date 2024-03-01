@@ -28,7 +28,7 @@ namespace ave {
 
 		ID3D12CommandQueue* m_poCommandQueue;
 		ID3D12CommandAllocator* m_poDirectCmdListAlloc;
-		ID3D12GraphicsCommandList* m_poCommandList;
+		static ID3D12GraphicsCommandList* M_poCommandList;
 
 		static const int SWAP_CHAIN_BUFFER_COUNT = 2;
 		int m_iCurrBackBuffer;
@@ -129,6 +129,7 @@ namespace ave {
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }
 		void Set4xMsaaState(bool value) { m_b4xMsaaState = value; }
+		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::M_poCommandList; }
 
 		virtual void Release();
 	};

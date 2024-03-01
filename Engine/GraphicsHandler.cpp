@@ -9,6 +9,8 @@
 #pragma comment(lib, "dxgi.lib")
 
 namespace ave {
+	ID3D12GraphicsCommandList* GraphicsHandler::M_poCommandList;
+
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
 
@@ -24,7 +26,7 @@ namespace ave {
 
 		m_poCommandQueue = nullptr;
 		m_poDirectCmdListAlloc = nullptr;
-		m_poCommandList = nullptr;
+		M_poCommandList = nullptr;
 
 		m_iCurrBackBuffer = 0;
 		//m_prDepthStencilBuffer = nullptr;
@@ -50,7 +52,7 @@ namespace ave {
 
 		m_poFactory->Release();
 		m_poDirectCmdListAlloc->Release();
-		m_poCommandList->Release();
+		M_poCommandList->Release();
 
 		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
 			m_prSwapChainBuffer[i]->Release();
@@ -89,13 +91,13 @@ namespace ave {
 
 	void GraphicsHandler::OnResize() {
 		if (m_poDevice == nullptr
-			|| m_poCommandList == nullptr
+			|| M_poCommandList == nullptr
 			|| m_poDirectCmdListAlloc == nullptr)
 			return;
 
 		FlushCommandQueue();
 
-		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
+		if (FAILED(M_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
 			return;
 		}
 
@@ -170,13 +172,13 @@ namespace ave {
 		// Transition the resource from its initial state to be used as a depth buffer.
 		CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_prDepthStencilBuffer,
 			D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
-		m_poCommandList->ResourceBarrier(1, &resourceBarrier);
+		M_poCommandList->ResourceBarrier(1, &resourceBarrier);
 
 		// Execute the resize commands.
-		if (FAILED(m_poCommandList->Close())) {
+		if (FAILED(M_poCommandList->Close())) {
 			return;
 		}
-		ID3D12CommandList* cmdsLists[] = { m_poCommandList };
+		ID3D12CommandList* cmdsLists[] = { M_poCommandList };
 		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 		// Wait until resize is complete.
@@ -287,12 +289,12 @@ namespace ave {
 			D3D12_COMMAND_LIST_TYPE_DIRECT,
 			m_poDirectCmdListAlloc, // Associated command allocator
 			nullptr,                // Initial PipelineStateObject
-			IID_PPV_ARGS(&m_poCommandList)))) {
+			IID_PPV_ARGS(&M_poCommandList)))) {
 			return false;
 		}
 
 		// Start off in a closed state.
-		m_poCommandList->Close();
+		M_poCommandList->Close();
 
 		return true;
 	}
@@ -375,9 +377,9 @@ namespace ave {
 #pragma region Rendering
 
 	void GraphicsHandler::ResetCommandList() {
-		m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);
-		m_poCommandList->RSSetViewports(1, &m_oScreenViewport);
-		m_poCommandList->RSSetScissorRects(1, &m_oScissorRect);
+		M_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);
+		M_poCommandList->RSSetViewports(1, &m_oScreenViewport);
+		M_poCommandList->RSSetScissorRects(1, &m_oScissorRect);
 	}
 
 	void GraphicsHandler::TransitionFromPresentToRenderTarget() {
@@ -385,7 +387,7 @@ namespace ave {
 			CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_PRESENT,
 			D3D12_RESOURCE_STATE_RENDER_TARGET);
-		m_poCommandList->ResourceBarrier(1, &transition);
+		M_poCommandList->ResourceBarrier(1, &transition);
 	}
 
 	void GraphicsHandler::TransitionFromRenderTargetToPresent() {
@@ -393,27 +395,27 @@ namespace ave {
 			CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET,
 			D3D12_RESOURCE_STATE_PRESENT);
-		m_poCommandList->ResourceBarrier(1, &transition);
+		M_poCommandList->ResourceBarrier(1, &transition);
 	}
 
 	void GraphicsHandler::ClearRenderTargetAndDepthStencil() {
-		m_poCommandList->ClearRenderTargetView(CurrentBackBufferView(), m_cFillColor, 0, nullptr);
-		m_poCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+		M_poCommandList->ClearRenderTargetView(CurrentBackBufferView(), m_cFillColor, 0, nullptr);
+		M_poCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 	
 		// Specify the buffers we are going to render to.
 		auto currentBuffer = CurrentBackBufferView();
 		auto depthStencil = DepthStencilView();
-		m_poCommandList->OMSetRenderTargets(1, &currentBuffer, true, &depthStencil);
+		M_poCommandList->OMSetRenderTargets(1, &currentBuffer, true, &depthStencil);
 	}
 
 	void GraphicsHandler::CloseCommandList() {
-		if (FAILED(m_poCommandList->Close())) {
+		if (FAILED(M_poCommandList->Close())) {
 			return;
 		}
 	}
 
 	void GraphicsHandler::QueueCommandList() {
-		ID3D12CommandList* cmdsLists[] = { m_poCommandList };
+		ID3D12CommandList* cmdsLists[] = { GraphicsHandler::M_poCommandList };
 		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 	}
 
