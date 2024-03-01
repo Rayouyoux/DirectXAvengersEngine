@@ -1,12 +1,14 @@
 #include <AvengersEngine.h>
 #include "d3dUtils.h"
 #include "MeshRenderer.h"
+#include "Shader.h"
 
 using namespace DirectX;
 class AppTest : public ave::D3DApp {
 protected:
 	ave::MeshRenderer* m_poRenderer;
 public:
+	ave::Shader* m_poShader;
     AppTest(HINSTANCE hInstance) : D3DApp(hInstance)
     {}
 
@@ -74,7 +76,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 #endif
 
     try
-    {
+    {	
+
+
         AppTest app(hInstance);
         if (app.Initialize() == false)
             return 0;

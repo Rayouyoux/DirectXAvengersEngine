@@ -46,20 +46,20 @@ namespace ave {
         pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     }
 
-    bool Shader::Create(const std::wstring& oSrc) {
+    bool Shader::CreateShader() {
 
         m_poDevice = D3DApp::GetApp()->GetDevice();
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
-        m_poVS = CompileShader(oSrc, "VS", "vs_5_0");
+        m_poVS = CompileShader(L"..\\Engine\\shader.hlsl", "VS", "vs_5_0");
         if (m_poVS == nullptr) {
             Destroy();
             return false;
         }
 
         //On compile le Pixel Shader
-        m_poPS = CompileShader(oSrc, "PS", "ps_5_0");
+        m_poPS = CompileShader(L"..\\Engine\\shader.hlsl", "PS", "ps_5_0");
         if (m_poPS == nullptr) {
             Destroy();
             return false;
@@ -91,9 +91,9 @@ namespace ave {
         oPestoDesc.SampleMask = UINT_MAX;
         oPestoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         oPestoDesc.NumRenderTargets = 1;
-        oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UINT;
-        oPestoDesc.SampleDesc.Count = m_poApp->Get4xMsaaState() ? 4 : 1;
-        oPestoDesc.SampleDesc.Quality = m_poApp->Get4xMsaaState() ? (m_poApp->Get4xMsaaQuality() - 1) : 0;
+        oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        oPestoDesc.SampleDesc.Count = D3DApp::GetApp()->Get4xMsaaState() ? 4 : 1;
+        oPestoDesc.SampleDesc.Quality = D3DApp::GetApp()->Get4xMsaaState() ? (D3DApp::GetApp()->Get4xMsaaQuality() - 1) : 0;
         oPestoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         if (m_poDevice->CreateGraphicsPipelineState(&oPestoDesc, IID_PPV_ARGS(&m_poPso)) != S_OK)
         {
@@ -129,16 +129,19 @@ namespace ave {
 
     ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {
         
-        ID3DBlob* poByteCode = nullptr;
+        UINT oflags = 0;
 #ifdef _DEBUG
-        
-        UINT oflags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-        ID3DBlob* poErrors = nullptr;
-        HRESULT hr = D3DCompileFromFile(oBuffer.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        oflags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+
+#endif
+        ID3DBlob* poByteCode = nullptr;
+        ID3DBlob* poErrors;
+        HRESULT hr = S_OK;
+        hr = D3DCompileFromFile(oBuffer.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
             oEntryPoint.c_str(), oTarget.c_str(), oflags, 0, &poByteCode, &poErrors);
-        
-        
-        if (poErrors) {
+
+
+        if (poErrors !=nullptr) {
             LPCVOID pErrorMsg = poErrors->GetBufferPointer();
 
             // Récupérer la taille du message d'erreur
@@ -157,13 +160,6 @@ namespace ave {
         if (hr != S_OK) {
             return nullptr;
         }
-#else
-        hr = D3DCompileFromFile(oBuffer.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-            oEntryPoint.c_str(), oTarget.c_str(), oflags, 0, &poByteCode, &poErrors); 
-        if (hr != S_OK) {
-            return nullptr;
-        }
-#endif
         return poByteCode;
     }
 
@@ -279,6 +275,9 @@ namespace ave {
                 Destroy();
                 return false;
             }
+        }
+        if (D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, nullptr)!= S_OK) {
+            return false;
         }
     }
     void Shader::AddObject() {

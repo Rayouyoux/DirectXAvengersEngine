@@ -339,11 +339,14 @@ namespace ave {
 		if (InitDirect3D() == false)
 			return false;
 
+		Shader* poShader = new ave::Shader();
+		poShader->CreateRootSignature(1);
+		poShader->CreateShader();
+		
 
 		m_oTimer.Initialize();
 		OnResize();
-		m_poShader = new Shader();
-		m_poShader->Create(L"..\\Engine\\shader.hlsl");
+
 		return true;
 	}
 

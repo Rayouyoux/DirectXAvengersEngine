@@ -45,8 +45,9 @@ namespace ave {
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		void AddObject();
-		bool Create(const std::wstring& oSrc);
+		bool CreateShader();
 		void UpdateObject();
+		bool CreateRootSignature(int id);
 
 		UINT GetRootObject();
 		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
@@ -54,7 +55,6 @@ namespace ave {
 		~Shader();
 
 	protected:
-		bool CreateRootSignature(int id);
 
 	public:
 		ID3DBlob* CompileShader(const std::wstring& oBuffer,const std::string& oEntryPoint,const std::string& oTarget);
