@@ -49,40 +49,9 @@ namespace ave {
 
 	}
 
-	DirectX::XMVECTOR Camera::GetPosition() const
+	DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix() const
 	{
-		return XMLoadFloat3(&m_voPosition);
-	}
-
-	DirectX::XMFLOAT3 Camera::GetPosition3f() const
-	{
-		return m_voPosition;
-	}
-
-	void Camera::SetPosition(float x, float y, float z)
-	{
-		m_voPosition = XMFLOAT3(x, y, z);
-		m_bIsValidView = false;
-	}
-
-	void Camera::SetPosition(const DirectX::XMFLOAT3& position)
-	{
-		m_voPosition = position;
-		m_bIsValidView = false;
-	}
-
-	DirectX::XMMATRIX Camera::GetViewMatrix() const
-	{
-		return DirectX::XMMATRIX();
-	}
-
-	DirectX::XMMATRIX Camera::GetProjectionMatrix() const
-	{
-		return DirectX::XMMATRIX();
-	}
-
-	void Camera::UpdateViewMatrix()
-	{
+		return m_voProjectionMatrix;
 	}
 
 	void Camera::UpdateProjectionMatrix()
