@@ -10,7 +10,7 @@ namespace ave
 	{
 
 		XMFLOAT4X4 MatriceIdentity();
-		const float PI;
+		const float PI = 3.1415926535f;
 
 	};
 }
