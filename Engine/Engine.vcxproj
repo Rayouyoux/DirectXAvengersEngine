@@ -152,11 +152,10 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="AvengersEngine.h" />
-    <ClInclude Include="D3DApp.h" />
     <ClInclude Include="D3DUtils.h" />
     <ClInclude Include="d3dx12.h" />
-    <ClInclude Include="framework.h" />
     <ClInclude Include="GameTime.h" />
+    <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="Maths.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shader.h" />
@@ -164,13 +163,14 @@
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D3DApp.cpp" />
     <ClCompile Include="D3DUtils.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="Maths.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -180,6 +180,7 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
