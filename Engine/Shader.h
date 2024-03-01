@@ -13,10 +13,6 @@ namespace ave {
 	class Texture;
 	class Shader
 	{
-	protected:
-
-	public:
-		ID3DBlob* Compile(BYTE* oBuffer, int iSize, std::string oEntryPoint, std::string oTarget);
 
 	protected:
 

@@ -2,9 +2,10 @@
 #include "D3DUtils.h"
 #include "d3d12.h"
 #include <wrl.h>
+#include "d3dx12.h"
 
 namespace ave {
-
+   
     class UploadBuffer
     {
     public:
