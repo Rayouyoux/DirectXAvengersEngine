@@ -22,7 +22,6 @@ namespace ave {
 		m_poShader = poShader;
 	}
 
-	
 	void MeshRenderer::Render() {
 		//Root
 		ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();

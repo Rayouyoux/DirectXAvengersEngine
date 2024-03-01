@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "Component.h"
 #include "MeshRenderer.h"
+#include "Camera.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -34,7 +35,7 @@ namespace ave {
 		GraphicsHandler::m_poCommandList = nullptr;
 
 		m_iCurrBackBuffer = 0;
-		//m_prDepthStencilBuffer = nullptr;
+		m_prDepthStencilBuffer = nullptr;
 
 		m_poRtvHeap = nullptr;
 		m_poDsvHeap = nullptr;
@@ -85,16 +86,21 @@ namespace ave {
 #endif
 		m_poAve = poAve;
 
-		m_poEntity = new Entity();
 		m_poShader = new Shader();
-		m_poMesh = new Mesh();;
-		
-		m_poEntity->Start(nullptr);
+		m_poMesh = new Mesh();
 
-		auto m_poMeshRenderer = m_poEntity->AddComponent<MeshRenderer>();
+		m_poCameraEntity = new Entity();
+		m_poCameraEntity->Start();
 
-		m_poMeshRenderer->SetMesh(m_poMesh);
-		m_poMeshRenderer->SetShader(m_poShader);
+		m_poCubeEntity = new Entity();
+		m_poCubeEntity->Start();
+
+		Camera* poCamera = m_poCameraEntity->AddComponent<Camera>();
+
+		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
+		poMeshRenderer->SetMesh(m_poMesh);
+		poMeshRenderer->SetShader(m_poShader);
+
 
 		return CreateFactory()
 			&& CreateDevice()
@@ -213,19 +219,19 @@ namespace ave {
 		m_oScissorRect = { 0, 0, m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight()};
 	}
 
-	void GraphicsHandler::Update() {
-		// Do with the Objects
-		m_poEntity->Update();
+	void GraphicsHandler::Update(float deltaTime) {
+		m_poCameraEntity->Update(deltaTime);
+		m_poCubeEntity->Update(deltaTime);
 	}
 
-	void GraphicsHandler::LateUpdate() { // Which should be called first ?
+	void GraphicsHandler::LateUpdate() {
 		// Do with the Objects
 	}
 
 	void GraphicsHandler::Render() {
 		RenderBegin();
 
-		m_poEntity->Render();
+		m_poCubeEntity->Render();
 		// Add your coubeh
 
 		RenderCease();

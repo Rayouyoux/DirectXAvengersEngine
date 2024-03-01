@@ -22,9 +22,9 @@ namespace ave {
 		AvengersEngine* m_poAve;
 
 		Shader* m_poShader;
-		MeshRenderer* m_poMeshRenderer;
 		Mesh* m_poMesh;
-		Entity* m_poEntity;
+		Entity* m_poCameraEntity;
+		Entity* m_poCubeEntity;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;
@@ -126,7 +126,7 @@ namespace ave {
 
 		virtual void OnResize();
 
-		virtual void Update();
+		virtual void Update(float m_poTimer);
 		virtual void LateUpdate();
 		virtual void Render();
 
