@@ -19,9 +19,9 @@ namespace ave {
 		m_poParent = poParent;
 	}
 
-	void Entity::Update() {
+	void Entity::Update(float iDeltaTime) {
 		for (int i = 0; i < m_loComponent.size(); i++) {
-			m_loComponent[i]->Update();
+			m_loComponent[i]->Update(iDeltaTime);
 		}
 		if(m_poTransform->m_bHandleChange){
 			m_poTransform->UpdateMatrice();

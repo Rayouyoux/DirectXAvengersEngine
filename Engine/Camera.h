@@ -1,7 +1,5 @@
 #pragma once
 
-#include <DirectXMath.h>
-
 namespace ave {
 
 	class Camera : public Component
@@ -19,8 +17,8 @@ namespace ave {
 
 		// SUR Methods
 		void Start() override;
-		void Update(__int64 deltaTime) override;
-		void LateUpdate(__int64 deltaTime) override;
+		void Update(float deltaTime) override;
+		void LateUpdate(float deltaTime) override;
 		void Render() override;
 
 		// Get Methods
@@ -28,7 +26,7 @@ namespace ave {
 
 	private:
 
-		// Matrice Update
+		// Matrices Update
 		void UpdateProjectionMatrix();
 
 	private:

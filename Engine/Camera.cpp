@@ -1,16 +1,24 @@
 #include "pch.h"
+#include "Component.h"
 #include "Camera.h"
+#include "Maths.h"
+#include "Entity.h"
+#include "Transform.h"
 
 namespace ave {
 
-	Camera::Camera() :
-		m_fAspect(0.0f),
-		m_fFOV(0.0f),
-		m_fNearZ(0.0f),
-		m_fFarZ(0.0f),
-		m_fNearWindowHeight(0.0f),
-		m_fFarWindowHeight(0.0f)
-	{}
+	Camera::Camera() 
+		: Component()
+	{
+		m_fAspect = 0.0f;
+		m_fFOV = 0.0f;
+		m_fNearZ = 0.0f;
+		m_fFarZ = 0.0f;
+		m_fNearWindowHeight = 0.0f;
+		m_fFarWindowHeight = 0.0f;
+		m_bIsValidView = true;
+		m_voProjectionMatrix = maths::MatriceIdentity();
+	}
 
 	Camera::~Camera()
 	{}
@@ -34,20 +42,16 @@ namespace ave {
 		SetLens(0.25f * maths::PI, 1.0f, 1.0f, 1000.0f);
 	}
 
-	void Camera::Update(__int64 deltaTime)
+	void Camera::Update(float deltaTime)
 	{
-
+		UpdateProjectionMatrix();
 	}
 	
-	void Camera::LateUpdate(__int64 deltaTime)
-	{
-
-	}
+	void Camera::LateUpdate(float deltaTime)
+	{}
 
 	void Camera::Render()
-	{
-
-	}
+	{}
 
 	DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix() const
 	{
@@ -55,6 +59,7 @@ namespace ave {
 	}
 
 	void Camera::UpdateProjectionMatrix()
-	{
-	}
+	{}
 }
+
+// &m_poEntity->m_poTransform->m_bHandleChange

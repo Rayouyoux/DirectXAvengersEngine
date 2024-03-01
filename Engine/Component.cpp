@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "Component.h"
+#include "Entity.h"
 
 namespace ave {
 
@@ -23,12 +25,12 @@ namespace ave {
 
 	}
 
-	void Component::Update(__int64 deltaTime) 
+	void Component::Update(float deltaTime)
 	{
 
 	}
 
-	void Component::LateUpdate(__int64 deltaTime)
+	void Component::LateUpdate(float deltaTime)
 	{
 
 	}

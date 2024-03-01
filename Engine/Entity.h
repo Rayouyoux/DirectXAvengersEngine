@@ -15,7 +15,7 @@ namespace ave {
 		~Entity();
 
 		void Start(Transform* poTransform, Entity* poParent = nullptr);
-		void Update();
+		void Update(float iDeltaTime);
 		void Render();
 
 		template <typename Comp>
