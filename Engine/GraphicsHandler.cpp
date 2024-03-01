@@ -4,10 +4,10 @@
 #include "GraphicsHandler.h"
 #include "WindowHandler.h"
 #include "Shader.h"
-#include "MeshRenderer.h"
 #include "Mesh.h"
 #include "Entity.h"
 #include "Component.h"
+#include "MeshRenderer.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -15,7 +15,6 @@
 
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
-
 
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
