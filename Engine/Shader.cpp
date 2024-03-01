@@ -12,9 +12,7 @@
 
 namespace ave {
 
-    struct Pass {
 
-    };
     Shader::Shader() {
 
     }
@@ -30,24 +28,32 @@ namespace ave {
         return m_poPass->Resource()->GetGPUVirtualAddress();
     }
 
-    void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
-
-        //Root
-        pList->SetGraphicsRootSignature(m_poRootSignature);
-
-        m_poPass = new UploadBuffer(poDevice, 100, false, sizeof(Pass));
-        //Pass
-        pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
-
-        //Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
-
-        //Pipeline
-        pList->SetPipelineState(m_poPso);
-
-        //Topology
-        pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    ID3D12RootSignature* Shader::GetRootSignature() {
+        return m_poRootSignature;
     }
 
+    UploadBuffer* Shader::GetPass() {
+        return m_poPass;
+    }
+    //void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
+
+    //    //Root
+    //    pList->SetGraphicsRootSignature(m_poRootSignature);
+
+    //    m_poPass = new UploadBuffer(poDevice, 100, false, sizeof(Pass));
+    //    //Pass
+    //    pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
+
+    //    //Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
+
+    //    //Pipeline
+    //    pList->SetPipelineState(m_poPso);
+
+    //    //Topology
+    //    pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //}
+
+    //A appeler dans l'init
     bool Shader::CreateShader() {
 
         m_poDevice = m_poGraphics->GetDevice();
@@ -93,7 +99,7 @@ namespace ave {
         oPestoDesc.SampleMask = UINT_MAX;
         oPestoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         oPestoDesc.NumRenderTargets = 1;
-        oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UINT;
+        oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
         oPestoDesc.SampleDesc.Count = m_poGraphics->Get4xMsaaState() ? 4 : 1;
         oPestoDesc.SampleDesc.Quality = m_poGraphics->Get4xMsaaState() ? (m_poGraphics->Get4xMsaaQuality() - 1) : 0;
         oPestoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -106,6 +112,10 @@ namespace ave {
 
     }
 
+    //A appeler dans l'init
+    void Shader::CreateUploadBuffer() {
+        m_poPass = new UploadBuffer(m_poDevice, 100, false, sizeof(ID3D12Device));
+    }
  //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
 
  //       D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();

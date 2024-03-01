@@ -28,7 +28,7 @@ namespace ave {
 
 		ID3D12CommandQueue* m_poCommandQueue;
 		ID3D12CommandAllocator* m_poDirectCmdListAlloc;
-		ID3D12GraphicsCommandList* m_poCommandList;
+		static ID3D12GraphicsCommandList* m_poCommandList;
 
 		static const int SWAP_CHAIN_BUFFER_COUNT = 2;
 		int m_iCurrBackBuffer;
@@ -64,9 +64,9 @@ namespace ave {
 		virtual bool CreateSwapChain();
 		virtual bool CreateRtvAndDsvDescriptorHeaps();
 
-		/// <summary>
-		/// Generic initial steps of the Render method.
-		/// </summary>
+		 //<summary>
+		 //Generic initial steps of the Render method.
+		 //</summary>
 		virtual void RenderBegin();
 		/// <summary>
 		/// Generic close steps of the Render method.
@@ -125,6 +125,7 @@ namespace ave {
 		virtual void SetFillColor(DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
 
 		virtual ID3D12Device* GetDevice() const { return m_poDevice; }
+		static ID3D12GraphicsCommandList* GetCommandList() ;
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }

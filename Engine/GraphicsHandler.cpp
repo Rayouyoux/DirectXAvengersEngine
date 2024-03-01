@@ -9,6 +9,7 @@
 #pragma comment(lib, "dxgi.lib")
 
 namespace ave {
+
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
 
@@ -59,6 +60,10 @@ namespace ave {
 
 		m_poRtvHeap->Release();
 		m_poDsvHeap->Release();
+	}
+
+	ID3D12GraphicsCommandList* GraphicsHandler::GetCommandList(){
+		return m_poCommandList;
 	}
 
 	GraphicsHandler* GraphicsHandler::Create() {

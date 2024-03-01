@@ -39,26 +39,27 @@ namespace ave {
 	public:
 		Shader();
 
-		ID3D12PipelineState* GetPso();
 		void Destroy();
 		void Reset();
-		void Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice);
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		void AddObject();
 		bool CreateShader();
 		void UpdateObject();
 		bool CreateRootSignature(int id);
+		void CreateUploadBuffer();
 
+		ID3DBlob* CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint, const std::string& oTarget);
+		
+
+		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
 		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
+		ID3D12PipelineState* GetPso();
+		UploadBuffer* GetPass();
 
 		~Shader();
 
-	protected:
-
-	public:
-		ID3DBlob* CompileShader(const std::wstring& oBuffer,const std::string& oEntryPoint,const std::string& oTarget);
 	};
 }
 
