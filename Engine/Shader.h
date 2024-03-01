@@ -9,13 +9,18 @@
 
 namespace ave {
 	class Mesh;
-	class D3DApp;
+	class GraphicsHandler;
 	class Texture;
 	class Shader
 	{
 	protected:
 
-		D3DApp* m_poApp;
+	public:
+		ID3DBlob* Compile(BYTE* oBuffer, int iSize, std::string oEntryPoint, std::string oTarget);
+
+	protected:
+
+		GraphicsHandler* m_poGraphics;
 		ID3D12Device* m_poDevice;
 		ID3D12DescriptorHeap* m_poCbvHeap;
 		ID3DBlob* m_poSerializedRootSig;

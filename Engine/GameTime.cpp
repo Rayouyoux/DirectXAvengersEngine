@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "GameTime.h"
 
 namespace ave {
     GameTime::GameTime() :

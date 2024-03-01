@@ -1,13 +1,6 @@
 #include "pch.h"
-#include <d3d12.h>
-#include <Windows.h>
+
 namespace ave {
-    DxException::DxException(HRESULT hr, const std::wstring& functionName, const std::wstring& filename, int lineNumber) :
-        ErrorCode(hr),
-        FunctionName(functionName),
-        Filename(filename),
-        LineNumber(lineNumber)
-    {}
     ID3D12Resource* D3DUtils::CreateDefaultBuffer(
         ID3D12Device* device,
         ID3D12GraphicsCommandList* cmdList,
@@ -65,12 +58,5 @@ namespace ave {
 
         return defaultBuffer;
     }
-    std::wstring DxException::ToString()const
-    {
-        // Get the string description of the error code.
-        _com_error err(ErrorCode);
-        std::wstring msg = err.ErrorMessage();
-
-        return FunctionName + L" failed in " + Filename + L"; line " + std::to_wstring(LineNumber) + L"; error: " + msg;
-    }
+   
 }
