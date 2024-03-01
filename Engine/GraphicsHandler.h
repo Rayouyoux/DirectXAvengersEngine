@@ -56,13 +56,13 @@ namespace ave {
 		~GraphicsHandler();
 
 	protected:
-		virtual void CreateFactory();
-		virtual void CreateDevice();
-		virtual void CreateFence();
-		virtual void RequestMsaaQuality();
-		virtual void CreateCommandObjects();
-		virtual void CreateSwapChain();
-		virtual void CreateRtvAndDsvDescriptorHeaps();
+		virtual bool CreateFactory();
+		virtual bool CreateDevice();
+		virtual bool CreateFence();
+		virtual bool RequestMsaaQuality();
+		virtual bool CreateCommandObjects();
+		virtual bool CreateSwapChain();
+		virtual bool CreateRtvAndDsvDescriptorHeaps();
 
 		/// <summary>
 		/// Generic initial steps of the Render method.

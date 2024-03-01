@@ -69,32 +69,35 @@ namespace ave {
 #if defined(DEBUG) || defined(_DEBUG) // Enable the D3D12 debug layer.
 		{
 			ID3D12Debug* debugController;
-			ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
+			if (FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+				return false;
+			}
 			debugController->EnableDebugLayer();
 		}
 #endif
 
 		m_poAve = poAve;
 
-		CreateFactory();
-		CreateDevice();
-		CreateFence();
-		RequestMsaaQuality();
-		CreateCommandObjects();
-		CreateSwapChain();
-		CreateRtvAndDsvDescriptorHeaps();
-
-		return true;
+		return CreateFactory()
+			&& CreateDevice()
+			&& CreateFence()
+			&& RequestMsaaQuality()
+			&& CreateCommandObjects()
+			&& CreateSwapChain()
+			&& CreateRtvAndDsvDescriptorHeaps();
 	}
 
 	void GraphicsHandler::OnResize() {
-		assert(m_poDevice);
-		assert(m_poSwapChain);
-		assert(m_poDirectCmdListAlloc);
+		if (m_poDevice == nullptr
+			|| m_poCommandList == nullptr
+			|| m_poDirectCmdListAlloc == nullptr)
+			return;
 
 		FlushCommandQueue();
 
-		ThrowIfFailed(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr));
+		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
+			return;
+		}
 
 		// Clear the previous resources we will be recreating.
 		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
@@ -105,19 +108,23 @@ namespace ave {
 			m_prDepthStencilBuffer->Release();
 
 		// Resize the swap chain.
-		ThrowIfFailed(m_poSwapChain->ResizeBuffers(
+		if (FAILED(m_poSwapChain->ResizeBuffers(
 			SWAP_CHAIN_BUFFER_COUNT,
 			m_poAve->GetWindowWidth(),
 			m_poAve->GetWindowHeight(),
 			m_eBackBufferFormat,
-			DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
+			DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH))) {
+			return;
+		}
 
 		m_iCurrBackBuffer = 0;
 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_poRtvHeap->GetCPUDescriptorHandleForHeapStart());
 		for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 		{
-			ThrowIfFailed(m_poSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_prSwapChainBuffer[i])));
+			if (FAILED(m_poSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_prSwapChainBuffer[i])))) {
+				return;
+			}
 			m_poDevice->CreateRenderTargetView(m_prSwapChainBuffer[i], nullptr, rtvHeapHandle);
 			rtvHeapHandle.Offset(1, m_iRtvDescriptorSize);
 		}
@@ -142,13 +149,15 @@ namespace ave {
 		optClear.DepthStencil.Depth = 1.0f;
 		optClear.DepthStencil.Stencil = 0;
 		CD3DX12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		ThrowIfFailed(m_poDevice->CreateCommittedResource(
+		if (FAILED(m_poDevice->CreateCommittedResource(
 			&heapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&depthStencilDesc,
 			D3D12_RESOURCE_STATE_COMMON,
 			&optClear,
-			IID_PPV_ARGS(&m_prDepthStencilBuffer)));
+			IID_PPV_ARGS(&m_prDepthStencilBuffer)))) {
+			return;
+		}
 
 		// Create descriptor to mip level 0 of entire resource using the format of the resource.
 		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -164,7 +173,9 @@ namespace ave {
 		m_poCommandList->ResourceBarrier(1, &resourceBarrier);
 
 		// Execute the resize commands.
-		ThrowIfFailed(m_poCommandList->Close());
+		if (FAILED(m_poCommandList->Close())) {
+			return;
+		}
 		ID3D12CommandList* cmdsLists[] = { m_poCommandList };
 		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
@@ -200,11 +211,11 @@ namespace ave {
 
 #pragma region Initializers
 
-	void GraphicsHandler::CreateFactory() {
-		ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&m_poFactory)));
+	bool GraphicsHandler::CreateFactory() {
+		return SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&m_poFactory)));
 	}
 
-	void GraphicsHandler::CreateDevice() {
+	bool GraphicsHandler::CreateDevice() {
 		// Try to create hardware device.
 		HRESULT hardwareResult = D3D12CreateDevice(
 			nullptr, // default adapter
@@ -215,12 +226,16 @@ namespace ave {
 		if (FAILED(hardwareResult))
 		{
 			IDXGIAdapter* oWarpAdapter;
-			ThrowIfFailed(m_poFactory->EnumWarpAdapter(IID_PPV_ARGS(&oWarpAdapter)));
+			if (FAILED(m_poFactory->EnumWarpAdapter(IID_PPV_ARGS(&oWarpAdapter)))) {
+				return false;
+			}
 
-			ThrowIfFailed(D3D12CreateDevice(
+			if (FAILED(D3D12CreateDevice(
 				oWarpAdapter,
 				D3D_FEATURE_LEVEL_11_0,
-				IID_PPV_ARGS(&m_poDevice)));
+				IID_PPV_ARGS(&m_poDevice)))) {
+				return false;
+			}
 		}
 
 		m_iRtvDescriptorSize = m_poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -228,50 +243,63 @@ namespace ave {
 		// CBV is used only for textures
 	}
 
-	void GraphicsHandler::CreateFence() {
-		ThrowIfFailed(m_poDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
-			IID_PPV_ARGS(&m_poFence)));
+	bool GraphicsHandler::CreateFence() {
+		return (SUCCEEDED(m_poDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+			IID_PPV_ARGS(&m_poFence))));
 	}
 
-	void GraphicsHandler::RequestMsaaQuality() {
+	bool GraphicsHandler::RequestMsaaQuality() {
 		D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
 		msQualityLevels.Format = m_eBackBufferFormat;
 		msQualityLevels.SampleCount = 4;
 		msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 		msQualityLevels.NumQualityLevels = 0;
-		ThrowIfFailed(m_poDevice->CheckFeatureSupport(
-			D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
-			&msQualityLevels,
-			sizeof(msQualityLevels)));
+			if (FAILED(m_poDevice->CheckFeatureSupport(
+				D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
+				&msQualityLevels,
+				sizeof(msQualityLevels)))) {
+				return false;
+		}
 
 		m_i4xMsaaQuality = msQualityLevels.NumQualityLevels;
-		assert(m_i4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
+		if(m_i4xMsaaQuality <= 0)
+			return false;// Unexpected MSAA quality level
+
+		return true;
 	}
 
-	void GraphicsHandler::CreateCommandObjects() {
+	bool GraphicsHandler::CreateCommandObjects() {
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-		ThrowIfFailed(m_poDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_poCommandQueue)));
+		if (FAILED(m_poDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_poCommandQueue)))) {
+			return false;
+		}
 
-		ThrowIfFailed(m_poDevice->CreateCommandAllocator(
+		if (FAILED(m_poDevice->CreateCommandAllocator(
 			D3D12_COMMAND_LIST_TYPE_DIRECT,
-			IID_PPV_ARGS(&m_poDirectCmdListAlloc)));
+			IID_PPV_ARGS(&m_poDirectCmdListAlloc)))) {
+			return false;
+		}
 
-		ThrowIfFailed(m_poDevice->CreateCommandList(
+		if (FAILED(m_poDevice->CreateCommandList(
 			0,
 			D3D12_COMMAND_LIST_TYPE_DIRECT,
 			m_poDirectCmdListAlloc, // Associated command allocator
 			nullptr,                // Initial PipelineStateObject
-			IID_PPV_ARGS(&m_poCommandList)));
+			IID_PPV_ARGS(&m_poCommandList)))) {
+			return false;
+		}
 
 		// Start off in a closed state.
 		m_poCommandList->Close();
+
+		return true;
 	}
 
-	void GraphicsHandler::CreateSwapChain() {
+	bool GraphicsHandler::CreateSwapChain() {
 		// Release the previous swapchain we will be recreating.
-		if(m_poSwapChain != nullptr)
+		if (m_poSwapChain != nullptr)
 			m_poSwapChain->Release();
 
 		DXGI_SWAP_CHAIN_DESC sd;
@@ -296,24 +324,32 @@ namespace ave {
 			m_poCommandQueue,
 			&sd,
 			&m_poSwapChain);
+
+		return true;
 	}
 
-	void GraphicsHandler::CreateRtvAndDsvDescriptorHeaps() {
+	bool GraphicsHandler::CreateRtvAndDsvDescriptorHeaps() {
 		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
 		rtvHeapDesc.NumDescriptors = SWAP_CHAIN_BUFFER_COUNT;
 		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		rtvHeapDesc.NodeMask = 0;
-		ThrowIfFailed(m_poDevice->CreateDescriptorHeap(
-			&rtvHeapDesc, IID_PPV_ARGS(&m_poRtvHeap)));
+		if (FAILED(m_poDevice->CreateDescriptorHeap(
+			&rtvHeapDesc, IID_PPV_ARGS(&m_poRtvHeap)))) {
+			return false;
+		}
 
 		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
 		dsvHeapDesc.NumDescriptors = 1;
 		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 		dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		dsvHeapDesc.NodeMask = 0;
-		ThrowIfFailed(m_poDevice->CreateDescriptorHeap(
-			&dsvHeapDesc, IID_PPV_ARGS(&m_poDsvHeap)));
+		if (FAILED(m_poDevice->CreateDescriptorHeap(
+			&dsvHeapDesc, IID_PPV_ARGS(&m_poDsvHeap)))) {
+				return false;
+		}
+
+		return true;
 	}
 
 #pragma endregion
@@ -371,7 +407,9 @@ namespace ave {
 	}
 
 	void GraphicsHandler::CloseCommandList() {
-		ThrowIfFailed(m_poCommandList->Close());
+		if (FAILED(m_poCommandList->Close())) {
+			return;
+		}
 	}
 
 	void GraphicsHandler::QueueCommandList() {
@@ -380,7 +418,9 @@ namespace ave {
 	}
 
 	void GraphicsHandler::Present() {
-		ThrowIfFailed(m_poSwapChain->Present(0, 0));
+		if (FAILED(m_poSwapChain->Present(0, 0))) {
+			return;
+		}
 		m_iCurrBackBuffer = (m_iCurrBackBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
 	}
 
@@ -390,7 +430,9 @@ namespace ave {
 		// Add an instruction to the command queue to set a new fence point.  Because we 
 		// are on the GPU timeline, the new fence point won't be set until the GPU finishes
 		// processing all the commands prior to this Signal().
-		ThrowIfFailed(m_poCommandQueue->Signal(m_poFence, m_iCurrentFence));
+		if (FAILED(m_poCommandQueue->Signal(m_poFence, m_iCurrentFence))) {
+			return;
+		}
 
 		// Wait until the GPU has completed commands up to this fence point.
 		if (m_poFence->GetCompletedValue() < m_iCurrentFence)
@@ -398,7 +440,9 @@ namespace ave {
 			HANDLE eventHandle = CreateEventEx(nullptr, L"false", false, EVENT_ALL_ACCESS);
 
 			// Fire event when GPU hits current fence.  
-			ThrowIfFailed(m_poFence->SetEventOnCompletion(m_iCurrentFence, eventHandle));
+			if (FAILED(m_poFence->SetEventOnCompletion(m_iCurrentFence, eventHandle))) {
+				return;
+			}
 
 			// Wait until the GPU hits current fence event is fired.
 			WaitForSingleObject(eventHandle, INFINITE);

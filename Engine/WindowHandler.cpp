@@ -46,7 +46,9 @@ namespace ave {
 		}
 
 		m_poGraphics = GraphicsHandler::Create();
-		m_poGraphics->Initialize(this);
+		if (m_poGraphics->Initialize(this) == false) {
+			return false;
+		}
 
 		m_poTimer = new GameTime();
 		m_poTimer->Initialize();
@@ -120,7 +122,7 @@ namespace ave {
 		ShowWindow(m_oMainWnd, SW_SHOW);
 		UpdateWindow(m_oMainWnd);
 	}
-
+	
 	LRESULT AvengersEngine::MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		AvengersEngine* poAve = (AvengersEngine*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
