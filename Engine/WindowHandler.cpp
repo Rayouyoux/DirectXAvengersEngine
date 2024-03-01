@@ -2,6 +2,7 @@
 #include "WindowHandler.h"
 #include "GraphicsHandler.h"
 #include "GameTime.h"
+#include "Logger.h"
 
 namespace ave {
 	AvengersEngine::AvengersEngine() {
@@ -36,6 +37,8 @@ namespace ave {
 
 	bool AvengersEngine::Initialize(HINSTANCE hInstance) {
 		m_ohInstance = hInstance;
+
+		Logger::StartMTail();
 
 		if (RegisterWndClass() == false) {
 			return false;

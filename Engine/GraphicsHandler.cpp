@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <dxgi1_4.h>
 #include <dxgi.h>
+#include <sstream>
 #include "GraphicsHandler.h"
 #include "WindowHandler.h"
 #include "Shader.h"
@@ -9,10 +10,22 @@
 #include "Component.h"
 #include "MeshRenderer.h"
 #include "Camera.h"
+#include "Logger.h"
+#include "Transform.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
+
+std::wstring RACISTEXMFLOAT4X4ToString(const DirectX::XMFLOAT4X4& matrix)
+{
+	std::wstringstream ss;
+	ss << "[" << matrix._11 << ", " << matrix._12 << ", " << matrix._13 << ", " << matrix._14 << "]" << std::endl;
+	ss << "[" << matrix._21 << ", " << matrix._22 << ", " << matrix._23 << ", " << matrix._24 << "]" << std::endl;
+	ss << "[" << matrix._31 << ", " << matrix._32 << ", " << matrix._33 << ", " << matrix._34 << "]" << std::endl;
+	ss << "[" << matrix._41 << ", " << matrix._42 << ", " << matrix._43 << ", " << matrix._44 << "]" << std::endl;
+	return ss.str();
+}
 
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
@@ -94,13 +107,17 @@ namespace ave {
 
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Start();
+		DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, -10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		m_poCubeEntity->m_poTransform->Move(&mInvLook);
 
 		Camera* poCamera = m_poCameraEntity->AddComponent<Camera>();
+		poCamera->Start();
+		std::wstring magic = RACISTEXMFLOAT4X4ToString(poCamera->GetProjectionMatrix());
+		Logger::PrintLog(magic.c_str());
 
 		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
 		poMeshRenderer->SetMesh(m_poMesh);
 		poMeshRenderer->SetShader(m_poShader);
-
 
 		return CreateFactory()
 			&& CreateDevice()
