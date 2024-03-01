@@ -94,11 +94,8 @@ namespace ave {
 
 		auto m_poMeshRenderer = m_poEntity->AddComponent<MeshRenderer>();
 
-		//m_poEntity->GetComponent<MeshRenderer>(); 
-
-		//m_poMeshRenderer->SetMesh(m_poMesh);
-		//m_poMeshRenderer->SetShader(m_poShader);
-
+		m_poMeshRenderer->SetMesh(m_poMesh);
+		m_poMeshRenderer->SetShader(m_poShader);
 
 		return CreateFactory()
 			&& CreateDevice()
@@ -109,7 +106,6 @@ namespace ave {
 			&& CreateRtvAndDsvDescriptorHeaps()
 			&& m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(),GetCommandList());
-			//&& m_poShader->CreateRootSignature(1);
 	}
 
 	void GraphicsHandler::OnResize() {
