@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Component.h"
 #include "Transform.h"
+#include "MeshRenderer.h"
 
 namespace ave {
 
@@ -35,16 +36,9 @@ namespace ave {
 		}
 	}
 
-	template <typename Comp>
-	Comp* Entity::AddComponent() {
-		Comp* poComponent = new Comp();
-		m_loComponent.push_back(poComponent);
-		poComponent->BindEntity();
-		poComponent->Start();
-		return poComponent;
-	}
+	
 
-	template <typename Comp>
+	template <class Comp>
 	Component* Entity::GetComponent() {
 		for (int i = 0; i < m_loComponent.size(); i++) {
 			if (typeid(m_loComponent[i]).name() == Comp) {
@@ -53,7 +47,7 @@ namespace ave {
 		}
 	}
 
-	template <typename Comp>
+	template <class Comp>
 	void Entity::RemoveComponent() {
 		for (auto it = m_loComponent.begin(); it < m_loComponent.end(); it++) {
 			if (typeid(*it).name() == Comp) {

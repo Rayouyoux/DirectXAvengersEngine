@@ -18,11 +18,17 @@ namespace ave {
 		void Update();
 		void Render();
 
-		template <typename Comp>
-		Comp* AddComponent();
-		template <typename Comp>
+		template <class Comp>
+		Comp* AddComponent() {
+			Comp* poComponent = new Comp();
+			m_loComponent.push_back(poComponent);
+			poComponent->BindEntity(this);
+			poComponent->Start();
+			return poComponent;
+		}
+		template <class Comp>
 		Component* GetComponent();
-		template <typename Comp>
+		template <class Comp>
 		void RemoveComponent();
 
 		Transform* m_poTransform;

@@ -4,10 +4,10 @@
 #include "GraphicsHandler.h"
 #include "WindowHandler.h"
 #include "Shader.h"
-#include "MeshRenderer.h"
 #include "Mesh.h"
 #include "Entity.h"
 #include "Component.h"
+#include "MeshRenderer.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -15,7 +15,6 @@
 
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
-
 
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
@@ -94,10 +93,8 @@ namespace ave {
 
 		auto m_poMeshRenderer = m_poEntity->AddComponent<MeshRenderer>();
 
-		//m_poEntity->GetComponent<MeshRenderer>(); 
-
-		//m_poMeshRenderer->SetMesh(m_poMesh);
-		//m_poMeshRenderer->SetShader(m_poShader);
+		m_poMeshRenderer->SetMesh(m_poMesh);
+		m_poMeshRenderer->SetShader(m_poShader);
 
 
 		return CreateFactory()
