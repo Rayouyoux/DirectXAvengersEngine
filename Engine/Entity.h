@@ -45,11 +45,6 @@ namespace ave {
 			}
 		}
 
-		template <class Comp>
-		Component* GetComponent();
-		template <class Comp>
-		void RemoveComponent();
-
 		Transform* m_poTransform;
 		std::vector<Component*> m_loComponent;
 		Entity* m_poParent;
