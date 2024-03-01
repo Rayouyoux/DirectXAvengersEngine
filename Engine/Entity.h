@@ -26,6 +26,25 @@ namespace ave {
 			poComponent->Start();
 			return poComponent;
 		}
+
+		template <class Comp>
+		Component* GetComponent() {
+			for (int i = 0; i < m_loComponent.size(); i++) {
+				if (typeid(m_loComponent[i]).name() == Comp) {
+					return m_loComponent[i];
+				}
+			}
+		}
+
+		template <class Comp>
+		void RemoveComponent() {
+			for (auto it = m_loComponent.begin(); it < m_loComponent.end(); it++) {
+				if (typeid(*it).name() == Comp) {
+					m_loComponent.erase(it);
+				}
+			}
+		}
+
 		template <class Comp>
 		Component* GetComponent();
 		template <class Comp>
