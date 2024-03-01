@@ -13,10 +13,14 @@
 #pragma comment(lib, "dxgi.lib")
 
 namespace ave {
+	class MeshRenderer;
+	class Shader;
 	class D3DApp {
 	protected:
 		static D3DApp* m_poApp; // Singleton Instance
 
+		Shader* m_poShader;
+		MeshRenderer* m_poMeshRenderer;
 		HINSTANCE m_oAppInst;
 		HWND m_oMainWnd;
 		bool m_bAppPaused;
@@ -76,6 +80,8 @@ namespace ave {
 		HWND MainWnd() const;
 		float AspectRatio() const;
 		ID3D12Device* GetDevice()const; 
+
+		MeshRenderer* GetMesh()const;
 
 		bool Get4xMsaaState() const;
 		UINT Get4xMsaaQuality() const;

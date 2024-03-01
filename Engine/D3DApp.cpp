@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "MeshRenderer.h"
+#include "Shader.h"
 
 namespace ave {
 	LRESULT CALLBACK
@@ -92,11 +94,16 @@ namespace ave {
 	bool D3DApp::Get4xMsaaState() const {
 		return m_b4xMsaaState;
 	}
+
 	UINT D3DApp::Get4xMsaaQuality() const {
 		return m_i4xMsaaQuality;
 	}
 	ID3D12Device* D3DApp::GetDevice()const {
 		return m_poDevice;
+	}
+
+	MeshRenderer* D3DApp::GetMesh()const {
+		return m_poMeshRenderer;
 	}
 
 	void D3DApp::Set4xMsaaState(bool value) {
@@ -331,6 +338,11 @@ namespace ave {
 	
 		if (InitDirect3D() == false)
 			return false;
+
+		Shader* poShader = new ave::Shader();
+		poShader->CreateRootSignature(1);
+		poShader->CreateShader();
+		
 
 		m_oTimer.Initialize();
 		OnResize();

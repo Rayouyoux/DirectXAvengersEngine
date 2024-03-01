@@ -9,6 +9,13 @@ namespace ave {
 
     class D3DUtils {
     public:
+        static ID3D12Resource* CreateDefaultBuffer(
+            ID3D12Device* device,
+            ID3D12GraphicsCommandList* cmdList,
+            const void* initData,
+            UINT64 byteSize,
+            ID3D12Resource* &uploadBuffer);
+
         static UINT CalcConstantBufferByteSize(UINT byteSize)
         {
             // Constant buffers must be a multiple of the minimum hardware
