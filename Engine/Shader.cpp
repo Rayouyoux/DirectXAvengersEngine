@@ -54,9 +54,11 @@ namespace ave {
     //}
 
     //A appeler dans l'init
-    bool Shader::CreateShader() {
+    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
 
-        m_poDevice = m_poGraphics->GetDevice();
+        m_poDevice = GraphicsHandler::GetDevice();
+        CreateUploadBuffer();
+        CreateRootSignature(1);
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -100,8 +102,8 @@ namespace ave {
         oPestoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         oPestoDesc.NumRenderTargets = 1;
         oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-        oPestoDesc.SampleDesc.Count = m_poGraphics->Get4xMsaaState() ? 4 : 1;
-        oPestoDesc.SampleDesc.Quality = m_poGraphics->Get4xMsaaState() ? (m_poGraphics->Get4xMsaaQuality() - 1) : 0;
+        oPestoDesc.SampleDesc.Count = poGraphicsHandler->Get4xMsaaState() ? 4 : 1;
+        oPestoDesc.SampleDesc.Quality = poGraphicsHandler->Get4xMsaaState() ? (poGraphicsHandler->Get4xMsaaQuality() - 1) : 0;
         oPestoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         if (m_poDevice->CreateGraphicsPipelineState(&oPestoDesc, IID_PPV_ARGS(&m_poPso)) != S_OK)
         {

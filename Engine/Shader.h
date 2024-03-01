@@ -44,7 +44,7 @@ namespace ave {
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		void AddObject();
-		bool CreateShader();
+		bool CreateShader(GraphicsHandler* poGraphicsHandler);
 		void UpdateObject();
 		bool CreateRootSignature(int id);
 		void CreateUploadBuffer();

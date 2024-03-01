@@ -11,17 +11,22 @@ class IDXGISwapChain;
 
 namespace ave {
 	class AvengersEngine;
+	class Shader;
+	class MeshRenderer;
 
 	class GraphicsHandler {
 	protected:
 		AvengersEngine* m_poAve;
+
+		Shader* m_poShader;
+		MeshRenderer* m_poMeshRenderer;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;
 
 		IDXGIFactory4* m_poFactory;
 		IDXGISwapChain* m_poSwapChain;
-		ID3D12Device* m_poDevice;
+		static ID3D12Device* m_poDevice;
 
 		ID3D12Fence* m_poFence;
 		UINT64 m_iCurrentFence;
@@ -124,8 +129,8 @@ namespace ave {
 		virtual DirectX::XMVECTORF32 GetFillColor() const { return m_cFillColor; }
 		virtual void SetFillColor(DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
 
-		virtual ID3D12Device* GetDevice() const { return m_poDevice; }
-		static ID3D12GraphicsCommandList* GetCommandList() ;
+		static ID3D12Device* GetDevice() { return m_poDevice; }
+		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }

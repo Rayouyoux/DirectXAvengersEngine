@@ -39,7 +39,7 @@ namespace ave {
 
 		//Topology
 		poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
+		
 		auto oVertexBufferView = m_poMesh->VertexBufferView();
 		auto oIndexBufferView = m_poMesh->IndexBufferView();
 		poList->IASetVertexBuffers(0, 1, &oVertexBufferView);

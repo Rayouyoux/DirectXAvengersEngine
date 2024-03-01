@@ -3,12 +3,16 @@
 #include <dxgi.h>
 #include "GraphicsHandler.h"
 #include "WindowHandler.h"
+#include "Shader.h"
+#include "MeshRenderer.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
 namespace ave {
+	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
+	ID3D12Device* GraphicsHandler::m_poDevice;
 
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
@@ -62,9 +66,6 @@ namespace ave {
 		m_poDsvHeap->Release();
 	}
 
-	ID3D12GraphicsCommandList* GraphicsHandler::GetCommandList(){
-		return m_poCommandList;
-	}
 
 	GraphicsHandler* GraphicsHandler::Create() {
 		return new GraphicsHandler();
@@ -82,6 +83,7 @@ namespace ave {
 #endif
 
 		m_poAve = poAve;
+		m_poShader = new Shader();
 
 		return CreateFactory()
 			&& CreateDevice()
@@ -89,7 +91,9 @@ namespace ave {
 			&& RequestMsaaQuality()
 			&& CreateCommandObjects()
 			&& CreateSwapChain()
-			&& CreateRtvAndDsvDescriptorHeaps();
+			&& CreateRtvAndDsvDescriptorHeaps()
+			&& m_poShader->CreateShader(this);
+			//&& m_poShader->CreateRootSignature(1);
 	}
 
 	void GraphicsHandler::OnResize() {
@@ -208,7 +212,7 @@ namespace ave {
 
 	void GraphicsHandler::Render() {
 		RenderBegin();
-
+		m_poMeshRenderer->Render();
 		// Add your coubeh
 
 		RenderCease();
