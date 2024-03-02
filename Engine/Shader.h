@@ -58,6 +58,7 @@ namespace ave {
 		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
 		ID3D12PipelineState* GetPso();
 		UploadBuffer* GetPass();
+		void UpdatePass(void* data);
 
 		~Shader();
 

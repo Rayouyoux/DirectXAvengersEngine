@@ -20,6 +20,7 @@ namespace ave{
 		void Rotate(XMFLOAT3* pvRoate);
 		void Rotate(float fPitch, float fRoll, float fYaw);
 		void UpdateMatrice();
+		XMMATRIX GetWorld();
 		~Transform();
 
 		XMFLOAT4X4 m_mTransformation;

@@ -118,6 +118,10 @@ namespace ave {
     void Shader::CreateUploadBuffer() {
         m_poPass = new UploadBuffer(m_poDevice, 100, false, sizeof(ID3D12Device));
     }
+
+    void Shader::UpdatePass(void* data) {
+        m_poPass->CopyData(0, data);
+    }
  //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
 
  //       D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();

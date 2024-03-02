@@ -53,9 +53,9 @@ namespace ave {
 	void Camera::Render()
 	{}
 
-	DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix() const
+	DirectX::XMMATRIX Camera::GetProjectionMatrix() const
 	{
-		return m_voProjectionMatrix;
+		return DirectX::XMLoadFloat4x4(&m_voProjectionMatrix);
 	}
 
 	void Camera::UpdateProjectionMatrix()

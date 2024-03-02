@@ -22,7 +22,7 @@ namespace ave {
 		void Render() override;
 
 		// Get Methods
-		DirectX::XMFLOAT4X4 GetProjectionMatrix() const;
+		DirectX::XMMATRIX GetProjectionMatrix() const;
 
 	private:
 

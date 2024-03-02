@@ -89,6 +89,10 @@ namespace ave {
 		m_bHandleChange = false;
 	}
 
+	XMMATRIX Transform::GetWorld() {
+		return XMLoadFloat4x4(&m_mTransformation);
+	}
+
 	Transform::~Transform(){
 
 	}

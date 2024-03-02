@@ -28,17 +28,18 @@ namespace ave {
 
 		poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
 
-		//Pass
-		poList->SetGraphicsRootConstantBufferView(1, m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
+		////Pass
+		///*poList->SetGraphicsRootConstantBufferView(1, m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());*/
 
-		//Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
+		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
-		//Pipeline
+		////Pipeline
 		poList->SetPipelineState(m_poShader->GetPso());
 
-		//Topology
+		////Topology
 		poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		
+		//
+
 		auto oVertexBufferView = m_poMesh->VertexBufferView();
 		auto oIndexBufferView = m_poMesh->IndexBufferView();
 		poList->IASetVertexBuffers(0, 1, &oVertexBufferView);

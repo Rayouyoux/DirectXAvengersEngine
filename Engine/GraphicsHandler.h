@@ -14,6 +14,7 @@ namespace ave {
 	class Shader;
 	class MeshRenderer;
 	class Entity;
+	class Camera;
 	
 	class Mesh;
 
@@ -25,6 +26,7 @@ namespace ave {
 		Mesh* m_poMesh;
 		Entity* m_poCameraEntity;
 		Entity* m_poCubeEntity;
+		Camera* m_poCamera;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;
@@ -58,6 +60,8 @@ namespace ave {
 		D3D_DRIVER_TYPE m_eDriverType;
 		DXGI_FORMAT m_eBackBufferFormat;
 		DXGI_FORMAT m_eDepthStencilFormat;
+
+		DirectX::XMMATRIX m_view;
 
 	protected:
 		GraphicsHandler();

@@ -12,10 +12,12 @@
 #include "Camera.h"
 #include "Logger.h"
 #include "Transform.h"
+#include "Maths.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
+
 
 std::wstring RACISTEXMFLOAT4X4ToString(const DirectX::XMFLOAT4X4& matrix)
 {
@@ -29,6 +31,11 @@ std::wstring RACISTEXMFLOAT4X4ToString(const DirectX::XMFLOAT4X4& matrix)
 
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
+
+	struct ObjectConstants
+	{
+		XMFLOAT4X4 WorldViewProj = maths::MatriceIdentity();
+	};
 
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
@@ -102,32 +109,53 @@ namespace ave {
 		m_poShader = new Shader();
 		m_poMesh = new Mesh();
 
-		m_poCameraEntity = new Entity();
-		m_poCameraEntity->Start();
+		//m_poCameraEntity = new Entity();
+		//m_poCameraEntity->Start();
 
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Start();
-		DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, -10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
-		m_poCubeEntity->m_poTransform->Move(&mInvLook);
+		//float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
+		//float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
+		//float y = 5.0f * cosf(XM_PIDIV4);
 
-		Camera* poCamera = m_poCameraEntity->AddComponent<Camera>();
-		poCamera->Start();
-		std::wstring magic = RACISTEXMFLOAT4X4ToString(poCamera->GetProjectionMatrix());
-		Logger::PrintLog(magic.c_str());
+		//// Build the view matrix.
+		//XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+		//XMVECTOR target = XMVectorZero();
+		//XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+		//m_view = XMMatrixLookAtLH(pos, target, up);
+		///*DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, -10.0f };*/ // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		///*m_poCubeEntity->m_poTransform->Move(&mInvLook);*/
+
+		//m_poCamera = m_poCameraEntity->AddComponent<Camera>();
+		//m_poCamera->Start();
+		///*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
+		//Logger::PrintLog(magic.c_str());*/
 
 		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
 		poMeshRenderer->SetMesh(m_poMesh);
 		poMeshRenderer->SetShader(m_poShader);
 
-		return CreateFactory()
+		bool test = CreateFactory()
 			&& CreateDevice()
 			&& CreateFence()
 			&& RequestMsaaQuality()
-			&& CreateCommandObjects()
+			&& CreateCommandObjects() 
 			&& CreateSwapChain()
-			&& CreateRtvAndDsvDescriptorHeaps()
-			&& m_poShader->CreateShader(this)
-			&& m_poMesh->BuildBoxGeometry(GetDevice(),GetCommandList());
+			&& CreateRtvAndDsvDescriptorHeaps();
+
+		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
+			return false;
+		}
+
+		bool test2 = m_poShader->CreateShader(this)
+			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
+
+		CloseCommandList();
+		QueueCommandList();
+		FlushCommandQueue();
+
+		return test && test2;
 	}
 
 	void GraphicsHandler::OnResize() {
@@ -233,12 +261,19 @@ namespace ave {
 		m_oScreenViewport.MinDepth = 0.0f;
 		m_oScreenViewport.MaxDepth = 1.0f;
 
-		m_oScissorRect = { 0, 0, m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight()};
+		m_oScissorRect = { 0, 0, m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight() };
 	}
 
 	void GraphicsHandler::Update(float deltaTime) {
-		m_poCameraEntity->Update(deltaTime);
+		/*m_poCameraEntity->Update(deltaTime);*/
 		m_poCubeEntity->Update(deltaTime);
+
+		/*m_poCameraEntity->m_poTransform->GetWorld()*/
+
+		/*XMMATRIX worldViewProj = m_poCubeEntity->m_poTransform->GetWorld() * m_view * m_poCamera->GetProjectionMatrix();
+		ObjectConstants objConstants;
+		XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+		m_poShader->UpdatePass(&objConstants);*/
 	}
 
 	void GraphicsHandler::LateUpdate() {
@@ -248,7 +283,7 @@ namespace ave {
 	void GraphicsHandler::Render() {
 		RenderBegin();
 
-		m_poCubeEntity->Render();
+		/*m_poCubeEntity->Render();*/
 		// Add your coubeh
 
 		RenderCease();
@@ -298,15 +333,15 @@ namespace ave {
 		msQualityLevels.SampleCount = 4;
 		msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 		msQualityLevels.NumQualityLevels = 0;
-			if (FAILED(m_poDevice->CheckFeatureSupport(
-				D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
-				&msQualityLevels,
-				sizeof(msQualityLevels)))) {
-				return false;
+		if (FAILED(m_poDevice->CheckFeatureSupport(
+			D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
+			&msQualityLevels,
+			sizeof(msQualityLevels)))) {
+			return false;
 		}
 
 		m_i4xMsaaQuality = msQualityLevels.NumQualityLevels;
-		if(m_i4xMsaaQuality <= 0)
+		if (m_i4xMsaaQuality <= 0)
 			return false;// Unexpected MSAA quality level
 
 		return true;
@@ -390,7 +425,7 @@ namespace ave {
 		dsvHeapDesc.NodeMask = 0;
 		if (FAILED(m_poDevice->CreateDescriptorHeap(
 			&dsvHeapDesc, IID_PPV_ARGS(&m_poDsvHeap)))) {
-				return false;
+			return false;
 		}
 
 		return true;
@@ -443,7 +478,7 @@ namespace ave {
 	void GraphicsHandler::ClearRenderTargetAndDepthStencil() {
 		m_poCommandList->ClearRenderTargetView(CurrentBackBufferView(), m_cFillColor, 0, nullptr);
 		m_poCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-	
+
 		// Specify the buffers we are going to render to.
 		auto currentBuffer = CurrentBackBufferView();
 		auto depthStencil = DepthStencilView();
