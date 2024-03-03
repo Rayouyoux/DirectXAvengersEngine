@@ -120,7 +120,7 @@ namespace ave {
 		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 		m_view = XMMatrixLookAtLH(pos, target, up);
-		DirectX::XMFLOAT3 mInvLook = { 0.0f, -10.0f, 0.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
 		m_poCubeEntity->m_poTransform->Move(&mInvLook);
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
