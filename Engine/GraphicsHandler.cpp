@@ -110,17 +110,17 @@ namespace ave {
 
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Start();
-		//float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
-		//float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
-		//float y = 5.0f * cosf(XM_PIDIV4);
+		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
+		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
+		float y = 5.0f * cosf(XM_PIDIV4);
 
-		//// Build the view matrix.
-		//XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-		//XMVECTOR target = XMVectorZero();
-		//XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		// Build the view matrix.
+		XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+		XMVECTOR target = XMVectorZero();
+		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-		/*m_view = XMMatrixLookAtLH(pos, target, up);*/
-		DirectX::XMFLOAT3 mInvLook = { -5.0f, 0.0f, 0.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		m_view = XMMatrixLookAtLH(pos, target, up);
+		DirectX::XMFLOAT3 mInvLook = { 0.0f, -10.0f, 0.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
 		m_poCubeEntity->m_poTransform->Move(&mInvLook);
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
@@ -267,15 +267,16 @@ namespace ave {
 		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 
 		XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
-		XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();
+		/*XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();*/
+		XMMATRIX view = m_view;
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
 		ObjectConstants objConstants;
-		XMStoreFloat4x4(&objConstants.World, world);
+		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
 		m_poShader->UpdateObject(&objConstants);
 
 		PassConstants passConstants;
-		XMStoreFloat4x4(&passConstants.View, view);
-		XMStoreFloat4x4(&passConstants.Proj, proj);
+		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
+		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
 		m_poShader->UpdatePass(&passConstants);
 	}
 
