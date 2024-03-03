@@ -29,7 +29,7 @@ namespace ave {
 		poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
 
 		////Pass
-		///*poList->SetGraphicsRootConstantBufferView(1, m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());*/
+		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
 
 		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
@@ -46,8 +46,6 @@ namespace ave {
 		poList->IASetIndexBuffer(&oIndexBufferView);
 
 		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poShader->GetVirtualAdress());
-
-		//Shader
 
 		poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(),1,0,0,0);
 	}

@@ -22,6 +22,7 @@ namespace ave {
 		ID3D12DescriptorHeap* m_poCbvHeap;
 		ID3DBlob* m_poSerializedRootSig;
 		UploadBuffer* m_poPass;
+		UploadBuffer* m_poObject;
 		std::vector<UploadBuffer*> m_voObjects;
 		ID3D12RootSignature* m_poRootSignature;
 		ID3DBlob* m_poVS;
@@ -46,7 +47,7 @@ namespace ave {
 		void End();
 		void AddObject();
 		bool CreateShader(GraphicsHandler* poGraphicsHandler);
-		void UpdateObject();
+		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
 		void CreateUploadBuffer();
 
@@ -55,10 +56,12 @@ namespace ave {
 
 		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
+		UINT GetRootPass();
 		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
 		ID3D12PipelineState* GetPso();
 		UploadBuffer* GetPass();
 		void UpdatePass(void* data);
+		void UpdateObject(void* data);
 
 		~Shader();
 

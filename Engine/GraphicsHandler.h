@@ -49,6 +49,7 @@ namespace ave {
 
 		ID3D12DescriptorHeap* m_poRtvHeap;
 		ID3D12DescriptorHeap* m_poDsvHeap;
+		ID3D12DescriptorHeap* m_poCbvHeap;
 
 		D3D12_VIEWPORT m_oScreenViewport;
 		D3D12_RECT m_oScissorRect;
@@ -76,7 +77,7 @@ namespace ave {
 		virtual bool RequestMsaaQuality();
 		virtual bool CreateCommandObjects();
 		virtual bool CreateSwapChain();
-		virtual bool CreateRtvAndDsvDescriptorHeaps();
+		virtual bool CreateRtv_Dsv_CBVDescriptorHeaps();
 
 		 //<summary>
 		 //Generic initial steps of the Render method.
@@ -103,6 +104,10 @@ namespace ave {
 		/// </summary>
 		/// <param name="cfillColor">White is the default color</param>
 		virtual void ClearRenderTargetAndDepthStencil();
+		/// <summary>
+		/// Set the Cbv descriptor with m_poCbvHeap.
+		/// </summary>
+		virtual void SetCbvDescriptor();
 		/// <summary>
 		/// Close the command list.
 		/// </summary>

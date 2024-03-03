@@ -9,6 +9,7 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include <iostream>
+#include "ConstantsStruct.h"
 
 namespace ave {
 
@@ -24,8 +25,12 @@ namespace ave {
         return m_iRootObject;
     }
 
+    UINT Shader::GetRootPass() {
+        return m_iRootPass;
+    }
+
     D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
-        return m_poPass->Resource()->GetGPUVirtualAddress();
+        return m_poObject->Resource()->GetGPUVirtualAddress();
     }
 
     ID3D12RootSignature* Shader::GetRootSignature() {
@@ -116,12 +121,19 @@ namespace ave {
 
     //A appeler dans l'init
     void Shader::CreateUploadBuffer() {
-        m_poPass = new UploadBuffer(m_poDevice, 100, false, sizeof(ID3D12Device));
+        m_poPass = new UploadBuffer(m_poDevice, 100, true, sizeof(PassConstants));
+        m_poObject = new UploadBuffer(m_poDevice, 100, true, sizeof(ObjectConstants));
     }
 
     void Shader::UpdatePass(void* data) {
         m_poPass->CopyData(0, data);
     }
+
+    void Shader::UpdateObject(void* data) {
+        m_poObject->CopyData(0, data);
+    }
+    
+
  //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
 
  //       D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();
@@ -140,10 +152,10 @@ namespace ave {
  //       //  et on l'ajoute au vecteur
  //   }
 
-    void Shader::UpdateObject() {
-        //int index =  //Get l'index de l objet;
-        //m_voObjects[1]->CopyData()
-    }
+    //void Shader::UpdateObject() {
+    //    //int index =  //Get l'index de l objet;
+    //    //m_voObjects[1]->CopyData()
+    //}
 
     ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {
         
@@ -182,6 +194,12 @@ namespace ave {
     }
 
     bool Shader::CreateRootSignature(int id) {
+        m_iIdRootSignature = id;
+        m_iTextureCount = 0;
+        m_iRootTexture = -1;
+        m_iRootTexture2 = -1;
+        m_iRootObject = 0;
+        m_iRootPass = 1;
 
         CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc;
 
@@ -305,6 +323,7 @@ namespace ave {
     void Shader::Destroy() {
         m_poPso->Release();
         delete m_poPass;
+        delete m_poObject;
         for (int i = 0; i < m_voObjects.size(); i++) {
             delete m_voObjects[i];
         }
