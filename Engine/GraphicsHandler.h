@@ -122,7 +122,7 @@ namespace ave {
 
 		// Set & Getters
 		virtual DirectX::XMVECTORF32 GetFillColor() const { return m_cFillColor; }
-		virtual void SetFillColor(DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
+		virtual void SetFillColor(const DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
 
 		virtual ID3D12Device* GetDevice() const { return m_poDevice; }
 
