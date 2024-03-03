@@ -267,17 +267,17 @@ namespace ave {
 		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 
 		XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
-		/*XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();*/
+		//XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();
 		XMMATRIX view = m_view;
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		m_poShader->UpdateObject(&objConstants);
+		m_poShader->UpdateObject(objConstants);
 
 		PassConstants passConstants;
 		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
 		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
-		m_poShader->UpdatePass(&passConstants);
+		m_poShader->UpdatePass(passConstants);
 	}
 
 	void GraphicsHandler::LateUpdate() {
