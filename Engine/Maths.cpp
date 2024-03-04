@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Maths.h"
-namespace ave {
+
+namespace ave 
+{
 
 	namespace Maths{
 

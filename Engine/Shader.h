@@ -6,11 +6,13 @@
 #include <cstring>
 #include <string>
 #include "Texture.h"
+#include "ConstantsStruct.h"
 
 namespace ave {
 	class Mesh;
 	class GraphicsHandler;
 	class Texture;
+	
 	class Shader
 	{
 
@@ -20,8 +22,9 @@ namespace ave {
 		ID3D12Device* m_poDevice;
 		ID3D12DescriptorHeap* m_poCbvHeap;
 		ID3DBlob* m_poSerializedRootSig;
-		UploadBuffer* m_poPass;
-		std::vector<UploadBuffer*> m_voObjects;
+		UploadBuffer<PassConstants>* m_poPass;
+		UploadBuffer<ObjectConstants>* m_poObject;
+		std::vector<UploadBuffer<ObjectConstants>*> m_voObjects;
 		ID3D12RootSignature* m_poRootSignature;
 		ID3DBlob* m_poVS;
 		ID3DBlob* m_poPS;
@@ -39,26 +42,32 @@ namespace ave {
 	public:
 		Shader();
 
-		ID3D12PipelineState* GetPso();
 		void Destroy();
 		void Reset();
-		void Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice);
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		void AddObject();
-		bool CreateShader();
-		void UpdateObject();
+		bool CreateShader(GraphicsHandler* poGraphicsHandler);
+		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
+		void CreateUploadBuffer();
 
+		ID3DBlob* CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint, const std::string& oTarget);
+		
+
+		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
+		UINT GetRootPass();
 		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
+		ID3D12PipelineState* GetPso();
+		UploadBuffer<PassConstants>* GetPass();
+		void UpdatePass(PassConstants data);
+		void UpdateObject(ObjectConstants data);
+
+
 
 		~Shader();
 
-	protected:
-
-	public:
-		ID3DBlob* CompileShader(const std::wstring& oBuffer,const std::string& oEntryPoint,const std::string& oTarget);
 	};
 }
 

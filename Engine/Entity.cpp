@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Component.h"
 #include "Transform.h"
+#include "MeshRenderer.h"
 
 namespace ave {
 
@@ -10,18 +11,17 @@ namespace ave {
 		m_poParent = nullptr;
 	}
 
-	Entity::~Entity() {
+	Entity::~Entity()
+	{}
 
-	}
-
-	void Entity::Start(Transform* poTransform, Entity* poParent) {
-		m_poTransform = poTransform;
+	void Entity::Start(Entity* poParent) {
+		m_poTransform = new Transform();
 		m_poParent = poParent;
 	}
 
-	void Entity::Update() {
+	void Entity::Update(float iDeltaTime) {
 		for (int i = 0; i < m_loComponent.size(); i++) {
-			m_loComponent[i]->Update();
+			m_loComponent[i]->Update(iDeltaTime);
 		}
 		if(m_poTransform->m_bHandleChange){
 			m_poTransform->UpdateMatrice();
@@ -32,32 +32,6 @@ namespace ave {
 	void Entity::Render() {
 		for (int i = 0; i < m_loComponent.size(); i++) {
 			m_loComponent[i]->Render();
-		}
-	}
-
-	template <typename Comp>
-	void Entity::AddComponent() {
-		Comp* poComponent = new Comp();
-		m_loComponent.push_back(poComponent);
-		poComponent->BindEntity();
-		poComponent->Start();
-	}
-
-	template <typename Comp>
-	Component* Entity::GetComponent() {
-		for (int i = 0; i < m_loComponent.size(); i++) {
-			if (typeid(m_loComponent[i]).name() == Comp) {
-				return m_loComponent[i];
-			}
-		}
-	}
-
-	template <typename Comp>
-	void Entity::RemoveComponent() {
-		for (auto it = m_loComponent.begin(); it < m_loComponent.end(); it++) {
-			if (typeid(*it).name() == Comp) {
-				m_loComponent.erase(it);
-			}
 		}
 	}
 };

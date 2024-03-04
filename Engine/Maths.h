@@ -4,11 +4,13 @@
 
 using namespace DirectX;
 
-namespace ave {
+namespace ave 
+{
 
 	namespace Maths {
 
 		XMFLOAT4X4 MatriceIdentity();
+		const float PI = 3.1415926535f;
 
 		template<typename T>
 		T Lerp(T a, T b, float alpha) {

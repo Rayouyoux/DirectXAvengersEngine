@@ -11,10 +11,22 @@ class IDXGISwapChain;
 
 namespace ave {
 	class AvengersEngine;
+	class Shader;
+	class MeshRenderer;
+	class Entity;
+	class Camera;
+	
+	class Mesh;
 
 	class GraphicsHandler {
 	protected:
 		AvengersEngine* m_poAve;
+
+		Shader* m_poShader;
+		Mesh* m_poMesh;
+		Entity* m_poCameraEntity;
+		Entity* m_poCubeEntity;
+		Camera* m_poCamera;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;
@@ -28,7 +40,7 @@ namespace ave {
 
 		ID3D12CommandQueue* m_poCommandQueue;
 		ID3D12CommandAllocator* m_poDirectCmdListAlloc;
-		static ID3D12GraphicsCommandList* M_poCommandList;
+		static ID3D12GraphicsCommandList* m_poCommandList;
 
 		static const int SWAP_CHAIN_BUFFER_COUNT = 2;
 		int m_iCurrBackBuffer;
@@ -37,6 +49,7 @@ namespace ave {
 
 		ID3D12DescriptorHeap* m_poRtvHeap;
 		ID3D12DescriptorHeap* m_poDsvHeap;
+		ID3D12DescriptorHeap* m_poCbvHeap;
 
 		D3D12_VIEWPORT m_oScreenViewport;
 		D3D12_RECT m_oScissorRect;
@@ -48,6 +61,8 @@ namespace ave {
 		D3D_DRIVER_TYPE m_eDriverType;
 		DXGI_FORMAT m_eBackBufferFormat;
 		DXGI_FORMAT m_eDepthStencilFormat;
+
+		DirectX::XMMATRIX m_view;
 
 	protected:
 		GraphicsHandler();
@@ -62,11 +77,11 @@ namespace ave {
 		virtual bool RequestMsaaQuality();
 		virtual bool CreateCommandObjects();
 		virtual bool CreateSwapChain();
-		virtual bool CreateRtvAndDsvDescriptorHeaps();
+		virtual bool CreateRtv_Dsv_CBVDescriptorHeaps();
 
-		/// <summary>
-		/// Generic initial steps of the Render method.
-		/// </summary>
+		 //<summary>
+		 //Generic initial steps of the Render method.
+		 //</summary>
 		virtual void RenderBegin();
 		/// <summary>
 		/// Generic close steps of the Render method.
@@ -89,6 +104,10 @@ namespace ave {
 		/// </summary>
 		/// <param name="cfillColor">White is the default color</param>
 		virtual void ClearRenderTargetAndDepthStencil();
+		/// <summary>
+		/// Set the Cbv descriptor with m_poCbvHeap.
+		/// </summary>
+		virtual void SetCbvDescriptor();
 		/// <summary>
 		/// Close the command list.
 		/// </summary>
@@ -116,7 +135,7 @@ namespace ave {
 
 		virtual void OnResize();
 
-		virtual void Update();
+		virtual void Update(float deltaTime);
 		virtual void LateUpdate();
 		virtual void Render();
 
@@ -124,12 +143,12 @@ namespace ave {
 		virtual DirectX::XMVECTORF32 GetFillColor() const { return m_cFillColor; }
 		virtual void SetFillColor(const DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
 
-		virtual ID3D12Device* GetDevice() const { return m_poDevice; }
+		ID3D12Device* GetDevice() { return m_poDevice; }
+		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }
 		void Set4xMsaaState(bool value) { m_b4xMsaaState = value; }
-		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::M_poCommandList; }
 
 		virtual void Release();
 	};

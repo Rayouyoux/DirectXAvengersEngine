@@ -1,16 +1,24 @@
 #pragma once
+#include "Component.h"
+#include <d3d12.h>
 
 namespace ave {
 	class Mesh;
 	class Shader;
-	class MeshRenderer
+
+	class MeshRenderer : public Component
 	{
 	public:
 
 		MeshRenderer();
+	
+		void SetMesh(Mesh* poMesh);
+		void SetShader(Shader* SetShader);
 
-		void Init(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice);
-		void Draw(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice);
+		void Start() override {};
+		void Update(float dT) override {};
+		void LateUpdate(float dT) override {};
+		void Render() override;
 		void Destroy();
 		~MeshRenderer();
 

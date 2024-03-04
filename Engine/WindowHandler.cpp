@@ -2,6 +2,7 @@
 #include "WindowHandler.h"
 #include "GraphicsHandler.h"
 #include "GameTime.h"
+#include "Logger.h"
 
 namespace ave {
 	AvengersEngine::AvengersEngine() {
@@ -37,6 +38,8 @@ namespace ave {
 	bool AvengersEngine::Initialize(HINSTANCE hInstance) {
 		m_ohInstance = hInstance;
 
+		Logger::StartMTail();
+
 		if (RegisterWndClass() == false) {
 			return false;
 		}
@@ -71,7 +74,7 @@ namespace ave {
 
 				if (m_bAppPaused == false) {
 					//CalculateFrameStats();
-					m_poGraphics->Update();
+					m_poGraphics->Update(m_poTimer->DeltaTime());
 					m_poGraphics->LateUpdate();
 					m_poGraphics->Render();
 				}
