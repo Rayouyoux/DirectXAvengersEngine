@@ -9,7 +9,6 @@ namespace ave {
 	Entity::Entity() {
 		m_poTransform = nullptr;
 		m_poParent = nullptr;
-		m_iID = 0;
 		m_bIsAlive = true;
 	}
 
