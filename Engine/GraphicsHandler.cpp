@@ -272,12 +272,17 @@ namespace ave {
 		
 
 		float rot = XMConvertToRadians(45.0f * deltaTime);
-		XMFLOAT3 rotate = { 0.0f ,rot, 0.0f };
+		/*XMFLOAT3 rotate = { 0.0f ,rot, 0.0f };
+		XMVECTOR rotateeee = XMLoadFloat3(&rotate);*/
+		
 
-		XMFLOAT3 scale = { -0.5f * deltaTime, -0.5f * deltaTime , -0.5f * deltaTime };
+		/*XMFLOAT3 scale = { -0.5f * deltaTime, -0.5f * deltaTime , -0.5f * deltaTime };*/
 
-		m_poCubeEntity->m_poTransform->Rotate(&rotate);
-		m_poCubeEntity->m_poTransform->Scale(&scale);
+		/*XMFLOAT3 pos = { 0.005f * deltaTime, 0.005f * deltaTime , 0.005f * deltaTime };*/
+
+		m_poCubeEntity->m_poTransform->RotateOnUp(rot);
+		/*m_poCubeEntity->m_poTransform->Scale(&scale);*/
+		/*m_poCubeEntity->m_poTransform->Move(&pos);*/
 
 		m_poCubeEntity->m_poTransform->UpdateMatrice();
 
