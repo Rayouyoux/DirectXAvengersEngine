@@ -1,6 +1,5 @@
 #pragma once
 #include <DirectXPackedVector.h>
-#include <time.h>
 
 using namespace DirectX;
 
@@ -18,20 +17,14 @@ namespace ave
 		}
 
 		static class Random {
-		private:
-			static bool m_bInitialized;
-
-			static void Initialize() {
-				m_bInitialized = true;
-				srand(time(0));
+		public:
+			static float Range(float minInclusive, float maxInclusive) {
+				float offset = rand() % (int)((maxInclusive - minInclusive + 1) * 100);
+				return minInclusive + offset * 0.01f;
 			}
 
-		public:
-			template<typename T>
-			static T Range(T minInclusive, T maxInclusive) {
-				if (m_bInitialized == false)
-					Initialize();
-				return minInclusive + (rand() % (maxInclusive - minInclusive + 1));
+			static int Range(int minInclusive, int maxInclusive) {
+				return minInclusive + (rand() % (int)(maxInclusive - minInclusive + 1));
 			}
 		};
 	};

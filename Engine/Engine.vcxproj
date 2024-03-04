@@ -167,7 +167,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Time.h" />
+    <ClInclude Include="GlobalTime.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="resource.h" />
@@ -195,7 +195,7 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="GlobalTime.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>

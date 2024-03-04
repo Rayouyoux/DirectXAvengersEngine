@@ -5,12 +5,12 @@
 namespace ave {
 	struct ObjectConstants
 	{
-		DirectX::XMFLOAT4X4 World = maths::MatriceIdentity();
+		DirectX::XMFLOAT4X4 World = Maths::MatriceIdentity();
 	};
 
 	struct PassConstants
 	{
-		DirectX::XMFLOAT4X4 View = maths::MatriceIdentity();
-		DirectX::XMFLOAT4X4 Proj = maths::MatriceIdentity();
+		DirectX::XMFLOAT4X4 View = Maths::MatriceIdentity();
+		DirectX::XMFLOAT4X4 Proj = Maths::MatriceIdentity();
 	};
 }

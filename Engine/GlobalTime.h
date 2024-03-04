@@ -2,7 +2,7 @@
 
 namespace ave {
 
-	namespace Time
+	namespace GlobalTime
 	{
 		// RETURNS TIME STRING
 		// Normal Format = 'HH:MM:SS'

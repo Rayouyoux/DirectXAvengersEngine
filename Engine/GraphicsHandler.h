@@ -15,6 +15,11 @@ namespace ave {
 	class MeshRenderer;
 	class Entity;
 	class Camera;
+
+	namespace Particles {
+		class ParticleSystem;
+		class ParticleBehaviour;
+	}
 	
 	class Mesh;
 
@@ -27,6 +32,8 @@ namespace ave {
 		Entity* m_poCameraEntity;
 		Entity* m_poCubeEntity;
 		Camera* m_poCamera;
+		Particles::ParticleBehaviour* m_poBehaviour;
+		Particles::ParticleSystem* m_poParticleSystem;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;

@@ -14,6 +14,7 @@
 #include "Transform.h"
 #include "Maths.h"
 #include "ConstantsStruct.h"
+#include "ParticleSystem.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -83,6 +84,8 @@ namespace ave {
 
 		m_poRtvHeap->Release();
 		m_poDsvHeap->Release();
+
+		delete m_poBehaviour;
 	}
 
 
@@ -110,8 +113,8 @@ namespace ave {
 
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Start();
-		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
-		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
+		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * Maths::PI);
+		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * Maths::PI);
 		float y = 5.0f * cosf(XM_PIDIV4);
 
 		// Build the view matrix.
@@ -120,7 +123,7 @@ namespace ave {
 		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 		m_view = XMMatrixLookAtLH(pos, target, up);
-		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE Maths / UTILS
 		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
@@ -131,6 +134,14 @@ namespace ave {
 		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
 		poMeshRenderer->SetMesh(m_poMesh);
 		poMeshRenderer->SetShader(m_poShader);
+
+		m_poBehaviour = new Particles::ParticleBehaviour();
+		m_poParticleSystem = m_poCubeEntity->AddComponent<Particles::ParticleSystem>();
+		m_poParticleSystem->Initialize(10, 300);
+		
+		m_poParticleSystem->SetBehaviour(m_poBehaviour);
+		m_poParticleSystem->SetMesh(m_poMesh);
+		m_poParticleSystem->SetShader(m_poShader);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -297,6 +308,8 @@ namespace ave {
 		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
 		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
 		m_poShader->UpdatePass(passConstants);
+
+		m_poParticleSystem->Update(deltaTime);
 	}
 
 	void GraphicsHandler::LateUpdate() {
@@ -308,6 +321,8 @@ namespace ave {
 
 		m_poCubeEntity->Render();
 		// Add your coubeh
+
+		m_poParticleSystem->Render();
 
 		RenderCease();
 	}

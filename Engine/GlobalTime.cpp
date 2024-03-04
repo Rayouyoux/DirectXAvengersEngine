@@ -1,12 +1,12 @@
 #include "pch.h"
-#include "Time.h"
+#include "GlobalTime.h"
 #include <ctime>
 #include <sstream>
 #include <iomanip>
 
 namespace ave {
 
-	std::wstring Time::GetTime(BOOL stripped)
+	std::wstring GlobalTime::GetTime(BOOL stripped)
 	{
 		time_t now = time(0);
 		tm ltm;
@@ -25,7 +25,7 @@ namespace ave {
 		return timeString;
 	}
 
-	std::wstring Time::GetDate(BOOL stripped)
+	std::wstring GlobalTime::GetDate(BOOL stripped)
 	{
 		time_t now = time(0);
 		tm ltm;
@@ -45,7 +45,7 @@ namespace ave {
 		return timeString;
 	}
 
-	std::wstring Time::GetDateTimeString(BOOL stripped)
+	std::wstring GlobalTime::GetDateTimeString(BOOL stripped)
 	{
 		std::wstring timeString = GetDate(stripped) + L" " + GetTime(stripped);
 

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Logger.h"
-#include "Time.h"
+#include "GlobalTime.h"
 #include <fstream>
 #include <Shlobj.h>
 #include <cstdio>
@@ -40,7 +40,7 @@ namespace ave {
 
 		if (outfile.is_open()) {
 			std::wstring s = buf;
-			outfile << L"[" << Time::GetDateTimeString() << L"]  " << s;
+			outfile << L"[" << GlobalTime::GetDateTimeString() << L"]  " << s;
 			outfile.close();
 			OutputDebugString(s.c_str());
 		}
