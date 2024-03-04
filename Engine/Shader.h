@@ -38,12 +38,13 @@ namespace ave {
 		int m_iRootObject;
 		int m_iRootPass;
 		int m_iTextureCount;
+		int m_iIndexObject;
 
 	public:
 		Shader();
 
 		void Destroy();
-		void Reset();
+		void ResetIndexObject();
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		void AddObject();
@@ -63,6 +64,7 @@ namespace ave {
 		UploadBuffer<PassConstants>* GetPass();
 		void UpdatePass(PassConstants data);
 		void UpdateObject(ObjectConstants data);
+		void UpdateObject(ObjectConstants data, int index);
 
 
 

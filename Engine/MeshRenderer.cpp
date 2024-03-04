@@ -48,6 +48,7 @@ namespace ave {
 		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poShader->GetVirtualAdress());
 
 		poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(),1,0,0,0);
+
 	}
 
 	void MeshRenderer::Destroy() {

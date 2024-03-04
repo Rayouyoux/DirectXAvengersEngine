@@ -26,6 +26,7 @@ namespace ave {
 		Mesh* m_poMesh;
 		Entity* m_poCameraEntity;
 		Entity* m_poCubeEntity;
+		Entity* m_poCubeEntity2;
 		Camera* m_poCamera;
 
 		bool m_b4xMsaaState;

@@ -110,12 +110,16 @@ namespace ave {
 
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Initialize();
+
+		m_poCubeEntity2 = new Entity();
+		m_poCubeEntity2->Initialize();
 		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
 		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
 		float y = 5.0f * cosf(XM_PIDIV4);
 
 		// Build the view matrix.
-		XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+		/*XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);*/
+		XMVECTOR pos = XMVectorSet(-4.0f, 0.0f, 0.0f, 1.0f);
 		XMVECTOR target = XMVectorZero();
 		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -131,6 +135,10 @@ namespace ave {
 		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
 		poMeshRenderer->SetMesh(m_poMesh);
 		poMeshRenderer->SetShader(m_poShader);
+
+		MeshRenderer* poMeshRenderer2 = m_poCubeEntity2->AddComponent<MeshRenderer>();
+		poMeshRenderer2->SetMesh(m_poMesh);
+		poMeshRenderer2->SetShader(m_poShader);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -267,6 +275,7 @@ namespace ave {
 		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 
 		XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
+		XMMATRIX world2 = m_poCubeEntity2->m_poTransform->GetWorld();
 		//XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();
 		
 		
@@ -291,7 +300,11 @@ namespace ave {
 
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		m_poShader->UpdateObject(objConstants);
+		m_poShader->UpdateObject(objConstants, 0);
+
+		ObjectConstants objConstants2;
+		XMStoreFloat4x4(&objConstants2.World, XMMatrixTranspose(world2));
+		m_poShader->UpdateObject(objConstants2, 1);
 
 		PassConstants passConstants;
 		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
@@ -307,6 +320,8 @@ namespace ave {
 		RenderBegin();
 
 		m_poCubeEntity->Render();
+		m_poCubeEntity2->Render();
+		m_poShader->ResetIndexObject();
 		// Add your coubeh
 
 		RenderCease();
@@ -564,8 +579,13 @@ namespace ave {
 			}
 
 			// Wait until the GPU hits current fence event is fired.
-			WaitForSingleObject(eventHandle, INFINITE);
-			CloseHandle(eventHandle);
+			if (FAILED(WaitForSingleObject(eventHandle, INFINITE))) {
+				return;
+			};
+
+			if (FAILED(CloseHandle(eventHandle))) {
+				return;
+			};
 		}
 	}
 

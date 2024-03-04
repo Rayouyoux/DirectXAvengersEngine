@@ -30,7 +30,10 @@ namespace ave {
     }
 
     D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
-        return m_poObject->Resource()->GetGPUVirtualAddress();
+        
+        D3D12_GPU_VIRTUAL_ADDRESS oVirtualAdress = m_voObjects[m_iIndexObject]->Resource()->GetGPUVirtualAddress();
+        m_iIndexObject++;
+        return oVirtualAdress;
     }
 
     ID3D12RootSignature* Shader::GetRootSignature() {
@@ -60,7 +63,7 @@ namespace ave {
 
     //A appeler dans l'init
     bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
-
+        m_iIndexObject = 0;
         m_poDevice = poGraphicsHandler->GetDevice();
         CreateUploadBuffer();
         CreateRootSignature(1);
@@ -122,7 +125,9 @@ namespace ave {
     //A appeler dans l'init
     void Shader::CreateUploadBuffer() {
         m_poPass = new UploadBuffer<PassConstants> (m_poDevice, 1, true);
-        m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
+        //m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
+        AddObject();
+        AddObject();
     }
 
 
@@ -137,6 +142,10 @@ namespace ave {
         {
             m_poObject->CopyData(0, data);
         }
+    }
+
+    void Shader::UpdateObject(ObjectConstants data, int index) {
+        m_voObjects[index]->CopyData(0, data);
     }
     
 
@@ -323,7 +332,8 @@ namespace ave {
         }
     }
     void Shader::AddObject() {
-       /* m_voObjects.push_back(m_poPass);*/
+       UploadBuffer<ObjectConstants>* poBuffer = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
+       m_voObjects.push_back(poBuffer);
     }
 
     void Shader::Destroy() {
@@ -340,6 +350,11 @@ namespace ave {
         m_poPS->Release();
 
         m_poDevice = nullptr;
+    }
+
+    void Shader::ResetIndexObject()
+    {
+        m_iIndexObject = 0;
     }
 
     void Shader::End() {
