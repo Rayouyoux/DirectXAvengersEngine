@@ -2,9 +2,9 @@
 #include "Maths.h"
 namespace ave {
 
-	namespace maths{
+	namespace Maths{
 
-		XMFLOAT4X4 maths::MatriceIdentity(){
+		XMFLOAT4X4 Maths::MatriceIdentity(){
 
 			return { 1.0f, 0.0f, 0.0f, 0.0f,
 					 0.0f, 1.0f, 0.0f, 0.0f,

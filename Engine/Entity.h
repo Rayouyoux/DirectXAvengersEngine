@@ -30,4 +30,3 @@ namespace ave {
 		Entity* m_poParent;
 	};
 }
-

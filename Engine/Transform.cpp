@@ -13,18 +13,18 @@ namespace ave {
 
 	void Transform::Identity() {
 		m_vScale = { 1.0f, 1.0f, 1.0f };
-		m_mScale = maths::MatriceIdentity();
+		m_mScale = Maths::MatriceIdentity();
 
 		m_vPosition = { 0.0f, 0.0f, 0.0f };
-		m_mPosition = maths::MatriceIdentity();
+		m_mPosition = Maths::MatriceIdentity();
 
 		m_vUp = { 0.0f, 1.0f, 0.0f };
 		m_vDir = { 0.0f, 0.0f, 1.0f };
 		m_vRight = { 1.0f, 0.0f, 0.0f };
 		m_qRotation = { 0.0f, 0.0f, 0.0f, 1.0f };
-		m_mRotation = maths::MatriceIdentity();
+		m_mRotation = Maths::MatriceIdentity();
 
-		m_mTransformation = maths::MatriceIdentity();
+		m_mTransformation = Maths::MatriceIdentity();
 	}
 
 	void Transform::Move(XMFLOAT3* pvPosition) {

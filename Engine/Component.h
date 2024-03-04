@@ -16,7 +16,8 @@ namespace ave {
 		void BindEntity(Entity* poEntity);
 
 		virtual void Start();
-		virtual void Update();
+		virtual void Update(float deltaTime);
+		virtual void LateUpdate(float deltaTime);
 		virtual void Render();
 	};
 };
