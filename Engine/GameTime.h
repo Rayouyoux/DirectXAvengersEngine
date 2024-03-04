@@ -24,18 +24,18 @@ namespace ave
         void        Reset();
 
         // Get Methods
-        double      TotalTime() const;
-        double      DeltaTime() const;
+        float      TotalTime() const;
+        float      DeltaTime() const;
 
     private:
 
         // Private Members
-        float     m_iStartTime;
-        float     m_iPreviousTime;
-        float     m_iCurrentTime;
-        float     m_iSecondsPerCount;
-        float     m_iDeltaTime;
-        float     m_iTotalTime;
+        __int64     m_iStartTime;
+        __int64     m_iPreviousTime;
+        __int64     m_iCurrentTime;
+        __int64     m_iSecondsPerCount;
+        __int64     m_iDeltaTime;
+        __int64     m_iTotalTime;
 
     };
 }

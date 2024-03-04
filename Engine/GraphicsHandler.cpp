@@ -120,8 +120,8 @@ namespace ave {
 		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 		m_view = XMMatrixLookAtLH(pos, target, up);
-		DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
-		m_poCubeEntity->m_poTransform->Move(&mInvLook);
+		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
 		m_poCamera->Start();
@@ -268,8 +268,22 @@ namespace ave {
 
 		XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
 		//XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();
+		
+		
+
+		float rot = XMConvertToRadians(45.0f * deltaTime);
+		XMFLOAT3 rotate = { 0.0f ,rot, 0.0f };
+
+		XMFLOAT3 scale = { -0.5f * deltaTime, -0.5f * deltaTime , -0.5f * deltaTime };
+
+		m_poCubeEntity->m_poTransform->Rotate(&rotate);
+		m_poCubeEntity->m_poTransform->Scale(&scale);
+
+		m_poCubeEntity->m_poTransform->UpdateMatrice();
+
 		XMMATRIX view = m_view;
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
+
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
 		m_poShader->UpdateObject(objConstants);

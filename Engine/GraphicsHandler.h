@@ -135,7 +135,7 @@ namespace ave {
 
 		virtual void OnResize();
 
-		virtual void Update(float m_poTimer);
+		virtual void Update(float deltaTime);
 		virtual void LateUpdate();
 		virtual void Render();
 
