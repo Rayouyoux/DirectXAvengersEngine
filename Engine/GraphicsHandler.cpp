@@ -113,19 +113,24 @@ namespace ave {
 
 		m_poCubeEntity2 = new Entity();
 		m_poCubeEntity2->Initialize();
-		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
+		/*float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
 		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
-		float y = 5.0f * cosf(XM_PIDIV4);
+		float y = 5.0f * cosf(XM_PIDIV4);*/
 
 		// Build the view matrix.
 		/*XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);*/
-		XMVECTOR pos = XMVectorSet(-4.0f, 0.0f, 0.0f, 1.0f);
+		/*XMVECTOR pos = XMVectorSet(-4.0f, 0.0f, 0.0f, 1.0f);
 		XMVECTOR target = XMVectorZero();
 		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-		m_view = XMMatrixLookAtLH(pos, target, up);
+		m_view = XMMatrixLookAtLH(pos, target, up);*/
 		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
 		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
+		XMVECTOR pos = XMVectorSet(-4.0f, 0.0f, 0.0f, 1.0f);
+		m_poCameraEntity->m_poTransform->SetVectorPosition(&pos);
+		XMVECTOR target = XMVectorZero();
+		m_poCameraEntity->m_poTransform->LookAt(&target);
+		m_view = m_poCameraEntity->m_poTransform->GetMatrixRotation();
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
 		m_poCamera->Start();
@@ -276,7 +281,7 @@ namespace ave {
 
 		XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
 		XMMATRIX world2 = m_poCubeEntity2->m_poTransform->GetWorld();
-		//XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();
+		/*XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();*/
 		
 		
 

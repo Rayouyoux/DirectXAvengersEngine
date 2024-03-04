@@ -190,6 +190,23 @@ namespace ave {
 		m_vDir.z = m_mRotation._33;
 	};
 
+	void Transform::LookAt(FXMVECTOR* poPoint) {
+		XMMATRIX mRot = XMMatrixLookAtLH(XMLoadFloat3(&m_vPosition), *poPoint, XMLoadFloat3(&m_vUp));
+		XMStoreFloat4x4(&m_mRotation, mRot);
+
+		XMStoreFloat4(&m_qRotation, XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_mRotation)));
+
+		m_vRight.x = m_mRotation._11;
+		m_vRight.y = m_mRotation._12;
+		m_vRight.z = m_mRotation._13;
+		m_vUp.x = m_mRotation._21;
+		m_vUp.y = m_mRotation._22;
+		m_vUp.z = m_mRotation._23;
+		m_vDir.x = m_mRotation._31;
+		m_vDir.y = m_mRotation._32;
+		m_vDir.z = m_mRotation._33;
+	}
+
 	Transform::~Transform(){
 
 	}
