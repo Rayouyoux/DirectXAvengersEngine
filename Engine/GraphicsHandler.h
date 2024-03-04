@@ -149,7 +149,6 @@ namespace ave {
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }
 		void Set4xMsaaState(bool value) { m_b4xMsaaState = value; }
-		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::M_poCommandList; }
 
 		virtual void Release();
 	};

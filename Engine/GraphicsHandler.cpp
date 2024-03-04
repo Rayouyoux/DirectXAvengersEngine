@@ -74,7 +74,7 @@ namespace ave {
 
 		m_poFactory->Release();
 		m_poDirectCmdListAlloc->Release();
-		M_poCommandList->Release();
+		m_poCommandList->Release();
 
 		for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
 			m_prSwapChainBuffer[i]->Release();
@@ -156,13 +156,13 @@ namespace ave {
 
 	void GraphicsHandler::OnResize() {
 		if (m_poDevice == nullptr
-			|| M_poCommandList == nullptr
+			|| m_poCommandList == nullptr
 			|| m_poDirectCmdListAlloc == nullptr)
 			return;
 
 		FlushCommandQueue();
 
-		if (FAILED(M_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
+		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
 			return;
 		}
 
@@ -237,13 +237,13 @@ namespace ave {
 		// Transition the resource from its initial state to be used as a depth buffer.
 		CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_prDepthStencilBuffer,
 			D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
-		M_poCommandList->ResourceBarrier(1, &resourceBarrier);
+		m_poCommandList->ResourceBarrier(1, &resourceBarrier);
 
 		// Execute the resize commands.
-		if (FAILED(M_poCommandList->Close())) {
+		if (FAILED(m_poCommandList->Close())) {
 			return;
 		}
-		ID3D12CommandList* cmdsLists[] = { M_poCommandList };
+		ID3D12CommandList* cmdsLists[] = { m_poCommandList };
 		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 		// Wait until resize is complete.
@@ -384,12 +384,12 @@ namespace ave {
 			D3D12_COMMAND_LIST_TYPE_DIRECT,
 			m_poDirectCmdListAlloc, // Associated command allocator
 			nullptr,                // Initial PipelineStateObject
-			IID_PPV_ARGS(&M_poCommandList)))) {
+			IID_PPV_ARGS(&m_poCommandList)))) {
 			return false;
 		}
 
 		// Start off in a closed state.
-		M_poCommandList->Close();
+		m_poCommandList->Close();
 
 		return true;
 	}
@@ -483,9 +483,9 @@ namespace ave {
 #pragma region Rendering
 
 	void GraphicsHandler::ResetCommandList() {
-		M_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);
-		M_poCommandList->RSSetViewports(1, &m_oScreenViewport);
-		M_poCommandList->RSSetScissorRects(1, &m_oScissorRect);
+		m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr);
+		m_poCommandList->RSSetViewports(1, &m_oScreenViewport);
+		m_poCommandList->RSSetScissorRects(1, &m_oScissorRect);
 	}
 
 	void GraphicsHandler::TransitionFromPresentToRenderTarget() {
@@ -493,7 +493,7 @@ namespace ave {
 			CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_PRESENT,
 			D3D12_RESOURCE_STATE_RENDER_TARGET);
-		M_poCommandList->ResourceBarrier(1, &transition);
+		m_poCommandList->ResourceBarrier(1, &transition);
 	}
 
 	void GraphicsHandler::TransitionFromRenderTargetToPresent() {
@@ -501,7 +501,7 @@ namespace ave {
 			CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET,
 			D3D12_RESOURCE_STATE_PRESENT);
-		M_poCommandList->ResourceBarrier(1, &transition);
+		m_poCommandList->ResourceBarrier(1, &transition);
 	}
 
 	void GraphicsHandler::ClearRenderTargetAndDepthStencil() {
@@ -511,7 +511,7 @@ namespace ave {
 		// Specify the buffers we are going to render to.
 		auto currentBuffer = CurrentBackBufferView();
 		auto depthStencil = DepthStencilView();
-		M_poCommandList->OMSetRenderTargets(1, &currentBuffer, true, &depthStencil);
+		m_poCommandList->OMSetRenderTargets(1, &currentBuffer, true, &depthStencil);
 	}
 
 	void GraphicsHandler::SetCbvDescriptor() {
@@ -521,13 +521,13 @@ namespace ave {
 		
 
 	void GraphicsHandler::CloseCommandList() {
-		if (FAILED(M_poCommandList->Close())) {
+		if (FAILED(m_poCommandList->Close())) {
 			return;
 		}
 	}
 
 	void GraphicsHandler::QueueCommandList() {
-		ID3D12CommandList* cmdsLists[] = { GraphicsHandler::M_poCommandList };
+		ID3D12CommandList* cmdsLists[] = { GraphicsHandler::m_poCommandList };
 		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 	}
 
