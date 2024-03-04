@@ -32,6 +32,7 @@ std::wstring RACISTEXMFLOAT4X4ToString(const DirectX::XMFLOAT4X4& matrix)
 
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
+	ID3D12Device* GraphicsHandler::m_poDevice;
 
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;

@@ -6,16 +6,30 @@
 #include "GraphicsHandler.h"
 #include "UploadBuffer.h"
 #include "Vertex.h"
-#include "Texture.h"
+//#include "Texture.h"
 #include "Mesh.h"
 #include <iostream>
 #include "ConstantsStruct.h"
 
 namespace ave {
+    
+    Shader::Shader(){
+        m_poGraphics = nullptr;
+        m_poDevice = nullptr;
+        m_poCbvHeap = nullptr;
+        m_poSerializedRootSig = nullptr;
+        m_poPass = nullptr;
+        m_poObject = nullptr;
+        m_poRootSignature = nullptr;
+        m_poVS = nullptr;
+        m_poPS = nullptr;
 
-
-    Shader::Shader() {
-
+        m_iIdRootSignature = 0;
+        m_iRootTexture = 0;
+        m_iRootTexture2 = 0;
+        m_iRootObject = 0;
+        m_iRootPass = 0;
+        m_iTextureCount = 0;
     }
     ID3D12PipelineState* Shader::GetPso() {
         return m_poPso;
@@ -29,6 +43,14 @@ namespace ave {
         return m_iRootPass;
     }
 
+    int Shader::GetRootTexture() {
+        return m_iRootTexture;
+    }
+
+    int Shader::GetRootTexture2() {
+        return m_iRootTexture2;
+    }
+
     D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
         return m_poObject->Resource()->GetGPUVirtualAddress();
     }
@@ -40,25 +62,8 @@ namespace ave {
     UploadBuffer<PassConstants>* Shader::GetPass() {
         return m_poPass;
     }
-    //void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
-
-    //    //Root
-    //    pList->SetGraphicsRootSignature(m_poRootSignature);
-
-    //    m_poPass = new UploadBuffer(poDevice, 100, false, sizeof(Pass));
-    //    //Pass
-    //    pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
-
-    //    //Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
-
-    //    //Pipeline
-    //    pList->SetPipelineState(m_poPso);
-
-    //    //Topology
-    //    pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    //}
-
-    //A appeler dans l'init
+  
+ 
     bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
 
         m_poDevice = poGraphicsHandler->GetDevice();
@@ -256,7 +261,9 @@ namespace ave {
                 m_iRootObject = 1;
                 m_iRootPass = 2;
 
-                //rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)SGraphics::I()->GetStaticSamplerCount(), SGraphics::I()->GetStaticSamplerCount());
+                auto staticSamplers = GetStaticSamplers();
+
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data());
                 break;
             };
             case ROOTSIGNATURE_VERTEX_COLOR_UV: {
@@ -281,7 +288,9 @@ namespace ave {
                 m_iRootObject = 1;
                 m_iRootPass = 2;
 
-                //rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)SGraphics::I()->GetStaticSamplerCount(), SGraphics::I()->GetStaticSamplerCount());
+                auto staticSamplers = GetStaticSamplers();
+
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data());
                 break;
             };
             case ROOTSIGNATURE_VERTEX_2UV: {
@@ -310,7 +319,9 @@ namespace ave {
                 m_iRootObject = 2;
                 m_iRootPass = 3;
 
-                //rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)SGraphics::I()->GetStaticSamplerCount(), SGraphics::I()->GetStaticSamplerCount());
+                auto staticSamplers = GetStaticSamplers();
+
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data());
                 break;
             };
             default: {
@@ -346,7 +357,61 @@ namespace ave {
         
     }
 
+    std::vector<CD3DX12_STATIC_SAMPLER_DESC> Shader::GetStaticSamplers()
+    {
+        std::vector<CD3DX12_STATIC_SAMPLER_DESC> samplers;
+
+        samplers.emplace_back(
+            0,
+            D3D12_FILTER_MIN_MAG_MIP_POINT,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP);
+
+        samplers.emplace_back(
+            1,
+            D3D12_FILTER_MIN_MAG_MIP_POINT,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+
+        samplers.emplace_back(
+            2,
+            D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP);
+
+        samplers.emplace_back(
+            3,
+            D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+
+        samplers.emplace_back(
+            4,
+            D3D12_FILTER_ANISOTROPIC,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            0.0f,
+            8);
+
+        samplers.emplace_back(
+            5,
+            D3D12_FILTER_ANISOTROPIC,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            0.0f,
+            8);
+
+        return samplers;
+    }
+
     Shader::~Shader() {
         Destroy();
     }
+
 }

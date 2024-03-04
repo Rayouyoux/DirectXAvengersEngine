@@ -31,7 +31,6 @@ namespace ave {
 		////Pass
 		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
 
-		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
 		////Pipeline
 		poList->SetPipelineState(m_poShader->GetPso());
@@ -39,6 +38,12 @@ namespace ave {
 		////Topology
 		poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		//
+
+   //     if (m_poShader->GetRootTexture() != -1 && pTexture)
+			//poList->SetGraphicsRootDescriptorTable(m_poShader->GetRootTexture(), );
+
+   //     if (m_poShader->GetRootTexture() != -1 && pTexture2)
+			//poList->SetGraphicsRootDescriptorTable(m_poShader->GetRootTexture(), /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
 
 		auto oVertexBufferView = m_poMesh->VertexBufferView();
 		auto oIndexBufferView = m_poMesh->IndexBufferView();
