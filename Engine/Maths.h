@@ -3,11 +3,14 @@
 
 using namespace DirectX;
 
-namespace ave {
+namespace ave 
+{
 
-	namespace maths {
+	namespace maths 
+	{
 
 		XMFLOAT4X4 MatriceIdentity();
+		const float PI = 3.1415926535f;
 
 	};
 }

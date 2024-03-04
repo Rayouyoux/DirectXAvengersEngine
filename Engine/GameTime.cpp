@@ -2,6 +2,7 @@
 #include "GameTime.h"
 
 namespace ave {
+
     GameTime::GameTime() :
         m_iStartTime(0),
         m_iPreviousTime(0),
@@ -14,7 +15,8 @@ namespace ave {
     GameTime::~GameTime()
     {}
 
-    void GameTime::Initialize() {
+    void GameTime::Initialize() 
+    {
 
         QueryPerformanceFrequency((LARGE_INTEGER*)&m_iSecondsPerCount);
 
@@ -23,7 +25,8 @@ namespace ave {
 
     }
 
-    void GameTime::Tick() {
+    void GameTime::Tick() 
+    {
 
         QueryPerformanceCounter((LARGE_INTEGER*)&m_iCurrentTime);
 
@@ -33,7 +36,8 @@ namespace ave {
 
     }
 
-    void GameTime::Reset() {
+    void GameTime::Reset() 
+    {
 
         m_iStartTime = 0;
         m_iPreviousTime = 0;
@@ -46,15 +50,17 @@ namespace ave {
 
     }
 
-    double GameTime::TotalTime() const {
+    float GameTime::TotalTime() const 
+    {
 
-        return static_cast<double>(m_iTotalTime) / m_iSecondsPerCount;
+        return static_cast<float>(m_iTotalTime) / m_iSecondsPerCount;
 
     }
 
-    double GameTime::DeltaTime() const {
+    float GameTime::DeltaTime() const
+    {
 
-        return static_cast<double>(m_iDeltaTime) / m_iSecondsPerCount;
+        return static_cast<float>(m_iDeltaTime) / m_iSecondsPerCount;
 
     }
 }

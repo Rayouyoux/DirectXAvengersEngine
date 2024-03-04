@@ -1,35 +1,43 @@
 #pragma once
-#include "D3DUtils.h"
-#include "d3d12.h"
-#include <wrl.h>
-#include "d3dx12.h"
+
+#include "pch.h"
 
 namespace ave {
-   
+    template<typename T>
     class UploadBuffer
     {
     public:
-        UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer, size_t elementSize) :
-            mIsConstantBuffer(isConstantBuffer), mElementByteSize(elementSize)
+        UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) :
+            mIsConstantBuffer(isConstantBuffer)
         {
-            if (isConstantBuffer)
-                mElementByteSize = D3DUtils::CalcConstantBufferByteSize(elementSize);
+            mElementByteSize = sizeof(T);
 
-            auto oHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-            auto RessourceBuffer = CD3DX12_RESOURCE_DESC::Buffer(mElementByteSize * elementCount);
-            if(FAILED(device->CreateCommittedResource(
-                &oHeapProperties,
+            // Constant buffer elements need to be multiples of 256 bytes.
+            // This is because the hardware can only view constant data 
+            // at m*256 byte offsets and of n*256 byte lengths. 
+            // typedef struct D3D12_CONSTANT_BUFFER_VIEW_DESC {
+            // UINT64 OffsetInBytes; // multiple of 256
+            // UINT   SizeInBytes;   // multiple of 256
+            // } D3D12_CONSTANT_BUFFER_VIEW_DESC;
+            if (isConstantBuffer)
+                mElementByteSize = D3DUtils::CalcConstantBufferByteSize(sizeof(T));
+
+
+            CD3DX12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+            CD3DX12_RESOURCE_DESC bufferRessource = CD3DX12_RESOURCE_DESC::Buffer(mElementByteSize * elementCount);
+            if (FAILED(device->CreateCommittedResource(
+                &heapProperties,
                 D3D12_HEAP_FLAG_NONE,
-                &RessourceBuffer,
+                &bufferRessource,
                 D3D12_RESOURCE_STATE_GENERIC_READ,
                 nullptr,
                 IID_PPV_ARGS(&mUploadBuffer)))) {
                 return;
-            }
+            };
 
             if (FAILED(mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData)))) {
                 return;
-            }
+            };
 
             // We do not need to unmap until we are done with the resource.  However, we must not write to
             // the resource while it is in use by the GPU (so we must use synchronization techniques).
@@ -45,14 +53,14 @@ namespace ave {
             mMappedData = nullptr;
         }
 
-        ID3D12Resource* Resource() const
+        ID3D12Resource* Resource()const
         {
             return mUploadBuffer;
         }
 
-        void CopyData(int elementIndex, const void* data)
+        void CopyData(int elementIndex, const T& data)
         {
-            memcpy(&mMappedData[elementIndex * mElementByteSize], data, mElementByteSize);
+            memcpy(&mMappedData[elementIndex * mElementByteSize], &data, sizeof(T));
         }
 
     private:

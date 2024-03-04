@@ -1,7 +1,10 @@
 #pragma once
 
-namespace ave {
-    class GameTime {
+namespace ave 
+{
+
+    class GameTime 
+    {
 
     public:
 
@@ -21,8 +24,8 @@ namespace ave {
         void        Reset();
 
         // Get Methods
-        double      TotalTime() const;
-        double      DeltaTime() const;
+        float      TotalTime() const;
+        float      DeltaTime() const;
 
     private:
 

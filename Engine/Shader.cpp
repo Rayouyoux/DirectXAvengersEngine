@@ -9,12 +9,11 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include <iostream>
+#include "ConstantsStruct.h"
 
 namespace ave {
 
-    struct Pass {
 
-    };
     Shader::Shader() {
 
     }
@@ -26,31 +25,45 @@ namespace ave {
         return m_iRootObject;
     }
 
+    UINT Shader::GetRootPass() {
+        return m_iRootPass;
+    }
+
     D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
-        return m_poPass->Resource()->GetGPUVirtualAddress();
+        return m_poObject->Resource()->GetGPUVirtualAddress();
     }
 
-    void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
-
-        //Root
-        pList->SetGraphicsRootSignature(m_poRootSignature);
-
-        m_poPass = new UploadBuffer(poDevice, 100, false, sizeof(Pass));
-        //Pass
-        pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
-
-        //Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
-
-        //Pipeline
-        pList->SetPipelineState(m_poPso);
-
-        //Topology
-        pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    ID3D12RootSignature* Shader::GetRootSignature() {
+        return m_poRootSignature;
     }
 
-    bool Shader::CreateShader() {
+    UploadBuffer<PassConstants>* Shader::GetPass() {
+        return m_poPass;
+    }
+    //void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
 
-        m_poDevice = m_poGraphics->GetDevice();
+    //    //Root
+    //    pList->SetGraphicsRootSignature(m_poRootSignature);
+
+    //    m_poPass = new UploadBuffer(poDevice, 100, false, sizeof(Pass));
+    //    //Pass
+    //    pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
+
+    //    //Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
+
+    //    //Pipeline
+    //    pList->SetPipelineState(m_poPso);
+
+    //    //Topology
+    //    pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //}
+
+    //A appeler dans l'init
+    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
+
+        m_poDevice = poGraphicsHandler->GetDevice();
+        CreateUploadBuffer();
+        CreateRootSignature(1);
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -93,9 +106,9 @@ namespace ave {
         oPestoDesc.SampleMask = UINT_MAX;
         oPestoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         oPestoDesc.NumRenderTargets = 1;
-        oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UINT;
-        oPestoDesc.SampleDesc.Count = m_poGraphics->Get4xMsaaState() ? 4 : 1;
-        oPestoDesc.SampleDesc.Quality = m_poGraphics->Get4xMsaaState() ? (m_poGraphics->Get4xMsaaQuality() - 1) : 0;
+        oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        oPestoDesc.SampleDesc.Count = poGraphicsHandler->Get4xMsaaState() ? 4 : 1;
+        oPestoDesc.SampleDesc.Quality = poGraphicsHandler->Get4xMsaaState() ? (poGraphicsHandler->Get4xMsaaQuality() - 1) : 0;
         oPestoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         if (m_poDevice->CreateGraphicsPipelineState(&oPestoDesc, IID_PPV_ARGS(&m_poPso)) != S_OK)
         {
@@ -105,6 +118,27 @@ namespace ave {
         return true;
 
     }
+
+    //A appeler dans l'init
+    void Shader::CreateUploadBuffer() {
+        m_poPass = new UploadBuffer<PassConstants> (m_poDevice, 1, true);
+        m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
+    }
+
+
+    void Shader::UpdatePass(PassConstants data) {
+        if (m_poPass) {
+            m_poPass->CopyData(0, data);
+        }
+    }
+
+    void Shader::UpdateObject(ObjectConstants data) {
+        if (m_poObject)
+        {
+            m_poObject->CopyData(0, data);
+        }
+    }
+    
 
  //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
 
@@ -124,10 +158,10 @@ namespace ave {
  //       //  et on l'ajoute au vecteur
  //   }
 
-    void Shader::UpdateObject() {
-        //int index =  //Get l'index de l objet;
-        //m_voObjects[1]->CopyData()
-    }
+    //void Shader::UpdateObject() {
+    //    //int index =  //Get l'index de l objet;
+    //    //m_voObjects[1]->CopyData()
+    //}
 
     ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {
         
@@ -166,6 +200,12 @@ namespace ave {
     }
 
     bool Shader::CreateRootSignature(int id) {
+        m_iIdRootSignature = id;
+        m_iTextureCount = 0;
+        m_iRootTexture = -1;
+        m_iRootTexture2 = -1;
+        m_iRootObject = 0;
+        m_iRootPass = 1;
 
         CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc;
 
@@ -283,12 +323,13 @@ namespace ave {
         }
     }
     void Shader::AddObject() {
-        m_voObjects.push_back(m_poPass);
+       /* m_voObjects.push_back(m_poPass);*/
     }
 
     void Shader::Destroy() {
         m_poPso->Release();
         delete m_poPass;
+        delete m_poObject;
         for (int i = 0; i < m_voObjects.size(); i++) {
             delete m_voObjects[i];
         }
