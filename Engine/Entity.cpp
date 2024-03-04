@@ -9,15 +9,20 @@ namespace ave {
 	Entity::Entity() {
 		m_poTransform = nullptr;
 		m_poParent = nullptr;
+		m_iID = 0;
+		m_bIsAlive = true;
 	}
 
 	Entity::~Entity()
 	{}
 
-	void Entity::Start(Entity* poParent) {
+	void Entity::Initialize(Entity * poParent) {
 		m_poTransform = new Transform();
 		m_poParent = poParent;
 	}
+
+	void Entity::Start() 
+	{}
 
 	void Entity::Update(float iDeltaTime) {
 		for (int i = 0; i < m_loComponent.size(); i++) {
@@ -33,5 +38,13 @@ namespace ave {
 		for (int i = 0; i < m_loComponent.size(); i++) {
 			m_loComponent[i]->Render();
 		}
+	}
+
+	bool Entity::GetIsAlive() {
+		return m_bIsAlive;
+	}
+
+	void Entity::ToggleIsAlive() {
+		m_bIsAlive = !m_bIsAlive;
 	}
 };

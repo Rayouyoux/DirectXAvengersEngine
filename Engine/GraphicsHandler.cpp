@@ -106,10 +106,10 @@ namespace ave {
 		m_poMesh = new Mesh();
 
 		m_poCameraEntity = new Entity();
-		m_poCameraEntity->Start();
+		m_poCameraEntity->Initialize();
 
 		m_poCubeEntity = new Entity();
-		m_poCubeEntity->Start();
+		m_poCubeEntity->Initialize();
 		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
 		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
 		float y = 5.0f * cosf(XM_PIDIV4);

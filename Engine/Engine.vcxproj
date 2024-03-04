@@ -155,6 +155,7 @@
     <ClInclude Include="AvengersEngine.h" />
     <ClInclude Include="D3DUtils.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="ConstantsStruct.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3DUtils.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
