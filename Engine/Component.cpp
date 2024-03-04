@@ -16,16 +16,4 @@ namespace ave {
 	void Component::BindEntity(Entity* poEntity) {
 		m_poEntity = poEntity;
 	}
-
-	void Component::Start() {
-
-	}
-
-	void Component::Update() {
-
-	}
-
-	void Component::Render() {
-
-	}
 };

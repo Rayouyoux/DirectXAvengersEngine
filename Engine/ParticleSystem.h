@@ -45,8 +45,6 @@ namespace ave {
 			Particle();
 			~Particle();
 
-			virtual void Initialize();
-
 			virtual void OnInstantiation() override;
 			virtual void OnAcquire() override;
 			virtual void OnRelease() override;

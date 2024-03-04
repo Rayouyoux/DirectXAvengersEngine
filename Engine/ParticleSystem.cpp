@@ -63,7 +63,7 @@ namespace ave {
 					scale = Lerp<XMVECTOR>(startScale, endScale, alpha);
 				}
 				else {
-					scale = m_poBehaviour->Scale;
+					scale = XMLoadFloat3(&m_poBehaviour->Scale);
 				}
 
 				float size;
@@ -73,7 +73,7 @@ namespace ave {
 				else {
 					size = m_poBehaviour->Size;
 				}
-				m_poTransform->SetVectorScale(scale * size);
+				m_poTransform->Set
 			}
 
 			// Update position based on Speed along Dir
