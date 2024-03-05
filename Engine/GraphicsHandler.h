@@ -15,6 +15,7 @@ namespace ave {
 	class MeshRenderer;
 	class Entity;
 	class Camera;
+	class Texture;
 	
 	class Mesh;
 
@@ -27,6 +28,7 @@ namespace ave {
 		Entity* m_poCameraEntity;
 		Entity* m_poCubeEntity;
 		Camera* m_poCamera;
+		Texture* m_poTexture;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;

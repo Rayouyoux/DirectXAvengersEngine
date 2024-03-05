@@ -68,7 +68,7 @@ namespace ave {
 		void UpdatePass(PassConstants data);
 		void UpdateObject(ObjectConstants data);
 
-		std::vector<CD3DX12_STATIC_SAMPLER_DESC> GetStaticSamplers();
+		static std::vector<CD3DX12_STATIC_SAMPLER_DESC> GetStaticSamplers();
 
 		~Shader();
 

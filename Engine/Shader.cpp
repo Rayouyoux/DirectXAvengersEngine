@@ -68,7 +68,7 @@ namespace ave {
 
         m_poDevice = poGraphicsHandler->GetDevice();
         CreateUploadBuffer();
-        CreateRootSignature(1);
+        CreateRootSignature(2);
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -239,6 +239,7 @@ namespace ave {
                 slotRootParameters[0].InitAsConstantBufferView(0);
                 slotRootParameters[1].InitAsConstantBufferView(1);
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
                 break;
             };
             case ROOTSIGNATURE_VERTEX_UV: {
@@ -263,7 +264,10 @@ namespace ave {
 
                 auto staticSamplers = GetStaticSamplers();
 
-                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data());
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(),
+                    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+               
+
                 break;
             };
             case ROOTSIGNATURE_VERTEX_COLOR_UV: {
@@ -290,7 +294,8 @@ namespace ave {
 
                 auto staticSamplers = GetStaticSamplers();
 
-                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data());
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+                
                 break;
             };
             case ROOTSIGNATURE_VERTEX_2UV: {
@@ -321,7 +326,7 @@ namespace ave {
 
                 auto staticSamplers = GetStaticSamplers();
 
-                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data());
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
                 break;
             };
             default: {
@@ -329,9 +334,16 @@ namespace ave {
                 return false;
             }
         }
-        if (D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, nullptr)!= S_OK) {
+        ID3DBlob* error = nullptr;
+
+        HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+
+        if (error != nullptr)
+        {
+            ::OutputDebugStringA((char*)error->GetBufferPointer());
             return false;
         }
+           
     }
     void Shader::AddObject() {
        /* m_voObjects.push_back(m_poPass);*/
@@ -366,28 +378,40 @@ namespace ave {
             D3D12_FILTER_MIN_MAG_MIP_POINT,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP);
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            0.0f,
+            1,
+            D3D12_SHADER_VISIBILITY_PIXEL);
 
         samplers.emplace_back(
             1,
             D3D12_FILTER_MIN_MAG_MIP_POINT,
             D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
             D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            0.0f,
+            1,
+            D3D12_SHADER_VISIBILITY_PIXEL);
 
         samplers.emplace_back(
             2,
             D3D12_FILTER_MIN_MAG_MIP_LINEAR,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP);
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+            0.0f,
+            1,
+            D3D12_SHADER_VISIBILITY_PIXEL);
 
         samplers.emplace_back(
             3,
             D3D12_FILTER_MIN_MAG_MIP_LINEAR,
             D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
             D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+            0.0f,
+            1,
+            D3D12_SHADER_VISIBILITY_PIXEL);
 
         samplers.emplace_back(
             4,
@@ -396,7 +420,8 @@ namespace ave {
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             0.0f,
-            8);
+            8,
+            D3D12_SHADER_VISIBILITY_PIXEL);
 
         samplers.emplace_back(
             5,
@@ -405,7 +430,8 @@ namespace ave {
             D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
             D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
             0.0f,
-            8);
+            8,
+            D3D12_SHADER_VISIBILITY_PIXEL);
 
         return samplers;
     }

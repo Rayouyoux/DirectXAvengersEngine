@@ -14,6 +14,7 @@
 #include "Transform.h"
 #include "Maths.h"
 #include "ConstantsStruct.h"
+#include "Texture.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -106,6 +107,8 @@ namespace ave {
 		m_poShader = new Shader();
 		m_poMesh = new Mesh();
 
+		m_poTexture = new Texture();
+
 		m_poCameraEntity = new Entity();
 		m_poCameraEntity->Start();
 
@@ -145,8 +148,11 @@ namespace ave {
 			return false;
 		}
 
+		m_poTexture->Init();
+		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\bricks.dds");
 		bool test2 = m_poShader->CreateShader(this)
-			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
+			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList())
+			&& m_poTexture->BuildDescriptorHeaps("wall");
 
 		CloseCommandList();
 		QueueCommandList();

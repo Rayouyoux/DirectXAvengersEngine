@@ -39,16 +39,16 @@ namespace ave {
 
 	bool Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList){
 
-		std::array<VERTEX_COLOR, 8> vertices =
+		std::array<VERTEX_UV, 8> vertices =
 		{
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+			VERTEX_UV({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
+			VERTEX_UV({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
+			VERTEX_UV({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
+			VERTEX_UV({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
+			VERTEX_UV({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)}),
+			VERTEX_UV({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)}),
+			VERTEX_UV({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)}),
+			VERTEX_UV({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)})
 		};
 
 		std::array<std::uint16_t, 36> indices =

@@ -14,15 +14,15 @@ cbuffer cbPerPass : register(b1)
 struct VertexIn
 {
     float3 pos : POSITION;
-    float4 color : COLOR;
-    //float2 uv : TEXCOORD;
+    //float4 color : COLOR;
+    float2 uv : TEXCOORD;
 };
 
 struct VertexOut
 {
     float4 pos : SV_POSITION;
-    float4 color : COLOR;
-    //float2 uv : TEXCOORD;
+    //float4 color : COLOR;
+    float2 uv : TEXCOORD;
 };
 
 VertexOut VS(VertexIn vin)
@@ -32,16 +32,16 @@ VertexOut VS(VertexIn vin)
     //Transform to homogeneous to space
     float4 pos = mul(float4(vin.pos, 1.0f), gWorld);
     vout.pos = mul(pos, mul(gView, gProj));
-    vout.color = vin.color;
-    //vout.uv = vin.uv;
+    //vout.color = vin.color;
+    vout.uv = vin.uv;
     
     return vout;
 }
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    return pin.color;
-    //return gTex.Sample(gSampler, pin.uv);
+    //return pin.color;
+    return gTex.Sample(gSampler, pin.uv);
 }
 
 void main(in VertexIn vin, out VertexOut vout)
