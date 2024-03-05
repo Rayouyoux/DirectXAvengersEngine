@@ -30,7 +30,7 @@ namespace ave {
             char key = _getch();
             return key;
         }
-        return;
+        return NULL;
     }
 
 }
