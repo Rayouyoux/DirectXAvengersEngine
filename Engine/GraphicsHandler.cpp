@@ -151,7 +151,7 @@ namespace ave {
 		}
 
 		m_poTexture->Init();
-		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\rayan.dds");
+		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\nat.dds");
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList())
 			&& m_poTexture->BuildDescriptorHeaps("wall");
