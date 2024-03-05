@@ -7,6 +7,9 @@
 #include "Shader.h"
 #include "GraphicsHandler.h"
 #include "UploadBuffer.h"
+#include "ConstantsStruct.h"
+#include "Entity.h"
+#include "Transform.h"
 
 namespace ave {
 	MeshRenderer::MeshRenderer() : Component(){
@@ -20,10 +23,17 @@ namespace ave {
 
 	void MeshRenderer::SetShader(Shader* poShader) {
 		m_poShader = poShader;
+		m_poBuffer = new UploadBuffer<ObjectConstants>(m_poShader->GetDevice(), 1, true);
 	}
 
 	void MeshRenderer::Start() {
 		
+	}
+
+	void MeshRenderer::Update(float deltaTime) {
+		ObjectConstants objConstants;
+		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
+		m_poBuffer->CopyData(0, objConstants);
 	}
 
 	void MeshRenderer::Render() {
@@ -31,6 +41,8 @@ namespace ave {
 
 		//Root
 		poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
+
+		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
 
 		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
@@ -45,7 +57,7 @@ namespace ave {
 		poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
 		poList->IASetIndexBuffer(&oIndexBufferView);
 
-		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poShader->GetVirtualAdress());
+		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poBuffer->Resource()->GetGPUVirtualAddress());
 
 		poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(),1,0,0,0);
 

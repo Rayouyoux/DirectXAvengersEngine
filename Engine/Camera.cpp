@@ -59,8 +59,8 @@ namespace ave {
 
 	void Camera::Render()
 	{
-		ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
-		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
+		/*ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
+		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());*/
 	}
 
 	DirectX::XMMATRIX Camera::GetProjectionMatrix() const

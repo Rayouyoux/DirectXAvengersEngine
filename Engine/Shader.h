@@ -47,7 +47,7 @@ namespace ave {
 		void ResetIndexObject();
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
-		void AddObject();
+		/*void AddObject();*/
 		bool CreateShader(GraphicsHandler* poGraphicsHandler);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
@@ -55,7 +55,7 @@ namespace ave {
 
 		ID3DBlob* CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint, const std::string& oTarget);
 		
-
+		ID3D12Device* GetDevice();
 		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
 		UINT GetRootPass();
@@ -63,8 +63,8 @@ namespace ave {
 		ID3D12PipelineState* GetPso();
 		UploadBuffer<PassConstants>* GetPass();
 		void UpdatePass(PassConstants data);
-		void UpdateObject(ObjectConstants data);
-		void UpdateObject(ObjectConstants data, int index);
+		/*void UpdateObject(ObjectConstants data);
+		void UpdateObject(ObjectConstants data, int index);*/
 
 
 

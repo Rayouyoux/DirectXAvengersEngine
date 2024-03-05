@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "EntityManager.h"
+#include "Transform.h"
 
 namespace ave {
 
@@ -12,10 +13,13 @@ namespace ave {
 		}
 	}
 
-	void EntityManager::Update(float iDeltaTime)
+	void EntityManager::Update(float fDeltaTime)
 	{
+		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
+		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
+
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			m_voAliveEntities[i]->Update(iDeltaTime);
+			m_voAliveEntities[i]->Update(fDeltaTime);
 		}
 	}
 

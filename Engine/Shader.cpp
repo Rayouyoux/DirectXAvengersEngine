@@ -126,8 +126,8 @@ namespace ave {
     void Shader::CreateUploadBuffer() {
         m_poPass = new UploadBuffer<PassConstants> (m_poDevice, 1, true);
         //m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
-        AddObject();
-        AddObject();
+        /*AddObject();
+        AddObject();*/
     }
 
 
@@ -137,7 +137,7 @@ namespace ave {
         }
     }
 
-    void Shader::UpdateObject(ObjectConstants data) {
+  /*  void Shader::UpdateObject(ObjectConstants data) {
         if (m_poObject)
         {
             m_poObject->CopyData(0, data);
@@ -146,7 +146,7 @@ namespace ave {
 
     void Shader::UpdateObject(ObjectConstants data, int index) {
         m_voObjects[index]->CopyData(0, data);
-    }
+    }*/
     
 
  //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
@@ -331,9 +331,14 @@ namespace ave {
             return false;
         }
     }
-    void Shader::AddObject() {
+
+   /* void Shader::AddObject() {
        UploadBuffer<ObjectConstants>* poBuffer = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
        m_voObjects.push_back(poBuffer);
+    }*/
+
+    ID3D12Device* Shader::GetDevice() {
+        return m_poDevice;
     }
 
     void Shader::Destroy() {
