@@ -5,6 +5,8 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "Maths.h"
+#include "Entity.h"
+#include "ConstantsStruct.h"
 
 namespace ave {
 	using namespace Maths;
@@ -43,6 +45,7 @@ namespace ave {
 			randomRotation.z = Random::Range(-360, 360);
 			XMVECTOR vectorRot = DirectX::XMLoadFloat3(&randomRotation);
 			m_poTransform->Rotate(&vectorRot);
+			m_poTransform->UpdateMatrice();
 
 			//XMVECTOR scale = DirectX::XMLoadFloat3(&m_poBehaviour->Scale);
 			//XMVECTOR vectorScale = scale * m_poBehaviour->Size;
@@ -51,6 +54,7 @@ namespace ave {
 
 		void Particle::OnRelease() {
 			m_poTransform->Identity();
+			m_iLifetime = 0;
 		}
 
 		void Particle::Update(float deltaTime) {
@@ -77,14 +81,38 @@ namespace ave {
 				}
 				XMVECTOR newScale = scale * size;
 				m_poTransform->SetVectorScale(&newScale);
+				m_poTransform->UpdateMatrice();
+			}
+
+			float rotSpeed;
+			if (m_poBehaviour->RotateOverTime) {
+				rotSpeed = Lerp<float>(m_poBehaviour->RotSpeed,
+					m_poBehaviour->EndRotSpeed, alpha);
+			} else
+				rotSpeed = m_poBehaviour->RotSpeed;
+			if (rotSpeed != 0) {
+				m_poTransform->RotateOnDir(rotSpeed * deltaTime);
 			}
 
 			// Update position based on Speed along Dir
+			float speed;
+			if (m_poBehaviour->SpeedOverTime) {
+				speed = Lerp<float>(m_poBehaviour->Speed,
+					m_poBehaviour->EndSpeed, alpha);
+			} else
+				speed = m_poBehaviour->Speed;
+
 			if (m_poBehaviour->Speed != 0) {
 				XMVECTOR dir = m_poTransform->GetVectorDir();
-				XMVECTOR offset = dir * m_poBehaviour->Speed * deltaTime;
+				XMVECTOR offset = dir * speed * deltaTime;
 				m_poTransform->Move(&offset);
+				m_poTransform->UpdateMatrice();
 			}
+
+			// Render Update
+			ObjectConstants objConstants;
+			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poTransform->GetWorld()));
+			m_poShader->UpdateObject(objConstants);
 		}
 
 		void Particle::Render() {
@@ -136,9 +164,10 @@ namespace ave {
 			m_poParticlePool->Release();
 		}
 
-		void ParticleSystem::Initialize(int iRate, int iCapacity) {
+		void ParticleSystem::Initialize(float iRate, int iCapacity) {
 			m_iCapacity = iCapacity;
 			m_iEmissionRate = iRate;
+			m_fRateDebounce = 1 / m_iEmissionRate;
 			m_poParticlePool->Initialize<Particle>(iCapacity);
 		}
 
@@ -162,6 +191,8 @@ namespace ave {
 			if (m_fRateDebounce >= 1 / m_iEmissionRate) {
 				m_fRateDebounce -= 1 / m_iEmissionRate;
 				Particle* particle = m_poParticlePool->AcquireObject<Particle>();
+				XMVECTOR pos = m_poEntity->m_poTransform->GetVectorPosition();
+				particle->m_poTransform->SetVectorPosition(&pos);
 				particle->SetBehaviour(m_poBehaviour);
 				particle->SetMesh(m_poMesh);
 				particle->SetShader(m_poShader);
@@ -169,11 +200,12 @@ namespace ave {
 				m_lActiveParticles.push_back(particle);
 			}
 
-			for (int i = 0; i < m_lActiveParticles.size(); i++) {
+			for (int i = m_lActiveParticles.size()-1; i >= 0; i--) {
 				Particle* particle = m_lActiveParticles[i];
 				particle->m_iLifetime += deltaTime;
 
 				if (particle->m_iLifetime >= particle->m_poBehaviour->MaxLifetime) {
+					m_lActiveParticles.erase(m_lActiveParticles.begin() + i);
 					m_poParticlePool->ReleaseObject(particle);
 				}
 				else {

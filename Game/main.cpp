@@ -1,6 +1,7 @@
 #include "AvengersEngine.h"
 #include "ObjectPooler.h"
 #include <vector>
+#include <sstream>
 #if defined(DEBUG) | defined(_DEBUG)
 #include <crtdbg.h>
 #endif
@@ -29,22 +30,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         MessageBoxA(NULL, "Euh ça bug ?", "ALED", 0);
         return 0;
     }
-
-    ObjectPool* myPool = ObjectPool::Create();
-    myPool->Initialize<Particle>(10);
-
-    for (int i = 0; i < 8; i++) {
-        myPool->AcquireObject<Particle>();
-    }
-
-    int count = myPool->CountActive();
-
-    DirectX::XMVECTORF32 color = (count == 8) ? DirectX::Colors::Green : DirectX::Colors::Orange;
-    gameInstance->GetGraphics()->SetFillColor(color);
-
-    myPool->Release();
   
     int res = gameInstance->Run();
+
 #ifdef _DEBUG
     _CrtMemState memStateEnd, memStateDiff;
     _CrtMemCheckpoint(&memStateEnd);
@@ -53,5 +41,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
     }
 #endif 
-    return res;
+    return 0;
 }

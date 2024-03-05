@@ -133,8 +133,7 @@ namespace ave {
     }
 
     void Shader::UpdateObject(ObjectConstants data) {
-        if (m_poObject)
-        {
+        if (m_poObject) {
             m_poObject->CopyData(0, data);
         }
     }

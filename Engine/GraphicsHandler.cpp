@@ -131,17 +131,16 @@ namespace ave {
 		/*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
 		Logger::PrintLog(magic.c_str());*/
 
-		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
-		poMeshRenderer->SetMesh(m_poMesh);
-		poMeshRenderer->SetShader(m_poShader);
+		//MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
+		//poMeshRenderer->SetMesh(m_poMesh);
+		//poMeshRenderer->SetShader(m_poShader);
 
 		m_poBehaviour = new Particles::ParticleBehaviour();
 		m_poParticleSystem = m_poCubeEntity->AddComponent<Particles::ParticleSystem>();
-		m_poParticleSystem->Initialize(10, 300);
-		
 		m_poParticleSystem->SetBehaviour(m_poBehaviour);
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);
+		m_poParticleSystem->Initialize(0.5, 1);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -273,7 +272,7 @@ namespace ave {
 
 	void GraphicsHandler::Update(float deltaTime) {
 		/*m_poCameraEntity->Update(deltaTime);*/
-		/*m_poCubeEntity->Update(deltaTime);*/
+		m_poCubeEntity->Update(deltaTime);
 
 		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 
@@ -300,16 +299,14 @@ namespace ave {
 		XMMATRIX view = m_view;
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
 
-		ObjectConstants objConstants;
-		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		m_poShader->UpdateObject(objConstants);
+		//ObjectConstants objConstants;
+		//XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+		//m_poShader->UpdateObject(objConstants);
 
 		PassConstants passConstants;
 		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
 		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
 		m_poShader->UpdatePass(passConstants);
-
-		m_poParticleSystem->Update(deltaTime);
 	}
 
 	void GraphicsHandler::LateUpdate() {
@@ -320,9 +317,6 @@ namespace ave {
 		RenderBegin();
 
 		m_poCubeEntity->Render();
-		// Add your coubeh
-
-		m_poParticleSystem->Render();
 
 		RenderCease();
 	}

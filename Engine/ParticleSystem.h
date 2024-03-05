@@ -22,15 +22,22 @@ namespace ave {
 
 		struct ParticleBehaviour {
 			float MaxLifetime = 2;
-			float Speed = 3;
+
+			float Speed = 0;
+			bool SpeedOverTime = false;
+			float EndSpeed = 5;
+
+			float RotSpeed = 0;
+			bool RotateOverTime = true;
+			float EndRotSpeed = 5;
 
 			const DirectX::XMFLOAT3 Scale = { 1.f, 1.f, 1.f };
-			bool ScaleOverTime;
-			const DirectX::XMFLOAT3 EndScale = { 1, 0.2f, 0.2f };
+			bool ScaleOverTime = false;
+			const DirectX::XMFLOAT3 EndScale = { 1, 1, 1 };
 
-			float Size = 1;
-			bool SizeOverTime;
-			float EndSize = 0.2f;
+			float Size = 1.f;
+			bool SizeOverTime = true;
+			float EndSize = 0;
 
 			ParticleRenderingType RenderingType = Mesh;
 		};
@@ -65,7 +72,7 @@ namespace ave {
 		private:
 			ObjectPooling::ObjectPool* m_poParticlePool;
 			int m_iCapacity;
-			int m_iEmissionRate;
+			float m_iEmissionRate;
 
 			ParticleBehaviour* m_poBehaviour;
 			ave::Mesh* m_poMesh;
@@ -79,7 +86,7 @@ namespace ave {
 			ParticleSystem();
 			~ParticleSystem();
 
-			void Initialize(int iRate, int iCapacity);
+			void Initialize(float iRate, int iCapacity);
 
 			void SetBehaviour(ParticleBehaviour* behaviour);
 			void SetMesh(ave::Mesh* mesh);
