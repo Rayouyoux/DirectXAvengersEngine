@@ -68,7 +68,6 @@ namespace ave {
 
         m_poDevice = poGraphicsHandler->GetDevice();
         CreateUploadBuffer();
-        CreateRootSignature(2);
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -85,6 +84,7 @@ namespace ave {
             return false;
         }
 
+        CreateRootSignature(2);
 
         if (m_poDevice->CreateRootSignature((UINT)0, m_poSerializedRootSig->GetBufferPointer(), m_poSerializedRootSig->GetBufferSize(), IID_PPV_ARGS(&m_poRootSignature))) {
             Destroy();
@@ -261,13 +261,21 @@ namespace ave {
                 m_iRootTexture = 0;
                 m_iRootObject = 1;
                 m_iRootPass = 2;
-
                 auto staticSamplers = GetStaticSamplers();
-
+                    
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(),
                     D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-               
+                ID3DBlob* error = nullptr;
 
+                //a redeplacer
+                HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+
+                if (error != nullptr)
+                {
+                    ::OutputDebugStringA((char*)error->GetBufferPointer());
+                    return false;
+                }
+                return true;
                 break;
             };
             case ROOTSIGNATURE_VERTEX_COLOR_UV: {
@@ -334,15 +342,16 @@ namespace ave {
                 return false;
             }
         }
-        ID3DBlob* error = nullptr;
+        
 
+     /*   rootSigDesc;
         HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
 
         if (error != nullptr)
         {
             ::OutputDebugStringA((char*)error->GetBufferPointer());
             return false;
-        }
+        }*/
            
     }
     void Shader::AddObject() {
@@ -374,64 +383,93 @@ namespace ave {
         std::vector<CD3DX12_STATIC_SAMPLER_DESC> samplers;
 
         samplers.emplace_back(
-            0,
-            D3D12_FILTER_MIN_MAG_MIP_POINT,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            0.0f,
-            1,
-            D3D12_SHADER_VISIBILITY_PIXEL);
+            0,                                  // Register
+            D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+            0.0f,                               // MipLODBias
+            8,                                  // MaxAnisotropy
+            D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+            D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+            0.0f,                               // MinLOD
+            D3D12_FLOAT32_MAX,                  // MaxLOD
+            D3D12_SHADER_VISIBILITY_ALL);
 
-        samplers.emplace_back(
-            1,
-            D3D12_FILTER_MIN_MAG_MIP_POINT,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            0.0f,
-            1,
-            D3D12_SHADER_VISIBILITY_PIXEL);
+        //samplers.emplace_back(
+        //    1,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    1);
 
-        samplers.emplace_back(
-            2,
-            D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            0.0f,
-            1,
-            D3D12_SHADER_VISIBILITY_PIXEL);
+        //samplers.emplace_back(
+        //    2,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    2);
 
-        samplers.emplace_back(
-            3,
-            D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            0.0f,
-            1,
-            D3D12_SHADER_VISIBILITY_PIXEL);
+        //samplers.emplace_back(
+        //    3,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    3);
 
-        samplers.emplace_back(
-            4,
-            D3D12_FILTER_ANISOTROPIC,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            0.0f,
-            8,
-            D3D12_SHADER_VISIBILITY_PIXEL);
+        //samplers.emplace_back(
+        //    4,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    4);
 
-        samplers.emplace_back(
-            5,
-            D3D12_FILTER_ANISOTROPIC,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            0.0f,
-            8,
-            D3D12_SHADER_VISIBILITY_PIXEL);
+        //samplers.emplace_back(
+        //    5,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    5);
 
         return samplers;
     }

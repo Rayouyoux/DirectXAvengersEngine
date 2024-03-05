@@ -39,16 +39,38 @@ namespace ave {
 
 	bool Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList){
 
-		std::array<VERTEX_UV, 8> vertices =
+		std::array<VERTEX_UV, 24> vertices =
 		{
-			VERTEX_UV({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
-			VERTEX_UV({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
-			VERTEX_UV({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
-			VERTEX_UV({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT2(-1.0f,2.0f)}),
-			VERTEX_UV({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)}),
-			VERTEX_UV({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)}),
-			VERTEX_UV({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)}),
-			VERTEX_UV({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT2(-1.0f,2.0f)})
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT2(0.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT2(1.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
+
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +1.0f), XMFLOAT2(0.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 1.0f)}),
+
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
+
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
+
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT2(0.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT2(1.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
+
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT2(0.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT2(1.0f, 1.0f)}),
+
 		};
 
 		std::array<std::uint16_t, 36> indices =
@@ -58,27 +80,23 @@ namespace ave {
 			0, 2, 3,
 
 			// back face
-			4, 6, 5,
-			4, 7, 6,
+			4, 5, 6,
+			4, 6, 7,
 
-			// left face
-			4, 5, 1,
-			4, 1, 0,
+			8,9,10,
+			8,10,11,
 
-			// right face
-			3, 2, 6,
-			3, 6, 7,
+			12,13,14,
+			12,14,15,
 
-			// top face
-			1, 5, 6,
-			1, 6, 2,
+			16,17,18,
+			16,18,19,
 
-			// bottom face
-			4, 0, 3,
-			4, 3, 7
+			20,21,22,
+			20,22,23
 		};
 
-		const UINT vbByteSize = (UINT)vertices.size() * sizeof(VERTEX_COLOR);
+		const UINT vbByteSize = (UINT)vertices.size() * sizeof(VERTEX_UV);
 		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
 		if (FAILED(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU))) {
@@ -97,7 +115,7 @@ namespace ave {
 		m_poIndexBufferGPU = D3DUtils::CreateDefaultBuffer(poDevice,
 			poCommandList, indices.data(), ibByteSize, m_poIndexBufferUploader);
 
-		m_oVertexByteStride = sizeof(VERTEX_COLOR);
+		m_oVertexByteStride = sizeof(VERTEX_UV);
 		m_oVertexBufferByteSize = vbByteSize;
 		m_oIndexFormat = DXGI_FORMAT_R16_UINT;
 		m_oIndexBufferByteSize = ibByteSize;

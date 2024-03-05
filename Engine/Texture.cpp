@@ -40,7 +40,7 @@ namespace ave {
 	bool Texture::BuildDescriptorHeaps(std::string oName) {
 
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-		srvHeapDesc.NumDescriptors = 1;
+		srvHeapDesc.NumDescriptors = 100;
 		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		if (FAILED(GraphicsHandler::GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_poSrvDescriptorHeap)))) {
@@ -59,8 +59,10 @@ namespace ave {
 		m_poSrvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
 		m_poSrvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
+
+
 		GraphicsHandler::GetDevice()->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
-			
+		
 		return true;
 	}
 

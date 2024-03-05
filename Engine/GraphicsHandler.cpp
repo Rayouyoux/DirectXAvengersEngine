@@ -135,6 +135,8 @@ namespace ave {
 		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
 		poMeshRenderer->SetMesh(m_poMesh);
 		poMeshRenderer->SetShader(m_poShader);
+		poMeshRenderer->SetFirstTexture(m_poTexture);
+
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -149,7 +151,7 @@ namespace ave {
 		}
 
 		m_poTexture->Init();
-		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\bricks.dds");
+		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\rayan.dds");
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList())
 			&& m_poTexture->BuildDescriptorHeaps("wall");

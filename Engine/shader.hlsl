@@ -11,6 +11,7 @@ cbuffer cbPerPass : register(b1)
     float4x4 gView;
     float4x4 gProj;
 }
+
 struct VertexIn
 {
     float3 pos : POSITION;
