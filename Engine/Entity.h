@@ -32,7 +32,7 @@ namespace ave {
 			Comp* poComponent = new Comp();
 			m_loComponent.push_back(poComponent);
 			poComponent->BindEntity(this);
-			poComponent->Start();
+			/*poComponent->Start();*/
 			return poComponent;
 		}
 

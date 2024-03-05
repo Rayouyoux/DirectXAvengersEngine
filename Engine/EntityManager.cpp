@@ -6,13 +6,9 @@ namespace ave {
 	EntityManager::EntityManager()
 	{}
 
-	EntityManager::~EntityManager()
-	{}
-
-	void EntityManager::Start()
-	{
+	EntityManager::~EntityManager(){
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			m_voAliveEntities[i]->Start();
+			delete m_voAliveEntities[i];
 		}
 	}
 
@@ -42,9 +38,14 @@ namespace ave {
 	}
 
 	Entity* EntityManager::NewEntity() {
-		Entity* oEntity = new Entity();
-		oEntity->Initialize();
-		m_voAliveEntities.push_back(oEntity);
-		return oEntity;
+		Entity* poEntity = new Entity();
+		poEntity->Initialize();
+		return poEntity;
+	}
+
+	bool EntityManager::RegisterEntity(Entity* poEntity) {
+		m_voAliveEntities.push_back(poEntity);
+		poEntity->Start();
+		return true;
 	}
 }

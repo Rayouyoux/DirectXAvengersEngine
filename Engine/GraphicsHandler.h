@@ -15,6 +15,7 @@ namespace ave {
 	class MeshRenderer;
 	class Entity;
 	class Camera;
+	class EntityManager;
 	
 	class Mesh;
 
@@ -24,6 +25,7 @@ namespace ave {
 
 		Shader* m_poShader;
 		Mesh* m_poMesh;
+		EntityManager* m_poEntityManager;
 		Entity* m_poCameraEntity;
 		Entity* m_poCubeEntity;
 		Entity* m_poCubeEntity2;

@@ -20,8 +20,11 @@ namespace ave {
 		m_poParent = poParent;
 	}
 
-	void Entity::Start() 
-	{}
+	void Entity::Start() {
+		for (int i = 0; i < m_loComponent.size(); i++) {
+			m_loComponent[i]->Start();
+		}
+	}
 
 	void Entity::Update(float iDeltaTime) {
 		for (int i = 0; i < m_loComponent.size(); i++) {

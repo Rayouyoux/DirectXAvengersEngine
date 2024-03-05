@@ -15,7 +15,7 @@ namespace ave {
 		void SetMesh(Mesh* poMesh);
 		void SetShader(Shader* SetShader);
 
-		void Start() override {};
+		void Start() override;
 		void Update(float dT) override {};
 		void LateUpdate(float dT) override {};
 		void Render() override;

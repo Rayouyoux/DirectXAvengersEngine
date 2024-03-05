@@ -22,14 +22,15 @@ namespace ave {
 		m_poShader = poShader;
 	}
 
+	void MeshRenderer::Start() {
+		
+	}
+
 	void MeshRenderer::Render() {
-		//Root
 		ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
+		//Root
 		poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
-
-		////Pass
-		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
 
 		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
@@ -38,7 +39,6 @@ namespace ave {
 
 		////Topology
 		poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		//
 
 		auto oVertexBufferView = m_poMesh->VertexBufferView();
 		auto oIndexBufferView = m_poMesh->IndexBufferView();

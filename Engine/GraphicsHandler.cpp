@@ -14,6 +14,7 @@
 #include "Transform.h"
 #include "Maths.h"
 #include "ConstantsStruct.h"
+#include "EntityManager.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -104,14 +105,16 @@ namespace ave {
 
 		m_poShader = new Shader();
 		m_poMesh = new Mesh();
+		m_poEntityManager = new EntityManager();
 
-		m_poCameraEntity = new Entity();
+		
+		m_poCameraEntity = m_poEntityManager->NewEntity();
 		m_poCameraEntity->Initialize();
 
-		m_poCubeEntity = new Entity();
+		m_poCubeEntity = m_poEntityManager->NewEntity();
 		m_poCubeEntity->Initialize();
 
-		m_poCubeEntity2 = new Entity();
+		m_poCubeEntity2 = m_poEntityManager->NewEntity();
 		m_poCubeEntity2->Initialize();
 		/*float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
 		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
@@ -126,14 +129,15 @@ namespace ave {
 		m_view = XMMatrixLookAtLH(pos, target, up);*/
 		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
 		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
-		XMVECTOR pos = XMVectorSet(-4.0f, 0.0f, 0.0f, 1.0f);
+		XMVECTOR pos = XMVectorSet(-4.0f, 2.0f, 0.0f, 1.0f);
 		m_poCameraEntity->m_poTransform->SetVectorPosition(&pos);
 		XMVECTOR target = XMVectorZero();
 		m_poCameraEntity->m_poTransform->LookAt(&target);
 		m_view = m_poCameraEntity->m_poTransform->GetMatrixRotation();
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
-		m_poCamera->Start();
+		m_poCamera->SetShader(m_poShader);
+		/*m_poCamera->Start();*/
 		/*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
 		Logger::PrintLog(magic.c_str());*/
 
@@ -159,6 +163,10 @@ namespace ave {
 
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
+
+		m_poEntityManager->RegisterEntity(m_poCubeEntity);
+		m_poEntityManager->RegisterEntity(m_poCubeEntity2);
+		m_poEntityManager->RegisterEntity(m_poCameraEntity);
 
 		CloseCommandList();
 		QueueCommandList();
