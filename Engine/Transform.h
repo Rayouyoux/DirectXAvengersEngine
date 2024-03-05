@@ -13,14 +13,43 @@ namespace ave{
 
 		Transform();
 		void Identity();
-		void Move(XMFLOAT3* pvPosition);
+		void Move(FXMVECTOR* pvPosition);
 		void Move(float fX, float fY, float fZ);
-		void Scale(XMFLOAT3* pvScale);
+		void Scale(FXMVECTOR* pvScale);
 		void Scale(float fX, float fY, float fZ);
-		void Rotate(XMFLOAT3* pvRoate);
+		void Rotate(FXMVECTOR* pvRotate);
 		void Rotate(float fPitch, float fRoll, float fYaw);
 		void UpdateMatrice();
-		XMMATRIX GetWorld();
+
+		XMMATRIX GetWorld() { return XMLoadFloat4x4(&m_mTransformation); };
+
+		XMVECTOR GetVectorScale() { return XMLoadFloat3(&m_vScale); };
+		XMMATRIX GetMatrixScale() { return XMLoadFloat4x4(&m_mScale); };
+
+		XMVECTOR GetVectorPosition() { return XMLoadFloat3(&m_vPosition); };
+		XMMATRIX GetMatrixPosition() { return XMLoadFloat4x4(&m_mPosition); };
+
+		XMVECTOR GetVectorDir() { return XMLoadFloat3(&m_vDir); };
+		XMVECTOR GetVectorUp() { return XMLoadFloat3(&m_vUp); };
+		XMVECTOR GetVectorRight() { return XMLoadFloat3(&m_vRight); };
+		XMVECTOR GetQuatRotation() { return XMLoadFloat4(&m_qRotation); };
+		XMMATRIX GetMatrixRotation() { return XMLoadFloat4x4(&m_mRotation); };
+
+		void SetVectorScale(FXMVECTOR* newScale);
+		void SetMatrixScale(FXMMATRIX* newMatrixScale);
+
+		void SetVectorPosition(FXMVECTOR* newPosition);
+		void SetMatrixPosition(FXMMATRIX* newMatrixPosition);
+
+		void RotateOnDir(float fRoll);
+		void RotateOnUp(float fYaw);
+		void RotateOnRight(float fPitch);
+		void SetQuatRotation(FXMVECTOR* newRotation);
+		void SetMatrixRotation(FXMMATRIX* newMatrixRotation);
+
+		
+
+
 		~Transform();
 
 		XMFLOAT4X4 m_mTransformation;

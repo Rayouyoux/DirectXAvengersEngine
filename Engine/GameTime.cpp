@@ -50,17 +50,17 @@ namespace ave {
 
     }
 
-    double GameTime::TotalTime() const 
+    float GameTime::TotalTime() const 
     {
 
-        return static_cast<double>(m_iTotalTime) / m_iSecondsPerCount;
+        return static_cast<float>(m_iTotalTime) / m_iSecondsPerCount;
 
     }
 
-    double GameTime::DeltaTime() const 
+    float GameTime::DeltaTime() const
     {
 
-        return static_cast<double>(m_iDeltaTime) / m_iSecondsPerCount;
+        return static_cast<float>(m_iDeltaTime) / m_iSecondsPerCount;
 
     }
 }

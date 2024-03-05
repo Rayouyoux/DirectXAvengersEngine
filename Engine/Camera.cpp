@@ -39,7 +39,7 @@ namespace ave {
 
 	void Camera::Start()
 	{
-		SetLens(0.25f * maths::PI, 1.0f, 1.0f, 1000.0f);
+		SetLens(0.25f * maths::PI, 800.f/600.f, 1.0f, 1000.0f);
 	}
 
 	void Camera::Update(float deltaTime)

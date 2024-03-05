@@ -6,6 +6,7 @@
 #include <cstring>
 #include <string>
 #include "Texture.h"
+#include "ConstantsStruct.h"
 
 namespace ave {
 	class Mesh;
@@ -21,9 +22,9 @@ namespace ave {
 		ID3D12Device* m_poDevice;
 		ID3D12DescriptorHeap* m_poCbvHeap;
 		ID3DBlob* m_poSerializedRootSig;
-		UploadBuffer* m_poPass;
-		UploadBuffer* m_poObject;
-		std::vector<UploadBuffer*> m_voObjects;
+		UploadBuffer<PassConstants>* m_poPass;
+		UploadBuffer<ObjectConstants>* m_poObject;
+		std::vector<UploadBuffer<ObjectConstants>*> m_voObjects;
 		ID3D12RootSignature* m_poRootSignature;
 		ID3DBlob* m_poVS;
 		ID3DBlob* m_poPS;
@@ -59,9 +60,11 @@ namespace ave {
 		UINT GetRootPass();
 		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
 		ID3D12PipelineState* GetPso();
-		UploadBuffer* GetPass();
-		void UpdatePass(void* data);
-		void UpdateObject(void* data);
+		UploadBuffer<PassConstants>* GetPass();
+		void UpdatePass(PassConstants data);
+		void UpdateObject(ObjectConstants data);
+
+
 
 		~Shader();
 

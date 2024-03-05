@@ -106,10 +106,10 @@ namespace ave {
 		m_poMesh = new Mesh();
 
 		m_poCameraEntity = new Entity();
-		m_poCameraEntity->Start();
+		m_poCameraEntity->Initialize();
 
 		m_poCubeEntity = new Entity();
-		m_poCubeEntity->Start();
+		m_poCubeEntity->Initialize();
 		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
 		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
 		float y = 5.0f * cosf(XM_PIDIV4);
@@ -120,8 +120,8 @@ namespace ave {
 		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 		m_view = XMMatrixLookAtLH(pos, target, up);
-		DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
-		m_poCubeEntity->m_poTransform->Move(&mInvLook);
+		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
 		m_poCamera->Start();
@@ -267,17 +267,36 @@ namespace ave {
 		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 
 		XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
-		/*XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();*/
+		//XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();
+		
+		
+
+		float rot = XMConvertToRadians(45.0f * deltaTime);
+		/*XMFLOAT3 rotate = { 0.0f ,rot, 0.0f };
+		XMVECTOR rotateeee = XMLoadFloat3(&rotate);*/
+		
+
+		/*XMFLOAT3 scale = { -0.5f * deltaTime, -0.5f * deltaTime , -0.5f * deltaTime };*/
+
+		/*XMFLOAT3 pos = { 0.005f * deltaTime, 0.005f * deltaTime , 0.005f * deltaTime };*/
+
+		m_poCubeEntity->m_poTransform->RotateOnUp(rot);
+		/*m_poCubeEntity->m_poTransform->Scale(&scale);*/
+		/*m_poCubeEntity->m_poTransform->Move(&pos);*/
+
+		m_poCubeEntity->m_poTransform->UpdateMatrice();
+
 		XMMATRIX view = m_view;
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
+
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		m_poShader->UpdateObject(&objConstants);
+		m_poShader->UpdateObject(objConstants);
 
 		PassConstants passConstants;
 		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
 		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
-		m_poShader->UpdatePass(&passConstants);
+		m_poShader->UpdatePass(passConstants);
 	}
 
 	void GraphicsHandler::LateUpdate() {
@@ -513,7 +532,7 @@ namespace ave {
 	}
 
 	void GraphicsHandler::QueueCommandList() {
-		ID3D12CommandList* cmdsLists[] = { m_poCommandList };
+		ID3D12CommandList* cmdsLists[] = { GraphicsHandler::m_poCommandList };
 		m_poCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 	}
 

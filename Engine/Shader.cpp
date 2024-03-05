@@ -37,7 +37,7 @@ namespace ave {
         return m_poRootSignature;
     }
 
-    UploadBuffer* Shader::GetPass() {
+    UploadBuffer<PassConstants>* Shader::GetPass() {
         return m_poPass;
     }
     //void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
@@ -121,16 +121,22 @@ namespace ave {
 
     //A appeler dans l'init
     void Shader::CreateUploadBuffer() {
-        m_poPass = new UploadBuffer(m_poDevice, 100, true, sizeof(PassConstants));
-        m_poObject = new UploadBuffer(m_poDevice, 100, true, sizeof(ObjectConstants));
+        m_poPass = new UploadBuffer<PassConstants> (m_poDevice, 1, true);
+        m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
     }
 
-    void Shader::UpdatePass(void* data) {
-        m_poPass->CopyData(0, data);
+
+    void Shader::UpdatePass(PassConstants data) {
+        if (m_poPass) {
+            m_poPass->CopyData(0, data);
+        }
     }
 
-    void Shader::UpdateObject(void* data) {
-        m_poObject->CopyData(0, data);
+    void Shader::UpdateObject(ObjectConstants data) {
+        if (m_poObject)
+        {
+            m_poObject->CopyData(0, data);
+        }
     }
     
 
@@ -317,7 +323,7 @@ namespace ave {
         }
     }
     void Shader::AddObject() {
-        m_voObjects.push_back(m_poPass);
+       /* m_voObjects.push_back(m_poPass);*/
     }
 
     void Shader::Destroy() {
