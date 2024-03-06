@@ -144,7 +144,7 @@ namespace ave {
 		/*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
 		Logger::PrintLog(magic.c_str());*/
 		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
-		poCubeEntity->Initialize();
+		poParticuleEntity->Initialize();
 
 
 		m_poBehaviour = new Particles::ParticleBehaviour();
@@ -180,6 +180,7 @@ namespace ave {
 		m_poEntityManager->RegisterEntity(poCameraEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity2);
+		m_poEntityManager->RegisterEntity(poParticuleEntity);
 
 		CloseCommandList();
 		QueueCommandList();
