@@ -59,5 +59,17 @@ namespace ave {
 
 		int GetWindowWidth() const { return m_iClientWidth; }
 		int GetWindowHeight() const { return m_iClientHeight; }
+
+	protected:
+		// Convenience overrides for handling mouse input.
+		void OnMouseDown(WPARAM btnState, int x, int y);
+		void OnMouseUp(WPARAM btnState, int x, int y);
+		void OnMouseMove(WPARAM btnState, int x, int y);
+
+		float m_fTheta = 1.5f * DirectX::XM_PI;
+		float m_fPhi = DirectX::XM_PIDIV4;
+		float m_fRadius = 5.0f;
+
+		POINT m_vLastMousePos;
 	};
 }

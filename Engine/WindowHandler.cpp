@@ -3,6 +3,7 @@
 #include "GraphicsHandler.h"
 #include "GameTime.h"
 #include "Logger.h"
+#include "Maths.h"
 
 namespace ave {
 	AvengersEngine::AvengersEngine() {
@@ -256,4 +257,50 @@ namespace ave {
 	void AvengersEngine::Release() {
 		delete this;
 	}
+
+	void AvengersEngine::OnMouseDown(WPARAM btnState, int x, int y)
+	{
+		m_vLastMousePos.x = x;
+		m_vLastMousePos.y = y;
+
+		SetCapture(m_oMainWnd);
+	}
+
+	void AvengersEngine::OnMouseUp(WPARAM btnState, int x, int y)
+	{
+		ReleaseCapture();
+	}
+
+	void AvengersEngine::OnMouseMove(WPARAM btnState, int x, int y)
+	{
+		if ((btnState & MK_LBUTTON) != 0)
+		{
+			// Make each pixel correspond to a quarter of a degree.
+			float dx = XMConvertToRadians(0.25f * static_cast<float>(x - m_vLastMousePos.x));
+			float dy = XMConvertToRadians(0.25f * static_cast<float>(y - m_vLastMousePos.y));
+
+			// Update angles based on input to orbit camera around box.
+			m_fTheta += dx;
+			m_fPhi += dy;
+
+			// Restrict the angle mPhi.
+			m_fPhi = maths::Clamp(m_fPhi, 0.1f, maths::PI - 0.1f);
+		}
+		else if ((btnState & MK_RBUTTON) != 0)
+		{
+			// Make each pixel correspond to 0.005 unit in the scene.
+			float dx = 0.005f * static_cast<float>(x - m_vLastMousePos.x);
+			float dy = 0.005f * static_cast<float>(y - m_vLastMousePos.y);
+
+			// Update the camera radius based on input.
+			m_fRadius += dx - dy;
+
+			// Restrict the radius.
+			m_fRadius = maths::Clamp(m_fRadius, 3.0f, 15.0f);
+		}
+
+		m_vLastMousePos.x = x;
+		m_vLastMousePos.y = y;
+	}
+
 }
