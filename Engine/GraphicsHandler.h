@@ -15,6 +15,12 @@ namespace ave {
 	class MeshRenderer;
 	class Entity;
 	class Camera;
+
+	namespace Particles {
+		class ParticleSystem;
+		class ParticleBehaviour;
+	}
+	
 	class EntityManager;
 	
 	class Mesh;
@@ -27,6 +33,8 @@ namespace ave {
 		Mesh* m_poMesh;
 		EntityManager* m_poEntityManager;
 		Camera* m_poCamera;
+		Particles::ParticleBehaviour* m_poBehaviour;
+		Particles::ParticleSystem* m_poParticleSystem;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;
@@ -141,7 +149,7 @@ namespace ave {
 
 		// Set & Getters
 		virtual DirectX::XMVECTORF32 GetFillColor() const { return m_cFillColor; }
-		virtual void SetFillColor(DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
+		virtual void SetFillColor(const DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
 
 		ID3D12Device* GetDevice() { return m_poDevice; }
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };

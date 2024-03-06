@@ -2,9 +2,9 @@
 
 #include <d3d12.h>
 #include <vector>
-#include "UploadBuffer.h"
 #include <cstring>
 #include <string>
+#include "UploadBuffer.h"
 #include "Texture.h"
 #include "ConstantsStruct.h"
 

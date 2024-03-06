@@ -19,24 +19,4 @@ namespace ave {
 	{
 		m_poEntity = poEntity;
 	}
-
-	void Component::Start() 
-	{
-
-	}
-
-	void Component::Update(float deltaTime)
-	{
-
-	}
-
-	void Component::LateUpdate(float deltaTime)
-	{
-
-	}
-
-	void Component::Render() 
-	{
-
-	}
 };

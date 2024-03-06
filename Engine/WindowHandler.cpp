@@ -3,6 +3,7 @@
 #include "GraphicsHandler.h"
 #include "GameTime.h"
 #include "Logger.h"
+#include "Maths.h"
 
 namespace ave {
 	AvengersEngine::AvengersEngine() {

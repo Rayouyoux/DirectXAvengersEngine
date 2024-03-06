@@ -19,7 +19,7 @@ namespace ave {
 		m_fNearWindowHeight = 0.0f;
 		m_fFarWindowHeight = 0.0f;
 		m_bIsValidView = true;
-		m_voProjectionMatrix = maths::MatriceIdentity();
+		m_voProjectionMatrix = Maths::MatriceIdentity();
 	}
 
 	Camera::~Camera()
@@ -41,7 +41,7 @@ namespace ave {
 
 	void Camera::Start()
 	{
-		SetLens(0.25f * maths::PI, 800.f/600.f, 1.0f, 1000.0f);
+		SetLens(0.25f * Maths::PI, 800.f/600.f, 1.0f, 1000.0f);
 	}
 
 	void Camera::SetShader(Shader* poShader)

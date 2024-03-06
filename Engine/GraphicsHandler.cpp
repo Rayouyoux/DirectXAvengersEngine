@@ -15,6 +15,7 @@
 #include "Maths.h"
 #include "ConstantsStruct.h"
 #include "EntityManager.h"
+#include "ParticleSystem.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -84,6 +85,8 @@ namespace ave {
 
 		m_poRtvHeap->Release();
 		m_poDsvHeap->Release();
+
+		delete m_poBehaviour;
 	}
 
 
@@ -140,6 +143,15 @@ namespace ave {
 		/*m_poCamera->Start();*/
 		/*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
 		Logger::PrintLog(magic.c_str());*/
+
+
+
+		m_poBehaviour = new Particles::ParticleBehaviour();
+		m_poParticleSystem = m_poCubeEntity->AddComponent<Particles::ParticleSystem>();
+		m_poParticleSystem->SetBehaviour(m_poBehaviour);
+		m_poParticleSystem->SetMesh(m_poMesh);
+		m_poParticleSystem->SetShader(m_poShader);
+		m_poParticleSystem->Initialize(10, 1);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -312,15 +324,9 @@ namespace ave {
 		XMMATRIX view = m_view;
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
 
-		/*ObjectConstants objConstants;
-		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		m_poShader->UpdateObject(objConstants, 0);*/
-
-		/*ObjectConstants objConstants2;
-		XMStoreFloat4x4(&objConstants2.World, XMMatrixTranspose(world2));
-		m_poShader->UpdateObject(objConstants2, 1);*/
-		/*m_poCubeEntity->Update(deltaTime);
-		m_poCubeEntity2->Update(deltaTime);*/
+		//ObjectConstants objConstants;
+		//XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+		//m_poShader->UpdateObject(objConstants);
 
 		PassConstants passConstants;
 		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
@@ -335,10 +341,7 @@ namespace ave {
 	void GraphicsHandler::Render() {
 		RenderBegin();
 		m_poEntityManager->Render();
-		/*m_poCubeEntity->Render();
-		m_poCubeEntity2->Render();*/
-		/*m_poShader->ResetIndexObject();*/
-		// Add your coubeh
+
 
 		RenderCease();
 	}
