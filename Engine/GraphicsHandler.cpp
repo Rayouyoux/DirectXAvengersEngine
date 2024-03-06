@@ -113,8 +113,8 @@ namespace ave {
 
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Initialize();
-		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
-		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
+		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * Maths::PI);
+		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * Maths::PI);
 		float y = 5.0f * cosf(XM_PIDIV4);
 
 		// Build the view matrix.
