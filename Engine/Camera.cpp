@@ -54,8 +54,9 @@ namespace ave {
 		UpdateProjectionMatrix();
 	}
 	
-	void Camera::LateUpdate(float deltaTime)
-	{}
+	void Camera::LateUpdate(float deltaTime){
+
+	}
 
 	void Camera::Render()
 	{

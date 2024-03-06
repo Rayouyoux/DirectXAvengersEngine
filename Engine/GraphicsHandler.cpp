@@ -134,9 +134,10 @@ namespace ave {
 		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
 		XMVECTOR pos = XMVectorSet(-4.0f, 2.0f, 0.0f, 1.0f);
 		poCameraEntity->m_poTransform->SetVectorPosition(&pos);
-		XMVECTOR target = XMVectorZero();
+		
+		/*XMVECTOR target = XMVectorZero();
 		poCameraEntity->m_poTransform->LookAt(&target);
-		m_view = poCameraEntity->m_poTransform->GetMatrixRotation();
+		m_view = poCameraEntity->m_poTransform->GetMatrixRotation();*/
 
 		m_poCamera = poCameraEntity->AddComponent<Camera>();
 		m_poCamera->SetShader(m_poShader);
@@ -323,7 +324,8 @@ namespace ave {
 
 		/*m_poCubeEntity->m_poTransform->UpdateMatrice();*/
 
-		XMMATRIX view = m_view;
+		/*XMMATRIX view = m_view;*/
+		XMMATRIX view = m_poCamera->m_poEntity->m_poTransform->GetWorld();
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
 
 		//ObjectConstants objConstants;
