@@ -2,9 +2,9 @@
 
 #include <d3d12.h>
 #include <vector>
-#include "UploadBuffer.h"
 #include <cstring>
 #include <string>
+#include "UploadBuffer.h"
 #include "Texture.h"
 #include "ConstantsStruct.h"
 
@@ -54,7 +54,7 @@ namespace ave {
 
 		ID3DBlob* CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint, const std::string& oTarget);
 		
-
+		ID3D12Device* GetDevice();
 		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
 		UINT GetRootPass();

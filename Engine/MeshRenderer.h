@@ -1,6 +1,6 @@
 #pragma once
-#include "Component.h"
 #include <d3d12.h>
+#include "Component.h"
 
 namespace ave {
 	class Mesh;

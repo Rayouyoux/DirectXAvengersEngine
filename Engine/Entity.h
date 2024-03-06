@@ -82,4 +82,3 @@ namespace ave {
 		bool m_bIsAlive;
 	};
 }
-

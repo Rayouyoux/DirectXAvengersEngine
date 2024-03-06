@@ -133,8 +133,7 @@ namespace ave {
     }
 
     void Shader::UpdateObject(ObjectConstants data) {
-        if (m_poObject)
-        {
+        if (m_poObject) {
             m_poObject->CopyData(0, data);
         }
     }
@@ -324,6 +323,10 @@ namespace ave {
     }
     void Shader::AddObject() {
        /* m_voObjects.push_back(m_poPass);*/
+    }
+
+    ID3D12Device* Shader::GetDevice() {
+        return m_poDevice;
     }
 
     void Shader::Destroy() {

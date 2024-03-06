@@ -57,6 +57,8 @@ namespace ave {
 		HINSTANCE GetHInstance() const { return m_ohInstance; }
 		HWND GetWindow() const { return m_oMainWnd; }
 
+		GraphicsHandler* GetGraphics() const { return m_poGraphics; }
+
 		int GetWindowWidth() const { return m_iClientWidth; }
 		int GetWindowHeight() const { return m_iClientHeight; }
 	};

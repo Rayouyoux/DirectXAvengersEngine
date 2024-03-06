@@ -14,6 +14,7 @@
 #include "Transform.h"
 #include "Maths.h"
 #include "ConstantsStruct.h"
+#include "ParticleSystem.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -83,6 +84,8 @@ namespace ave {
 
 		m_poRtvHeap->Release();
 		m_poDsvHeap->Release();
+
+		delete m_poBehaviour;
 	}
 
 
@@ -120,7 +123,7 @@ namespace ave {
 		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 		m_view = XMMatrixLookAtLH(pos, target, up);
-		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
+		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE Maths / UTILS
 		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
 
 		m_poCamera = m_poCameraEntity->AddComponent<Camera>();
@@ -131,6 +134,13 @@ namespace ave {
 		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
 		poMeshRenderer->SetMesh(m_poMesh);
 		poMeshRenderer->SetShader(m_poShader);
+
+		m_poBehaviour = new Particles::ParticleBehaviour();
+		m_poParticleSystem = m_poCubeEntity->AddComponent<Particles::ParticleSystem>();
+		m_poParticleSystem->SetBehaviour(m_poBehaviour);
+		m_poParticleSystem->SetMesh(m_poMesh);
+		m_poParticleSystem->SetShader(m_poShader);
+		m_poParticleSystem->Initialize(10, 1);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -262,7 +272,7 @@ namespace ave {
 
 	void GraphicsHandler::Update(float deltaTime) {
 		/*m_poCameraEntity->Update(deltaTime);*/
-		/*m_poCubeEntity->Update(deltaTime);*/
+		m_poCubeEntity->Update(deltaTime);
 
 		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 
@@ -289,9 +299,9 @@ namespace ave {
 		XMMATRIX view = m_view;
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
 
-		ObjectConstants objConstants;
-		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		m_poShader->UpdateObject(objConstants);
+		//ObjectConstants objConstants;
+		//XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+		//m_poShader->UpdateObject(objConstants);
 
 		PassConstants passConstants;
 		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
@@ -307,7 +317,6 @@ namespace ave {
 		RenderBegin();
 
 		m_poCubeEntity->Render();
-		// Add your coubeh
 
 		RenderCease();
 	}
