@@ -13,6 +13,8 @@ namespace ave {
 
 		std::map<std::string, Texture*> m_mTextures;
 
+		ID3D12Device* m_poDevice;
+
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_poRessource;
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_poUploadHeap;
 
@@ -29,10 +31,10 @@ namespace ave {
 		Texture();
 		~Texture();
 
-		void Init();
+		void Init(ID3D12Device* poDevice);
 
 		void LoadTexture(std::string oName, std::wstring oFilename);
-		bool BuildDescriptorHeaps(std::string oName);
+		bool BuildDescriptorHeaps(std::string oName, ID3D12DescriptorHeap* CbvDescriptorHeap);
 		void Offset(std::string oName);
 
 		ID3D12DescriptorHeap* GetDescriptorHeap() { return m_poSrvDescriptorHeap; };

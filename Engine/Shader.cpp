@@ -143,30 +143,6 @@ namespace ave {
             m_poObject->CopyData(0, data);
         }
     }
-    
-
- //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
-
- //       D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();
- //       D3D12_INDEX_BUFFER_VIEW ibv = pMesh->IndexBufferView();
-
- ///*       if (m_iRootTexture != -1 && pTexture)
- //           pList->SetGraphicsRootDescriptorTable(m_iRootTexture, );*/
-
- //       //if (m_iRootTexture2 != -1 && pTexture2)
- //       //    pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
-
- //       //Manque du code ici pour recuperer l'index de l'objet en question
- //       //pList->SetGraphicsRootConstantBufferView(m_iRootObject, l'index dans le tableau de vecteur m_voObjects->Ressource()->GetGPUVirtualAdress();
- //       //pList->DrawIndexedInstanced(pMesh->GetIndexCount(),1,0,0,0);
- //       // on incremente l'index d'object
- //       //  et on l'ajoute au vecteur
- //   }
-
-    //void Shader::UpdateObject() {
-    //    //int index =  //Get l'index de l objet;
-    //    //m_voObjects[1]->CopyData()
-    //}
 
     ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {
         
@@ -226,7 +202,7 @@ namespace ave {
                 slotRootParameters[1].InitAsConstantBufferView(1); //b1 for pass
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
                 break;
-            };
+            }
             case ROOTSIGNATURE_VERTEX_COLOR: {
                 m_oInputLayout =
                 {
@@ -241,7 +217,7 @@ namespace ave {
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
                 break;
-            };
+            }
             case ROOTSIGNATURE_VERTEX_UV: {
                 m_oInputLayout =
                 {
@@ -261,23 +237,24 @@ namespace ave {
                 m_iRootTexture = 0;
                 m_iRootObject = 1;
                 m_iRootPass = 2;
+
                 auto staticSamplers = GetStaticSamplers();
                     
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(),
                     D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-                ID3DBlob* error = nullptr;
+                //ID3DBlob* error = nullptr;
 
-                //a redeplacer
-                HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+                ////a redeplacer
+                //HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
 
-                if (error != nullptr)
-                {
-                    ::OutputDebugStringA((char*)error->GetBufferPointer());
-                    return false;
-                }
-                return true;
+                //if (error != nullptr)
+                //{
+                //    ::OutputDebugStringA((char*)error->GetBufferPointer());
+                //    return false;
+                //}
+                //return true;
                 break;
-            };
+            }
             case ROOTSIGNATURE_VERTEX_COLOR_UV: {
 
                 m_oInputLayout =
@@ -305,7 +282,7 @@ namespace ave {
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
                 
                 break;
-            };
+            }
             case ROOTSIGNATURE_VERTEX_2UV: {
 
                 m_oInputLayout =
@@ -336,22 +313,29 @@ namespace ave {
 
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
                 break;
-            };
+            }
             default: {
                 Destroy();
                 return false;
             }
         }
-        
-
-     /*   rootSigDesc;
+        ID3DBlob* error = nullptr;
         HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
 
-        if (error != nullptr)
+        if (FAILED(hr))
         {
-            ::OutputDebugStringA((char*)error->GetBufferPointer());
+            if (error != nullptr)
+            {
+                ::OutputDebugStringA((char*)error->GetBufferPointer());
+            }
+            else
+            {
+                // Afficher le code d'erreur directement
+                ::OutputDebugStringA("Failed to serialize root signature without error details.\n");
+            }
+
             return false;
-        }*/
+        }
            
     }
     void Shader::AddObject() {
@@ -395,81 +379,6 @@ namespace ave {
             0.0f,                               // MinLOD
             D3D12_FLOAT32_MAX,                  // MaxLOD
             D3D12_SHADER_VISIBILITY_ALL);
-
-        //samplers.emplace_back(
-        //    1,                                  // Register
-        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
-        //    0.0f,                               // MipLODBias
-        //    8,                                  // MaxAnisotropy
-        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
-        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
-        //    0.0f,                               // MinLOD
-        //    D3D12_FLOAT32_MAX,                  // MaxLOD
-        //    D3D12_SHADER_VISIBILITY_ALL,
-        //    1);
-
-        //samplers.emplace_back(
-        //    2,                                  // Register
-        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
-        //    0.0f,                               // MipLODBias
-        //    8,                                  // MaxAnisotropy
-        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
-        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
-        //    0.0f,                               // MinLOD
-        //    D3D12_FLOAT32_MAX,                  // MaxLOD
-        //    D3D12_SHADER_VISIBILITY_ALL,
-        //    2);
-
-        //samplers.emplace_back(
-        //    3,                                  // Register
-        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
-        //    0.0f,                               // MipLODBias
-        //    8,                                  // MaxAnisotropy
-        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
-        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
-        //    0.0f,                               // MinLOD
-        //    D3D12_FLOAT32_MAX,                  // MaxLOD
-        //    D3D12_SHADER_VISIBILITY_ALL,
-        //    3);
-
-        //samplers.emplace_back(
-        //    4,                                  // Register
-        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
-        //    0.0f,                               // MipLODBias
-        //    8,                                  // MaxAnisotropy
-        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
-        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
-        //    0.0f,                               // MinLOD
-        //    D3D12_FLOAT32_MAX,                  // MaxLOD
-        //    D3D12_SHADER_VISIBILITY_ALL,
-        //    4);
-
-        //samplers.emplace_back(
-        //    5,                                  // Register
-        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
-        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
-        //    0.0f,                               // MipLODBias
-        //    8,                                  // MaxAnisotropy
-        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
-        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
-        //    0.0f,                               // MinLOD
-        //    D3D12_FLOAT32_MAX,                  // MaxLOD
-        //    D3D12_SHADER_VISIBILITY_ALL,
-        //    5);
 
         return samplers;
     }

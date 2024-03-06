@@ -47,8 +47,11 @@ namespace ave {
         if (m_poShader->GetRootTexture() != -1 && m_poTexture)
 		{ 
 			CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTexture->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-			//tex.Offset(ri->Mat->DiffuseSrvHeapIndex, m_poTexture->GetDescriptorSize());
+
+			//
+ 			
 			poList->SetGraphicsRootDescriptorTable(m_poShader->GetRootTexture(), tex);
+
 		}
 
 

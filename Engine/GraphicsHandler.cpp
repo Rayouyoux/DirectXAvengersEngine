@@ -148,13 +148,13 @@ namespace ave {
 
 		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
 			return false;
-		}
+		} 
 
-		m_poTexture->Init();
-		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\nat.dds");
+		m_poTexture->Init(m_poDevice);
+		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\image.dds");
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList())
-			&& m_poTexture->BuildDescriptorHeaps("wall");
+			&& m_poTexture->BuildDescriptorHeaps("wall", m_poCbvHeap);
 
 		CloseCommandList();
 		QueueCommandList();

@@ -41,35 +41,36 @@ namespace ave {
 
 		std::array<VERTEX_UV, 24> vertices =
 		{
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT2(0.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT2(1.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +1.0f), XMFLOAT2(0.0f, 1.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +1.0f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT2(0.0f, 1.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT2(0.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT2(1.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT2(0.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT2(1.0f, 0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT2(1.0f, 1.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+
 
 		};
 

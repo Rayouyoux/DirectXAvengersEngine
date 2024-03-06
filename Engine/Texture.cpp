@@ -8,26 +8,24 @@ namespace ave {
 
 	Texture::Texture() {
 
+		m_poDevice = nullptr;
 		m_poUploadHeap = nullptr;
 		m_poSrvDescriptorHeap = nullptr;
 		m_oCbvSrvDescriptorSize = 0;
 	}
-	Texture::~Texture() {
 
-	}
-
-	void Texture::Init() {
+	void Texture::Init(ID3D12Device* poDevice) {
 		
-		ID3D12Device* poDevice = GraphicsHandler::GetDevice();
+		m_poDevice = poDevice;
 
-		m_oCbvSrvDescriptorSize = poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_oCbvSrvDescriptorSize = m_poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
 	void Texture::LoadTexture(std::string oName, std::wstring oFilename) {
 
 		m_oName = oName;
 
-		if (FAILED(DirectX::CreateDDSTextureFromFile12(GraphicsHandler::GetDevice(),
+		if (FAILED(DirectX::CreateDDSTextureFromFile12(m_poDevice,
 			GraphicsHandler::GetCommandList(),oFilename.c_str(),
 			m_poRessource,m_poUploadHeap))) {
 			return;
@@ -37,16 +35,9 @@ namespace ave {
 
 	}
 
-	bool Texture::BuildDescriptorHeaps(std::string oName) {
+	bool Texture::BuildDescriptorHeaps(std::string oName, ID3D12DescriptorHeap* CbvDescriptorHeap) {
 
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-		srvHeapDesc.NumDescriptors = 100;
-		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		if (FAILED(GraphicsHandler::GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_poSrvDescriptorHeap)))) {
-			return false;
-		};
-
+		m_poSrvDescriptorHeap = CbvDescriptorHeap;
 		m_pohDescriptor = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
 		auto texture = m_mTextures[oName]->m_poRessource;
@@ -61,7 +52,7 @@ namespace ave {
 
 
 
-		GraphicsHandler::GetDevice()->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
+		m_poDevice->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
 		
 		return true;
 	}
@@ -74,7 +65,13 @@ namespace ave {
 		m_poSrvDesc.Format = offset->GetDesc().Format;
 		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
 
-		GraphicsHandler::GetDevice()->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
+		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
 
+	}
+
+	Texture::~Texture() {
+		m_mTextures.clear();
+		m_poDevice->Release();
+		m_poSrvDescriptorHeap->Release();
 	}
 }
