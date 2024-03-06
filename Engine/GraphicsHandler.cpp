@@ -143,11 +143,12 @@ namespace ave {
 		/*m_poCamera->Start();*/
 		/*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
 		Logger::PrintLog(magic.c_str());*/
-
+		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
+		poCubeEntity->Initialize();
 
 
 		m_poBehaviour = new Particles::ParticleBehaviour();
-		m_poParticleSystem = m_poCubeEntity->AddComponent<Particles::ParticleSystem>();
+		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
 		m_poParticleSystem->SetBehaviour(m_poBehaviour);
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);

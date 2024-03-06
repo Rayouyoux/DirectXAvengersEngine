@@ -341,10 +341,6 @@ namespace ave {
         return m_poDevice;
     }
 
-    ID3D12Device* Shader::GetDevice() {
-        return m_poDevice;
-    }
-
     void Shader::Destroy() {
         m_poPso->Release();
         delete m_poPass;
