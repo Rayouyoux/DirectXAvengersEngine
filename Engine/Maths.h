@@ -19,7 +19,7 @@ namespace ave
 		static class Random {
 		public:
 			static float Range(float minInclusive, float maxInclusive) {
-				float offset = rand() % (int)((maxInclusive - minInclusive + 1) * 100);
+				float offset = rand() % (int)(((maxInclusive - minInclusive) * 100) + 1);
 				return minInclusive + offset * 0.01f;
 			}
 

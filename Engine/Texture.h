@@ -3,15 +3,18 @@
 #include <wrl.h>
 #include <map>
 
+class ID3D12Device;
+
 namespace ave {
 
 	class Texture {
-
 
 	protected:
 		std::string m_oName;
 
 		std::map<std::string, Texture*> m_mTextures;
+
+		ID3D12Device* m_poDevice;
 
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_poRessource;
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_poUploadHeap;
@@ -29,7 +32,7 @@ namespace ave {
 		Texture();
 		~Texture();
 
-		void Init();
+		void Init(ID3D12Device* poDevice, ID3D12DescriptorHeap* heap);
 
 		void LoadTexture(std::string oName, std::wstring oFilename);
 		bool BuildDescriptorHeaps(std::string oName);

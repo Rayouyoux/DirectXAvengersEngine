@@ -16,10 +16,11 @@ namespace ave {
 
 	}
 
-	void Texture::Init() {
+	void Texture::Init(ID3D12Device* poDevice, ID3D12DescriptorHeap* heap) {
 		
-		ID3D12Device* poDevice = GraphicsHandler::GetDevice();
+		m_poDevice = poDevice;
 
+		m_poSrvDescriptorHeap = heap;
 		m_oCbvSrvDescriptorSize = poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
@@ -27,7 +28,7 @@ namespace ave {
 
 		m_oName = oName;
 
-		if (FAILED(DirectX::CreateDDSTextureFromFile12(GraphicsHandler::GetDevice(),
+		if (FAILED(DirectX::CreateDDSTextureFromFile12(m_poDevice,
 			GraphicsHandler::GetCommandList(),oFilename.c_str(),
 			m_poRessource,m_poUploadHeap))) {
 			return;
@@ -39,13 +40,13 @@ namespace ave {
 
 	bool Texture::BuildDescriptorHeaps(std::string oName) {
 
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+		/*D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 		srvHeapDesc.NumDescriptors = 100;
 		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		if (FAILED(GraphicsHandler::GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_poSrvDescriptorHeap)))) {
+		if (FAILED(m_poDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_poSrvDescriptorHeap)))) {
 			return false;
-		};
+		};*/
 
 		m_pohDescriptor = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
@@ -61,7 +62,7 @@ namespace ave {
 
 
 
-		GraphicsHandler::GetDevice()->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
+		m_poDevice->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
 		
 		return true;
 	}
@@ -74,7 +75,6 @@ namespace ave {
 		m_poSrvDesc.Format = offset->GetDesc().Format;
 		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
 
-		GraphicsHandler::GetDevice()->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
-
+		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
 	}
 }

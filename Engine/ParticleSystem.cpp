@@ -49,7 +49,6 @@ namespace ave {
 			randomRotation.z = Random::Range(-360, 360);
 			XMVECTOR vectorRot = DirectX::XMLoadFloat3(&randomRotation);
 			m_poTransform->Rotate(&vectorRot);
-			m_poTransform->UpdateMatrice();
 
 			//XMVECTOR scale = DirectX::XMLoadFloat3(&m_poBehaviour->Scale);
 			//XMVECTOR vectorScale = scale * m_poBehaviour->Size;
@@ -196,13 +195,34 @@ namespace ave {
 		void ParticleSystem::Start()
 		{}
 
+		void Particle::SpawnInsideSphere(float fRadius) {
+			float x = Random::Range(-0.5f, 0.5f);
+			float y = Random::Range(-0.5f, 0.5f);
+			float z = Random::Range(-0.5f, 0.5f);
+
+			XMVECTOR vector = XMVectorSet(x, y, z, 0.f);
+			XMVECTOR normalizedVector = XMVector3Normalize(vector);
+			XMVECTOR position = normalizedVector * Random::Range(0.f, fRadius);
+
+			//XMFLOAT3 pos;
+			//XMStoreFloat3(&pos, position);
+
+			//std::wstringstream wss;
+			//wss << "Pos: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
+			//Logger::PrintLog(wss.str().c_str());
+
+			m_poTransform->SetVectorPosition(&position);
+			m_poTransform->UpdateMatrice();
+		}
+
 		void ParticleSystem::Update(float deltaTime) {
 			m_fRateDebounce += deltaTime;
-			if (m_fRateDebounce >= 1 / m_iEmissionRate) {
-				m_fRateDebounce -= 1 / m_iEmissionRate;
+			if (m_fRateDebounce >= (1.0f / m_iEmissionRate)) {
+				m_fRateDebounce = 0;
 				Particle* particle = m_poParticlePool->AcquireObject<Particle>();
 				XMVECTOR pos = m_poEntity->m_poTransform->GetVectorPosition();
 				particle->m_poTransform->SetVectorPosition(&pos);
+				particle->SpawnInsideSphere(5);
 				particle->SetBehaviour(m_poBehaviour);
 				particle->SetMesh(m_poMesh);
 				particle->SetShader(m_poShader);

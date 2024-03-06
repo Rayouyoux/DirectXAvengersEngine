@@ -23,21 +23,21 @@ namespace ave {
 		};
 
 		struct ParticleBehaviour {
-			float MaxLifetime = 0.8;
+			float MaxLifetime = 0.4;
 
-			float Speed = 6;
+			float Speed = -15;
 			bool SpeedOverTime = false;
-			float EndSpeed = 2;
+			float EndSpeed = 10;
 
-			float RotSpeed = 20;
+			float RotSpeed = 10;
 			bool RotateOverTime = false;
-			float EndRotSpeed = 100;
+			float EndRotSpeed = 80;
 
-			const DirectX::XMFLOAT3 Scale = { 0.2f, 0.2f, 1.f };
+			const DirectX::XMFLOAT3 Scale = { 1.f, 1.f, 1.f };
 			bool ScaleOverTime = false;
-			const DirectX::XMFLOAT3 EndScale = { 1, 1, 1 };
+			const DirectX::XMFLOAT3 EndScale = { 0, 0, 0 };
 
-			float Size = 0.5f;
+			float Size = .8f;
 			bool SizeOverTime = true;
 			float EndSize = 0;
 
@@ -65,6 +65,8 @@ namespace ave {
 			void SetMesh(ave::Mesh* poMesh);
 			void SetShader(Shader* poShader);
 
+			void SpawnInsideSphere(float fRadius);
+
 			virtual void Update(float deltaTime);
 			virtual void Render();
 
@@ -81,7 +83,7 @@ namespace ave {
 			ave::Mesh* m_poMesh;
 			Shader* m_poShader;
 
-			float m_fRateDebounce;
+			double m_fRateDebounce;
 
 			std::vector<Particle*> m_lActiveParticles;
 

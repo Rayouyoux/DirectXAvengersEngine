@@ -342,15 +342,15 @@ namespace ave {
             }
         }
         
+        //ID3DBlob* error = nullptr;
+        //rootSigDesc;
+        //HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
 
-     /*   rootSigDesc;
-        HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
-
-        if (error != nullptr)
-        {
-            ::OutputDebugStringA((char*)error->GetBufferPointer());
-            return false;
-        }*/
+        //if (error != nullptr)
+        //{
+        //    ::OutputDebugStringA((char*)error->GetBufferPointer());
+        //    return false;
+        //}
            
     }
     void Shader::AddObject() {

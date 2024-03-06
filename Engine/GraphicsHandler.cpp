@@ -117,7 +117,7 @@ namespace ave {
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Initialize();
 		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * Maths::PI);
-		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * Maths::PI);
+		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * Maths::PI) + 30;
 		float y = 5.0f * cosf(XM_PIDIV4);
 
 		// Build the view matrix.
@@ -139,13 +139,12 @@ namespace ave {
 		poMeshRenderer->SetShader(m_poShader);
 		poMeshRenderer->SetFirstTexture(m_poTexture);
 
-
 		m_poBehaviour = new Particles::ParticleBehaviour();
 		m_poParticleSystem = m_poCubeEntity->AddComponent<Particles::ParticleSystem>();
 		m_poParticleSystem->SetBehaviour(m_poBehaviour);
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(10, 1);
+		m_poParticleSystem->Initialize(1000, 1000);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -159,11 +158,11 @@ namespace ave {
 			return false;
 		}
 
-		m_poTexture->Init();
-		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\nat.dds");
+		m_poTexture->Init(m_poDevice, m_poCbvHeap);
+		m_poTexture->LoadTexture("particle", L"..\\Engine\\Textures\\default_particle.dds");
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList())
-			&& m_poTexture->BuildDescriptorHeaps("wall");
+			&& m_poTexture->BuildDescriptorHeaps("particle");
 
 		CloseCommandList();
 		QueueCommandList();
