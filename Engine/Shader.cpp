@@ -29,12 +29,12 @@ namespace ave {
         return m_iRootPass;
     }
 
-    D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
+    /*D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
         
         D3D12_GPU_VIRTUAL_ADDRESS oVirtualAdress = m_voObjects[m_iIndexObject]->Resource()->GetGPUVirtualAddress();
         m_iIndexObject++;
         return oVirtualAdress;
-    }
+    }*/
 
     ID3D12RootSignature* Shader::GetRootSignature() {
         return m_poRootSignature;
