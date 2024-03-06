@@ -169,6 +169,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="GlobalTime.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="resource.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="GlobalTime.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>

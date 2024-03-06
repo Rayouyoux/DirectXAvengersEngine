@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "GraphicsHandler.h"
 #include "UploadBuffer.h"
+#include "Texture.h"
 
 namespace ave {
 	MeshRenderer::MeshRenderer() : Component(){
@@ -21,6 +22,9 @@ namespace ave {
 	void MeshRenderer::SetShader(Shader* poShader) {
 		m_poShader = poShader;
 	}
+	void MeshRenderer::SetFirstTexture(Texture* poTexture) {
+		m_poTexture = poTexture;
+	}
 
 	void MeshRenderer::Render() {
 		//Root
@@ -31,7 +35,6 @@ namespace ave {
 		////Pass
 		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
 
-		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
 		////Pipeline
 		poList->SetPipelineState(m_poShader->GetPso());
@@ -39,6 +42,15 @@ namespace ave {
 		////Topology
 		poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		//
+
+ 
+        if (m_poShader->GetRootTexture() != -1 && m_poTexture)
+		{ 
+			CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTexture->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+			//tex.Offset(ri->Mat->DiffuseSrvHeapIndex, m_poTexture->GetDescriptorSize());
+			poList->SetGraphicsRootDescriptorTable(m_poShader->GetRootTexture(), tex);
+		}
+
 
 		auto oVertexBufferView = m_poMesh->VertexBufferView();
 		auto oIndexBufferView = m_poMesh->IndexBufferView();

@@ -1,20 +1,21 @@
 #pragma once
 
-#include <d3d12.h>
-#include <vector>
-#include <cstring>
-#include <string>
+//#include <d3d12.h>
+//#include "d3dx12.h"
+//#include <vector>
 #include "UploadBuffer.h"
-#include "Texture.h"
+//#include <cstring>
+//#include <string>
+//#include "Texture.h"
 #include "ConstantsStruct.h"
+//#include <vector>
 
 namespace ave {
 	class Mesh;
 	class GraphicsHandler;
 	class Texture;
 	
-	class Shader
-	{
+	class Shader{
 
 	protected:
 
@@ -54,6 +55,10 @@ namespace ave {
 
 		ID3DBlob* CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint, const std::string& oTarget);
 		
+
+		int GetRootTexture();
+		int GetRootTexture2();
+
 		ID3D12Device* GetDevice();
 		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
@@ -64,7 +69,7 @@ namespace ave {
 		void UpdatePass(PassConstants data);
 		void UpdateObject(ObjectConstants data);
 
-
+		static std::vector<CD3DX12_STATIC_SAMPLER_DESC> GetStaticSamplers();
 
 		~Shader();
 

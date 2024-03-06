@@ -6,16 +6,30 @@
 #include "GraphicsHandler.h"
 #include "UploadBuffer.h"
 #include "Vertex.h"
-#include "Texture.h"
+//#include "Texture.h"
 #include "Mesh.h"
 #include <iostream>
 #include "ConstantsStruct.h"
 
 namespace ave {
+    
+    Shader::Shader(){
+        m_poGraphics = nullptr;
+        m_poDevice = nullptr;
+        m_poCbvHeap = nullptr;
+        m_poSerializedRootSig = nullptr;
+        m_poPass = nullptr;
+        m_poObject = nullptr;
+        m_poRootSignature = nullptr;
+        m_poVS = nullptr;
+        m_poPS = nullptr;
 
-
-    Shader::Shader() {
-
+        m_iIdRootSignature = 0;
+        m_iRootTexture = 0;
+        m_iRootTexture2 = 0;
+        m_iRootObject = 0;
+        m_iRootPass = 0;
+        m_iTextureCount = 0;
     }
     ID3D12PipelineState* Shader::GetPso() {
         return m_poPso;
@@ -29,6 +43,14 @@ namespace ave {
         return m_iRootPass;
     }
 
+    int Shader::GetRootTexture() {
+        return m_iRootTexture;
+    }
+
+    int Shader::GetRootTexture2() {
+        return m_iRootTexture2;
+    }
+
     D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
         return m_poObject->Resource()->GetGPUVirtualAddress();
     }
@@ -40,30 +62,12 @@ namespace ave {
     UploadBuffer<PassConstants>* Shader::GetPass() {
         return m_poPass;
     }
-    //void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
-
-    //    //Root
-    //    pList->SetGraphicsRootSignature(m_poRootSignature);
-
-    //    m_poPass = new UploadBuffer(poDevice, 100, false, sizeof(Pass));
-    //    //Pass
-    //    pList->SetGraphicsRootConstantBufferView(1, m_poPass->Resource()->GetGPUVirtualAddress());
-
-    //    //Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
-
-    //    //Pipeline
-    //    pList->SetPipelineState(m_poPso);
-
-    //    //Topology
-    //    pList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    //}
-
-    //A appeler dans l'init
+  
+ 
     bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
 
         m_poDevice = poGraphicsHandler->GetDevice();
         CreateUploadBuffer();
-        CreateRootSignature(1);
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
@@ -80,6 +84,7 @@ namespace ave {
             return false;
         }
 
+        CreateRootSignature(2);
 
         if (m_poDevice->CreateRootSignature((UINT)0, m_poSerializedRootSig->GetBufferPointer(), m_poSerializedRootSig->GetBufferSize(), IID_PPV_ARGS(&m_poRootSignature))) {
             Destroy();
@@ -233,6 +238,7 @@ namespace ave {
                 slotRootParameters[0].InitAsConstantBufferView(0);
                 slotRootParameters[1].InitAsConstantBufferView(1);
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
                 break;
             };
             case ROOTSIGNATURE_VERTEX_UV: {
@@ -254,8 +260,21 @@ namespace ave {
                 m_iRootTexture = 0;
                 m_iRootObject = 1;
                 m_iRootPass = 2;
+                auto staticSamplers = GetStaticSamplers();
+                    
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(),
+                    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+                ID3DBlob* error = nullptr;
 
-                //rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)SGraphics::I()->GetStaticSamplerCount(), SGraphics::I()->GetStaticSamplerCount());
+                //a redeplacer
+                HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+
+                if (error != nullptr)
+                {
+                    ::OutputDebugStringA((char*)error->GetBufferPointer());
+                    return false;
+                }
+                return true;
                 break;
             };
             case ROOTSIGNATURE_VERTEX_COLOR_UV: {
@@ -280,7 +299,10 @@ namespace ave {
                 m_iRootObject = 1;
                 m_iRootPass = 2;
 
-                //rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)SGraphics::I()->GetStaticSamplerCount(), SGraphics::I()->GetStaticSamplerCount());
+                auto staticSamplers = GetStaticSamplers();
+
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+                
                 break;
             };
             case ROOTSIGNATURE_VERTEX_2UV: {
@@ -309,7 +331,9 @@ namespace ave {
                 m_iRootObject = 2;
                 m_iRootPass = 3;
 
-                //rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)SGraphics::I()->GetStaticSamplerCount(), SGraphics::I()->GetStaticSamplerCount());
+                auto staticSamplers = GetStaticSamplers();
+
+                rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
                 break;
             };
             default: {
@@ -317,9 +341,17 @@ namespace ave {
                 return false;
             }
         }
-        if (D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, nullptr)!= S_OK) {
+        
+
+     /*   rootSigDesc;
+        HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+
+        if (error != nullptr)
+        {
+            ::OutputDebugStringA((char*)error->GetBufferPointer());
             return false;
-        }
+        }*/
+           
     }
     void Shader::AddObject() {
        /* m_voObjects.push_back(m_poPass);*/
@@ -349,7 +381,104 @@ namespace ave {
         
     }
 
+    std::vector<CD3DX12_STATIC_SAMPLER_DESC> Shader::GetStaticSamplers()
+    {
+        std::vector<CD3DX12_STATIC_SAMPLER_DESC> samplers;
+
+        samplers.emplace_back(
+            0,                                  // Register
+            D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+            D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+            0.0f,                               // MipLODBias
+            8,                                  // MaxAnisotropy
+            D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+            D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+            0.0f,                               // MinLOD
+            D3D12_FLOAT32_MAX,                  // MaxLOD
+            D3D12_SHADER_VISIBILITY_ALL);
+
+        //samplers.emplace_back(
+        //    1,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    1);
+
+        //samplers.emplace_back(
+        //    2,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    2);
+
+        //samplers.emplace_back(
+        //    3,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    3);
+
+        //samplers.emplace_back(
+        //    4,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    4);
+
+        //samplers.emplace_back(
+        //    5,                                  // Register
+        //    D3D12_FILTER_MIN_MAG_MIP_LINEAR,    // Filter
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressU
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressV
+        //    D3D12_TEXTURE_ADDRESS_MODE_WRAP,    // AddressW
+        //    0.0f,                               // MipLODBias
+        //    8,                                  // MaxAnisotropy
+        //    D3D12_COMPARISON_FUNC_LESS_EQUAL,   // ComparisonFunc
+        //    D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE, // BorderColor
+        //    0.0f,                               // MinLOD
+        //    D3D12_FLOAT32_MAX,                  // MaxLOD
+        //    D3D12_SHADER_VISIBILITY_ALL,
+        //    5);
+
+        return samplers;
+    }
+
     Shader::~Shader() {
         Destroy();
     }
+
 }
