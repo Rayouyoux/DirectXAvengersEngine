@@ -114,7 +114,7 @@ namespace ave {
 		m_poCubeEntity = new Entity();
 		m_poCubeEntity->Start();
 		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * Maths::PI);
-		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * Maths::PI);
+		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * Maths::PI) + 30;
 		float y = 5.0f * cosf(XM_PIDIV4);
 
 		// Build the view matrix.
@@ -140,7 +140,7 @@ namespace ave {
 		m_poParticleSystem->SetBehaviour(m_poBehaviour);
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(0.5, 1);
+		m_poParticleSystem->Initialize(10, 1);
 
 		bool test = CreateFactory()
 			&& CreateDevice()

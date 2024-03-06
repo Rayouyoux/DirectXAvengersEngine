@@ -7,6 +7,9 @@
 #include "Maths.h"
 #include "Entity.h"
 #include "ConstantsStruct.h"
+#include "UploadBuffer.h"
+#include "Logger.h"
+#include <sstream>
 
 namespace ave {
 	using namespace Maths;
@@ -36,6 +39,7 @@ namespace ave {
 
 		void Particle::SetShader(Shader* poShader) {
 			m_poShader = poShader;
+			m_poBuffer = new UploadBuffer<ObjectConstants>(m_poShader->GetDevice(), 1, true);
 		}
 
 		void Particle::OnAcquire() {
@@ -59,6 +63,7 @@ namespace ave {
 
 		void Particle::Update(float deltaTime) {
 			float alpha = m_iLifetime / m_poBehaviour->MaxLifetime;
+			bool isMatrixDirty = true;
 
 			// Update size along lifetime
 			if (m_poBehaviour->ScaleOverTime || m_poBehaviour->SizeOverTime) {
@@ -81,7 +86,7 @@ namespace ave {
 				}
 				XMVECTOR newScale = scale * size;
 				m_poTransform->SetVectorScale(&newScale);
-				m_poTransform->UpdateMatrice();
+				isMatrixDirty = true;
 			}
 
 			float rotSpeed;
@@ -92,6 +97,7 @@ namespace ave {
 				rotSpeed = m_poBehaviour->RotSpeed;
 			if (rotSpeed != 0) {
 				m_poTransform->RotateOnDir(rotSpeed * deltaTime);
+				isMatrixDirty = true;
 			}
 
 			// Update position based on Speed along Dir
@@ -106,13 +112,17 @@ namespace ave {
 				XMVECTOR dir = m_poTransform->GetVectorDir();
 				XMVECTOR offset = dir * speed * deltaTime;
 				m_poTransform->Move(&offset);
-				m_poTransform->UpdateMatrice();
+				isMatrixDirty = true;
 			}
 
-			// Render Update
-			ObjectConstants objConstants;
-			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poTransform->GetWorld()));
-			m_poShader->UpdateObject(objConstants);
+			if (isMatrixDirty) {
+				isMatrixDirty = false;
+				m_poTransform->UpdateMatrice();
+
+				ObjectConstants objConstants;
+				XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poTransform->GetWorld()));
+				m_poBuffer->CopyData(0, objConstants);
+			}
 		}
 
 		void Particle::Render() {
@@ -146,7 +156,7 @@ namespace ave {
 			poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
 			poList->IASetIndexBuffer(&oIndexBufferView);
 
-			poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poShader->GetVirtualAdress());
+			poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poBuffer->Resource()->GetGPUVirtualAddress());
 
 			poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(), 1, 0, 0, 0);
 		}

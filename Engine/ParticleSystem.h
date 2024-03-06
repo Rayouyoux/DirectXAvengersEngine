@@ -3,6 +3,8 @@
 #include <DirectXMath.h>
 #include "Component.h"
 #include "ObjectPooler.h"
+#include "UploadBuffer.h"
+#include "ConstantsStruct.h"
 
 namespace ave {
 	class Transform;
@@ -21,21 +23,21 @@ namespace ave {
 		};
 
 		struct ParticleBehaviour {
-			float MaxLifetime = 2;
+			float MaxLifetime = 0.8;
 
-			float Speed = 0;
+			float Speed = 6;
 			bool SpeedOverTime = false;
-			float EndSpeed = 5;
+			float EndSpeed = 2;
 
-			float RotSpeed = 0;
-			bool RotateOverTime = true;
-			float EndRotSpeed = 5;
+			float RotSpeed = 20;
+			bool RotateOverTime = false;
+			float EndRotSpeed = 100;
 
-			const DirectX::XMFLOAT3 Scale = { 1.f, 1.f, 1.f };
+			const DirectX::XMFLOAT3 Scale = { 0.2f, 0.2f, 1.f };
 			bool ScaleOverTime = false;
 			const DirectX::XMFLOAT3 EndScale = { 1, 1, 1 };
 
-			float Size = 1.f;
+			float Size = 0.5f;
 			bool SizeOverTime = true;
 			float EndSize = 0;
 
@@ -46,6 +48,7 @@ namespace ave {
 		public:
 			Transform* m_poTransform;
 			Shader* m_poShader;
+			UploadBuffer<ObjectConstants>* m_poBuffer;
 			ave::Mesh* m_poMesh;
 			float m_iLifetime;
 			ParticleBehaviour* m_poBehaviour;
