@@ -242,17 +242,17 @@ namespace ave {
                     
                 rootSigDesc = CD3DX12_ROOT_SIGNATURE_DESC(count, slotRootParameters, (UINT)staticSamplers.size(), staticSamplers.data(),
                     D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-                //ID3DBlob* error = nullptr;
+                ID3DBlob* error = nullptr;
 
-                ////a redeplacer
-                //HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+                //a redeplacer
+                HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
 
-                //if (error != nullptr)
-                //{
-                //    ::OutputDebugStringA((char*)error->GetBufferPointer());
-                //    return false;
-                //}
-                //return true;
+                if (error != nullptr)
+                {
+                    ::OutputDebugStringA((char*)error->GetBufferPointer());
+                    return false;
+                }
+                return true;
                 break;
             }
             case ROOTSIGNATURE_VERTEX_COLOR_UV: {
@@ -319,23 +319,23 @@ namespace ave {
                 return false;
             }
         }
-        ID3DBlob* error = nullptr;
-        HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+        //ID3DBlob* error = nullptr;
+        //HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
 
-        if (FAILED(hr))
-        {
-            if (error != nullptr)
-            {
-                ::OutputDebugStringA((char*)error->GetBufferPointer());
-            }
-            else
-            {
-                // Afficher le code d'erreur directement
-                ::OutputDebugStringA("Failed to serialize root signature without error details.\n");
-            }
+        //if (FAILED(hr))
+        //{
+        //    if (error != nullptr)
+        //    {
+        //        ::OutputDebugStringA((char*)error->GetBufferPointer());
+        //    }
+        //    else
+        //    {
+        //        // Afficher le code d'erreur directement
+        //        ::OutputDebugStringA("Failed to serialize root signature without error details.\n");
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
            
     }
     void Shader::AddObject() {
