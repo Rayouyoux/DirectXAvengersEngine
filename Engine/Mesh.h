@@ -12,7 +12,6 @@ namespace ave {
 
 		UINT GetIndexCount();
 		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList);
-		void Destroy();
 		~Mesh();
 
 	protected:
@@ -34,8 +33,6 @@ namespace ave {
 		UINT m_oIndexBufferByteSize;
 
 		UINT m_oIndexCount;
-		
-
 	};
 
 

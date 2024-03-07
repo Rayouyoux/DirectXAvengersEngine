@@ -39,15 +39,16 @@ namespace ave {
 		int m_iRootObject;
 		int m_iRootPass;
 		int m_iTextureCount;
+		int m_iIndexObject;
 
 	public:
 		Shader();
 
 		void Destroy();
-		void Reset();
+		void ResetIndexObject();
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
-		void AddObject();
+		/*void AddObject();*/
 		bool CreateShader(GraphicsHandler* poGraphicsHandler);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
@@ -67,7 +68,8 @@ namespace ave {
 		ID3D12PipelineState* GetPso();
 		UploadBuffer<PassConstants>* GetPass();
 		void UpdatePass(PassConstants data);
-		void UpdateObject(ObjectConstants data);
+		/*void UpdateObject(ObjectConstants data);
+		void UpdateObject(ObjectConstants data, int index);*/
 
 		static std::vector<CD3DX12_STATIC_SAMPLER_DESC> GetStaticSamplers();
 

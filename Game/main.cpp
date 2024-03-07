@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     _CrtMemCheckpoint(&memStateEnd);
     if (_CrtMemDifference(&memStateDiff, &memStateInit, &memStateEnd))
     {
-        MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
+        MessageBoxA(NULL, "UWU", "DISCLAIMER", 0);
     }
 #endif 
     return 0;

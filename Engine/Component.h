@@ -17,16 +17,16 @@ namespace ave {
 		Component();
 
 		// Deconstructor
-		~Component();
+		virtual ~Component();
 
 		// Set Method
 		void			BindEntity(Entity* poEntity);
 
 		// Main components methods
-		virtual void	Start() = 0;
-		virtual void	Update(float deltaTime) = 0;
-		virtual void	LateUpdate(float deltaTime) = 0;
-		virtual void	Render() = 0;
+		virtual void	Start() {};
+		virtual void	Update(float deltaTime) {};
+		virtual void	LateUpdate(float deltaTime) {};
+		virtual void	Render() {};
 
 	};
 };

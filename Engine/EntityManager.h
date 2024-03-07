@@ -16,7 +16,6 @@ namespace ave {
 		~EntityManager();
 
 		// SUR Methods
-		void Start();
 		void Update(float iDeltaTime);
 		void LateUpdate();
 		void Render();
@@ -35,6 +34,7 @@ namespace ave {
 
 		// Main Methods
 		Entity* NewEntity();
+		bool RegisterEntity(Entity* poEntity);
 
 	public:
 

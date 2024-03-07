@@ -55,6 +55,13 @@ namespace ave {
         return m_poObject->Resource()->GetGPUVirtualAddress();
     }
 
+    /*D3D12_GPU_VIRTUAL_ADDRESS Shader::GetVirtualAdress() {
+        
+        D3D12_GPU_VIRTUAL_ADDRESS oVirtualAdress = m_voObjects[m_iIndexObject]->Resource()->GetGPUVirtualAddress();
+        m_iIndexObject++;
+        return oVirtualAdress;
+    }*/
+
     ID3D12RootSignature* Shader::GetRootSignature() {
         return m_poRootSignature;
     }
@@ -65,7 +72,7 @@ namespace ave {
   
  
     bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
-
+        m_iIndexObject = 0;
         m_poDevice = poGraphicsHandler->GetDevice();
         CreateUploadBuffer();
         //m_poCbvHeap =  //Get heap 
@@ -127,7 +134,9 @@ namespace ave {
     //A appeler dans l'init
     void Shader::CreateUploadBuffer() {
         m_poPass = new UploadBuffer<PassConstants> (m_poDevice, 1, true);
-        m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
+        //m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
+        /*AddObject();
+        AddObject();*/
     }
 
 
@@ -137,11 +146,16 @@ namespace ave {
         }
     }
 
-    void Shader::UpdateObject(ObjectConstants data) {
-        if (m_poObject) {
+  /*  void Shader::UpdateObject(ObjectConstants data) {
+        if (m_poObject)
+        {
             m_poObject->CopyData(0, data);
         }
     }
+
+    void Shader::UpdateObject(ObjectConstants data, int index) {
+        m_voObjects[index]->CopyData(0, data);
+    }*/
     
 
  //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
@@ -357,6 +371,11 @@ namespace ave {
        /* m_voObjects.push_back(m_poPass);*/
     }
 
+   /* void Shader::AddObject() {
+       UploadBuffer<ObjectConstants>* poBuffer = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
+       m_voObjects.push_back(poBuffer);
+    }*/
+
     ID3D12Device* Shader::GetDevice() {
         return m_poDevice;
     }
@@ -375,6 +394,11 @@ namespace ave {
         m_poPS->Release();
 
         m_poDevice = nullptr;
+    }
+
+    void Shader::ResetIndexObject()
+    {
+        m_iIndexObject = 0;
     }
 
     void Shader::End() {

@@ -23,6 +23,10 @@ namespace ave {
 		class ParticleSystem;
 		class ParticleBehaviour;
 	}
+	
+	class EntityManager;
+	
+	class Mesh;
 
 	class GraphicsHandler {
 	protected:
@@ -30,8 +34,7 @@ namespace ave {
 
 		Shader* m_poShader;
 		Mesh* m_poMesh;
-		Entity* m_poCameraEntity;
-		Entity* m_poCubeEntity;
+		EntityManager* m_poEntityManager;
 		Camera* m_poCamera;
 		Particles::ParticleBehaviour* m_poBehaviour;
 		Particles::ParticleSystem* m_poParticleSystem;

@@ -30,18 +30,18 @@ namespace ave {
 		template <typename Comp>
 		Comp* AddComponent() {
 			Comp* poComponent = new Comp();
-			m_loComponent.push_back(poComponent);
+			m_loComponents.push_back(poComponent);
 			poComponent->BindEntity(this);
-			poComponent->Start();
+			/*poComponent->Start();*/
 			return poComponent;
 		}
 
 		// Gets a Component from the Entity
 		template <typename Comp>
 		Comp* GetComponent() {
-			for (int i = 0; i < m_loComponent.size(); i++) {
-				if (typeid(m_loComponent[i]).name() == Comp) {
-					return static_cast<Comp>(m_loComponent[i]);
+			for (int i = 0; i < m_loComponents.size(); i++) {
+				if (typeid(m_loComponents[i]).name() == Comp) {
+					return static_cast<Comp>(m_loComponents[i]);
 				}
 			}
 		}
@@ -49,8 +49,8 @@ namespace ave {
 		// Verifies if an Entity has a given Component
 		template <typename Comp>
 		bool HasComponent() {
-			for (int i = 0; i < m_loComponent.size(); i++) {
-				if (typeid(m_loComponent[i]) == typeid(Comp)) {
+			for (int i = 0; i < m_loComponents.size(); i++) {
+				if (typeid(m_loComponents[i]) == typeid(Comp)) {
 					return true;
 				}
 			}
@@ -60,9 +60,9 @@ namespace ave {
 		// Removes a Component from the Entity
 		template <typename Comp>
 		bool RemoveComponent() {
-			for (auto it = m_loComponent.begin(); it < m_loComponent.end(); it++) {
+			for (auto it = m_loComponents.begin(); it < m_loComponents.end(); it++) {
 				if (typeid(*it).name() == Comp) {
-					m_loComponent.erase(it);
+					m_loComponents.erase(it);
 					return true;
 				}
 			}
@@ -75,9 +75,8 @@ namespace ave {
 
 	public:
 
-		// Main Public Attributes
 		Transform* m_poTransform;
-		std::vector<Component*> m_loComponent;
+		std::vector<Component*> m_loComponents;
 		Entity* m_poParent;
 		bool m_bIsAlive;
 	};

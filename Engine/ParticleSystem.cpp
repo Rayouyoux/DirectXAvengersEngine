@@ -22,8 +22,10 @@ namespace ave {
 			m_poTransform = new Transform();
 		}
 
-		Particle::~Particle()
-		{}
+		Particle::~Particle() {
+			delete m_poTransform;
+			delete m_poBuffer;
+		}
 
 		void Particle::OnInstantiation() {
 
@@ -171,6 +173,7 @@ namespace ave {
 
 		ParticleSystem::~ParticleSystem() {
 			m_poParticlePool->Release();
+			m_lActiveParticles.clear();
 		}
 
 		void ParticleSystem::Initialize(float iRate, int iCapacity) {

@@ -1,25 +1,25 @@
 #include "pch.h"
 #include "EntityManager.h"
+#include "Transform.h"
 
 namespace ave {
 
 	EntityManager::EntityManager()
 	{}
 
-	EntityManager::~EntityManager()
-	{}
-
-	void EntityManager::Start()
-	{
-		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			m_voAliveEntities[i]->Start();
+	EntityManager::~EntityManager(){
+		for (int i = m_voAliveEntities.size()-1; i >= 0; i--) {
+			delete m_voAliveEntities[i];
 		}
 	}
 
-	void EntityManager::Update(float iDeltaTime)
+	void EntityManager::Update(float fDeltaTime)
 	{
+		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
+		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
+
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			m_voAliveEntities[i]->Update(iDeltaTime);
+			m_voAliveEntities[i]->Update(fDeltaTime);
 		}
 	}
 
@@ -42,9 +42,14 @@ namespace ave {
 	}
 
 	Entity* EntityManager::NewEntity() {
-		Entity* oEntity = new Entity();
-		oEntity->Initialize();
-		m_voAliveEntities.push_back(oEntity);
-		return oEntity;
+		Entity* poEntity = new Entity();
+		poEntity->Initialize();
+		return poEntity;
+	}
+
+	bool EntityManager::RegisterEntity(Entity* poEntity) {
+		m_voAliveEntities.push_back(poEntity);
+		poEntity->Start();
+		return true;
 	}
 }

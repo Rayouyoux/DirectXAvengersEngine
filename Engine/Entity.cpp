@@ -12,20 +12,29 @@ namespace ave {
 		m_bIsAlive = true;
 	}
 
-	Entity::~Entity()
-	{}
+	Entity::~Entity() {
+		// Clear all components
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			delete m_loComponents[i];
+		}
 
-	void Entity::Initialize(Entity * poParent) {
+		delete m_poTransform;
+	}
+
+	void Entity::Initialize(Entity* poParent) {
 		m_poTransform = new Transform();
 		m_poParent = poParent;
 	}
 
-	void Entity::Start() 
-	{}
+	void Entity::Start() {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->Start();
+		}
+	}
 
 	void Entity::Update(float iDeltaTime) {
-		for (int i = 0; i < m_loComponent.size(); i++) {
-			m_loComponent[i]->Update(iDeltaTime);
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->Update(iDeltaTime);
 		}
 		if(m_poTransform->m_bHandleChange){
 			m_poTransform->UpdateMatrice();
@@ -34,8 +43,8 @@ namespace ave {
 	}
 
 	void Entity::Render() {
-		for (int i = 0; i < m_loComponent.size(); i++) {
-			m_loComponent[i]->Render();
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->Render();
 		}
 	}
 

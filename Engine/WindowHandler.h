@@ -18,6 +18,7 @@ namespace ave {
 		HINSTANCE m_ohInstance;
 		HWND m_oMainWnd;
 
+		bool m_bRunning;
 		bool m_bAppPaused;
 		bool m_bMinimized;
 		bool m_bMaximized;

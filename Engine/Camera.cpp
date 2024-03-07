@@ -4,6 +4,8 @@
 #include "Maths.h"
 #include "Entity.h"
 #include "Transform.h"
+#include "GraphicsHandler.h"
+#include "Shader.h"
 
 namespace ave {
 
@@ -42,6 +44,11 @@ namespace ave {
 		SetLens(0.25f * Maths::PI, 800.f/600.f, 1.0f, 1000.0f);
 	}
 
+	void Camera::SetShader(Shader* poShader)
+	{
+		m_poShader = poShader;
+	}
+
 	void Camera::Update(float deltaTime)
 	{
 		UpdateProjectionMatrix();
@@ -51,7 +58,10 @@ namespace ave {
 	{}
 
 	void Camera::Render()
-	{}
+	{
+		/*ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
+		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());*/
+	}
 
 	DirectX::XMMATRIX Camera::GetProjectionMatrix() const
 	{
@@ -61,5 +71,3 @@ namespace ave {
 	void Camera::UpdateProjectionMatrix()
 	{}
 }
-
-// &m_poEntity->m_poTransform->m_bHandleChange

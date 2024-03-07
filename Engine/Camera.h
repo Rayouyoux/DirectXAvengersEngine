@@ -1,6 +1,7 @@
 #pragma once
 
 namespace ave {
+	class Shader;
 
 	class Camera : public Component
 	{
@@ -14,6 +15,7 @@ namespace ave {
 
 		// Frustrum Setter
 		void SetLens(float fovY, float aspect, float zn, float zf);
+		void SetShader(Shader* poShader);
 
 		// SUR Methods
 		void Start() override;
@@ -38,6 +40,9 @@ namespace ave {
 		float m_fFarZ;
 		float m_fNearWindowHeight;
 		float m_fFarWindowHeight;
+
+		Shader* m_poShader;
+
 
 		// View Matrix
 		DirectX::XMFLOAT4X4 m_voProjectionMatrix;

@@ -23,6 +23,8 @@ namespace ave
         // Resets All Times & Initializes App Again
         void        Reset();
 
+        void        SetTimeScale(float fTimeScale);
+
         // Get Methods
         float      TotalTime() const;
         float      DeltaTime() const;
@@ -37,5 +39,6 @@ namespace ave
         __int64     m_iDeltaTime;
         __int64     m_iTotalTime;
 
+        float m_fTimeScale;
     };
 }

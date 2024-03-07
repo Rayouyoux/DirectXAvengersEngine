@@ -105,11 +105,13 @@ namespace ave {
 		m_vScale.x = m_mScale._11;
 		m_vScale.y = m_mScale._22;
 		m_vScale.z = m_mScale._33;
+		m_bHandleChange = true;
 	};
 
 	void Transform::SetVectorPosition(FXMVECTOR* newPosition) { 
 		XMStoreFloat3(&m_vPosition, *newPosition);
 		XMStoreFloat4x4(&m_mPosition, XMMatrixTranslation(m_vPosition.x, m_vPosition.y, m_vPosition.z));
+		m_bHandleChange = true;
 	};
 
 	void Transform::SetMatrixPosition(FXMMATRIX* newMatrixPosition) { 
@@ -117,6 +119,7 @@ namespace ave {
 		m_vPosition.x = m_mPosition._41;
 		m_vPosition.y = m_mPosition._42;
 		m_vPosition.z = m_mPosition._43;
+		m_bHandleChange = true;
 	};
 
 	void Transform::RotateOnDir(float fRoll) {
@@ -130,6 +133,7 @@ namespace ave {
 		m_vDir.x = m_mRotation._31;
 		m_vDir.y = m_mRotation._32;
 		m_vDir.z = m_mRotation._33;
+		m_bHandleChange = true;
 	};
 
 	void Transform::RotateOnUp(float fYaw) {
@@ -143,6 +147,7 @@ namespace ave {
 		m_vUp.x = m_mRotation._21;
 		m_vUp.y = m_mRotation._22;
 		m_vUp.z = m_mRotation._23;
+		m_bHandleChange = true;
 	};
 
 	void Transform::RotateOnRight(float fPitch) {
@@ -155,7 +160,8 @@ namespace ave {
 
 		m_vRight.x = m_mRotation._11;
 		m_vRight.y = m_mRotation._12;
-		m_vRight.z = m_mRotation._13;
+		m_vRight.z = m_mRotation._13; 
+		m_bHandleChange = true;
 	};
 
 	void Transform::SetQuatRotation(FXMVECTOR* newRotation) { 
@@ -172,6 +178,7 @@ namespace ave {
 		m_vDir.x = m_mRotation._31;
 		m_vDir.y = m_mRotation._32;
 		m_vDir.z = m_mRotation._33;
+		m_bHandleChange = true;
 	};
 
 	void Transform::SetMatrixRotation(FXMMATRIX* newMatrixRotation) { 
@@ -188,9 +195,26 @@ namespace ave {
 		m_vDir.x = m_mRotation._31;
 		m_vDir.y = m_mRotation._32;
 		m_vDir.z = m_mRotation._33;
+		m_bHandleChange = true;
 	};
 
-	Transform::~Transform(){
+	void Transform::LookAt(FXMVECTOR* poPoint) {
+		XMMATRIX mRot = XMMatrixLookAtLH(XMLoadFloat3(&m_vPosition), *poPoint, XMLoadFloat3(&m_vUp));
+		XMStoreFloat4x4(&m_mRotation, mRot);
 
+		XMStoreFloat4(&m_qRotation, XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_mRotation)));
+
+		m_vRight.x = m_mRotation._11;
+		m_vRight.y = m_mRotation._12;
+		m_vRight.z = m_mRotation._13;
+		m_vUp.x = m_mRotation._21;
+		m_vUp.y = m_mRotation._22;
+		m_vUp.z = m_mRotation._23;
+		m_vDir.x = m_mRotation._31;
+		m_vDir.y = m_mRotation._32;
+		m_vDir.z = m_mRotation._33;
 	}
+
+	Transform::~Transform()
+	{}
 }

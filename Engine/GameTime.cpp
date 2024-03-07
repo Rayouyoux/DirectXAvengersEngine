@@ -9,7 +9,8 @@ namespace ave {
         m_iCurrentTime(0),
         m_iSecondsPerCount(0),
         m_iDeltaTime(0),
-        m_iTotalTime(0)
+        m_iTotalTime(0),
+        m_fTimeScale(1)
     {}
 
     GameTime::~GameTime()
@@ -45,9 +46,14 @@ namespace ave {
         m_iSecondsPerCount = 0;
         m_iDeltaTime = 0;
         m_iTotalTime = 0;
+        m_fTimeScale = 1;
 
         Initialize();
 
+    }
+
+    void GameTime::SetTimeScale(float fTimeScale) {
+        m_fTimeScale = fTimeScale;
     }
 
     float GameTime::TotalTime() const 
@@ -60,7 +66,7 @@ namespace ave {
     float GameTime::DeltaTime() const
     {
 
-        return static_cast<float>(m_iDeltaTime) / m_iSecondsPerCount;
+        return static_cast<float>(m_iDeltaTime) / m_iSecondsPerCount * m_fTimeScale;
 
     }
 }

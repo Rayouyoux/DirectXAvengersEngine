@@ -47,8 +47,7 @@ namespace ave{
 		void SetQuatRotation(FXMVECTOR* newRotation);
 		void SetMatrixRotation(FXMMATRIX* newMatrixRotation);
 
-		
-
+		void LookAt(FXMVECTOR* poPoint);
 
 		~Transform();
 

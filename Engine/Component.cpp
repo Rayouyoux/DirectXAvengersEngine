@@ -8,15 +8,12 @@ namespace ave {
 	{
 		m_poEntity = nullptr;
 	}
-
 	
-	Component::~Component() 
-	{
+	Component::~Component() {
 
 	}
 
-	void Component::BindEntity(Entity* poEntity) 
-	{
+	void Component::BindEntity(Entity* poEntity) {
 		m_poEntity = poEntity;
 	}
 };

@@ -9,12 +9,14 @@ namespace ave {
 		m_poVertexBufferGPU = nullptr;
 		m_poVertexBufferCPU = nullptr;
 		m_poIndexBufferCPU = nullptr;
+
 		m_oIndexFormat = DXGI_FORMAT_R16_UINT;
 		m_oIndexBufferByteSize = 0;
 		m_oVertexByteStride = 0;
 		m_oVertexBufferByteSize = 0;
 		m_oIndexCount = 0;
 	}
+
 	UINT Mesh::GetIndexCount() {
 		return m_oIndexCount;
 	}
@@ -125,13 +127,13 @@ namespace ave {
 		return true;
 	}
 
-	void Mesh::Destroy() {
+	Mesh::~Mesh() {
 		m_poVertexBufferCPU->Release();
 		m_poIndexBufferCPU->Release();
-		m_poIndexBufferGPU->Release();
 		m_poVertexBufferGPU->Release();
-	}
-	Mesh::~Mesh() {
-		Destroy();
+		m_poIndexBufferGPU->Release();
+
+		m_poVertexBufferUploader->Release();
+		m_poIndexBufferUploader->Release();
 	}
 }
