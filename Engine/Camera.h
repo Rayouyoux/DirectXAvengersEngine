@@ -16,6 +16,7 @@ namespace ave {
 		// Frustrum Setter
 		void SetLens(float fovY, float aspect, float zn, float zf);
 		void SetShader(Shader* poShader);
+		void ChangeAspectRatio(float fWidth, float fHeight);
 
 		// SUR Methods
 		void Start() override;

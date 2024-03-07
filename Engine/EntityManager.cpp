@@ -17,8 +17,9 @@ namespace ave {
 	{
 		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
-		float rotCam = DirectX::XMConvertToRadians(90.0f * fDeltaTime);
-		m_voAliveEntities[0]->m_poTransform->RotateOnRight(rotCam);
+		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
+		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
+		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
 
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Update(fDeltaTime);

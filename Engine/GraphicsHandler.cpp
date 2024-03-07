@@ -112,38 +112,29 @@ namespace ave {
 
 		
 		Entity* poCameraEntity = m_poEntityManager->NewEntity();
-		poCameraEntity->Initialize();
 
 		Entity* poCubeEntity = m_poEntityManager->NewEntity();
-		poCubeEntity->Initialize();
 
 		Entity* poCubeEntity2 = m_poEntityManager->NewEntity();
-		poCubeEntity2->Initialize();
-		/*float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
-		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
-		float y = 5.0f * cosf(XM_PIDIV4);*/
 
-		// Build the view matrix.
-		/*XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);*/
-		/*XMVECTOR pos = XMVectorSet(-4.0f, 0.0f, 0.0f, 1.0f);
-		XMVECTOR target = XMVectorZero();
-		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-		m_view = XMMatrixLookAtLH(pos, target, up);*/
-		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
-		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
-		XMVECTOR pos = XMVectorSet(-4.0f, 2.0f, 0.0f, 1.0f);
+		XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
+		poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
+
+
+		XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+		//XMVECTOR pos = XMVectorSet(0.0f, 2.0f, 4.0f, 0.0f);
 		poCameraEntity->m_poTransform->SetVectorPosition(&pos);
 		
-		/*XMVECTOR target = XMVectorZero();
-		poCameraEntity->m_poTransform->LookAt(&target);
-		m_view = poCameraEntity->m_poTransform->GetMatrixRotation();*/
+		//XMVECTOR direction = XMVectorSet(4.0f, -2.0f, 0.0f, 0.0f);
+		XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+		poCameraEntity->m_poTransform->LookTo(&direction);
+
+		m_view = poCameraEntity->m_poTransform->GetMatrixRotation();
 
 		m_poCamera = poCameraEntity->AddComponent<Camera>();
 		m_poCamera->SetShader(m_poShader);
-		/*m_poCamera->Start();*/
-		/*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
-		Logger::PrintLog(magic.c_str());*/
+
 		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
 		poParticuleEntity->Initialize();
 
@@ -196,6 +187,7 @@ namespace ave {
 			|| m_poDirectCmdListAlloc == nullptr)
 			return;
 
+		m_poCamera->ChangeAspectRatio(m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight());
 		FlushCommandQueue();
 
 		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
@@ -332,8 +324,11 @@ namespace ave {
 		//XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
 		//m_poShader->UpdateObject(objConstants);
 
+				//mRot = (nullptr, mRot);
+
 		PassConstants passConstants;
-		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
+		//XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
+		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(XMMatrixInverse(nullptr, view)));
 		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
 		m_poShader->UpdatePass(passConstants);
 	}

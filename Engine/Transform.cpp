@@ -90,7 +90,6 @@ namespace ave {
 		XMMATRIX mPosition = XMLoadFloat4x4(&m_mPosition);
 		XMMATRIX mRotation = XMLoadFloat4x4(&m_mRotation);
 		XMMATRIX mWorld = XMMatrixMultiply(XMMatrixMultiply(mScale, mRotation), mPosition);
-
 		XMStoreFloat4x4(&m_mTransformation, mWorld);
 		m_bHandleChange = false;
 	}
@@ -198,8 +197,9 @@ namespace ave {
 		m_bHandleChange = true;
 	};
 
-	void Transform::LookAt(FXMVECTOR* poPoint) {
-		XMMATRIX mRot = XMMatrixLookAtLH(XMLoadFloat3(&m_vPosition), *poPoint, XMLoadFloat3(&m_vUp));
+	void Transform::LookTo(FXMVECTOR* poDirection) {
+		XMMATRIX mRot = XMMatrixLookToLH(XMVectorZero(), *poDirection, XMLoadFloat3(&m_vUp));
+		mRot = XMMatrixInverse(nullptr, mRot);
 		XMStoreFloat4x4(&m_mRotation, mRot);
 
 		XMStoreFloat4(&m_qRotation, XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_mRotation)));
@@ -213,6 +213,8 @@ namespace ave {
 		m_vDir.x = m_mRotation._31;
 		m_vDir.y = m_mRotation._32;
 		m_vDir.z = m_mRotation._33;
+
+		m_bHandleChange = true;
 	}
 
 	Transform::~Transform(){

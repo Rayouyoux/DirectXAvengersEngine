@@ -49,6 +49,10 @@ namespace ave {
 		m_poShader = poShader;
 	}
 
+	void Camera::ChangeAspectRatio(float fWidth, float fHeight) {
+		SetLens(0.25f * Maths::PI, fWidth / fHeight, 1.0f, 1000.0f);
+	}
+
 	void Camera::Update(float deltaTime)
 	{
 		UpdateProjectionMatrix();
