@@ -367,9 +367,6 @@ namespace ave {
         //}
            
     }
-    void Shader::AddObject() {
-       /* m_voObjects.push_back(m_poPass);*/
-    }
 
    /* void Shader::AddObject() {
        UploadBuffer<ObjectConstants>* poBuffer = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);

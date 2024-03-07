@@ -117,11 +117,6 @@ namespace ave {
 
 		m_poTexture = new Texture();
 
-		m_poCameraEntity = new Entity();
-		m_poCameraEntity->Initialize();
-
-		m_poCubeEntity = new Entity();
-		m_poCubeEntity->Initialize();
 		float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * Maths::PI);
 		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * Maths::PI) + 30;
 		float y = 5.0f * cosf(XM_PIDIV4);
@@ -138,16 +133,12 @@ namespace ave {
 		m_view = XMMatrixLookAtLH(pos, target, up);*/
 		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
 		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
-		XMVECTOR pos = XMVectorSet(-4.0f, 2.0f, -4.0f, 1.0f);
+		XMVECTOR pos = XMVectorSet(-4.0f, 2.0f, -8.0f, 1.0f);
 		poCameraEntity->m_poTransform->SetVectorPosition(&pos);
 		XMVECTOR target = XMVectorZero();
 		poCameraEntity->m_poTransform->LookAt(&target);
 		m_view = poCameraEntity->m_poTransform->GetMatrixRotation();
 
-		MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
-		poMeshRenderer->SetMesh(m_poMesh);
-		poMeshRenderer->SetShader(m_poShader);
-		poMeshRenderer->SetFirstTexture(m_poTexture);
 		m_poCamera = poCameraEntity->AddComponent<Camera>();
 		m_poCamera->SetShader(m_poShader);
 
@@ -156,7 +147,7 @@ namespace ave {
 		m_poParticleSystem->SetBehaviour(m_poBehaviour);
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(1000, 1000);
+		m_poParticleSystem->Initialize(100, 1000);
 
 		bool test = CreateFactory()
 			&& CreateDevice()

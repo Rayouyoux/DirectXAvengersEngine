@@ -56,6 +56,7 @@ namespace ave {
 
 		m_poTimer = new GameTime();
 		m_poTimer->Initialize();
+		m_poTimer->SetTimeScale(0);
 
 		m_poGraphics->OnResize();
 

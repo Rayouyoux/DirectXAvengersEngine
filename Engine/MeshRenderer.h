@@ -17,6 +17,7 @@ namespace ave {
 	
 		void SetMesh(Mesh* poMesh);
 		void SetShader(Shader* SetShader);
+		void SetFirstTexture(Texture* texture);
 
 		void Start() override;
 		void Update(float dT) override;
