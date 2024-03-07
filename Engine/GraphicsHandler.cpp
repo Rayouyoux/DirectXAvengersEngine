@@ -136,7 +136,6 @@ namespace ave {
 		m_poCamera->SetShader(m_poShader);
 
 		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
-		poParticuleEntity->Initialize();
 
 
 		m_poBehaviour = new Particles::ParticleBehaviour();

@@ -1,8 +1,9 @@
 #pragma once
+#include "UploadBuffer.h"
 
 namespace ave {
 	class Shader;
-
+	struct PassConstants;
 	class Camera : public Component
 	{
 	public:
@@ -41,6 +42,8 @@ namespace ave {
 		float m_fFarZ;
 		float m_fNearWindowHeight;
 		float m_fFarWindowHeight;
+
+		UploadBuffer<PassConstants>* m_poBuffer;
 
 		Shader* m_poShader;
 

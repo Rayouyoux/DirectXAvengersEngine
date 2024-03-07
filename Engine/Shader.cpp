@@ -357,10 +357,10 @@ namespace ave {
         m_poDevice = nullptr;
     }
 
-    void Shader::ResetIndexObject()
+    /*void Shader::ResetIndexObject()
     {
         m_iIndexObject = 0;
-    }
+    }*/
 
     void Shader::End() {
         
