@@ -215,7 +215,6 @@ namespace ave {
 		m_vDir.z = m_mRotation._33;
 	}
 
-	Transform::~Transform(){
-
-	}
+	Transform::~Transform()
+	{}
 }

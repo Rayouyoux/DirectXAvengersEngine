@@ -21,17 +21,6 @@
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-
-std::wstring RACISTEXMFLOAT4X4ToString(const DirectX::XMFLOAT4X4& matrix)
-{
-	std::wstringstream ss;
-	ss << "[" << matrix._11 << ", " << matrix._12 << ", " << matrix._13 << ", " << matrix._14 << "]" << std::endl;
-	ss << "[" << matrix._21 << ", " << matrix._22 << ", " << matrix._23 << ", " << matrix._24 << "]" << std::endl;
-	ss << "[" << matrix._31 << ", " << matrix._32 << ", " << matrix._33 << ", " << matrix._34 << "]" << std::endl;
-	ss << "[" << matrix._41 << ", " << matrix._42 << ", " << matrix._43 << ", " << matrix._44 << "]" << std::endl;
-	return ss.str();
-}
-
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
 
@@ -74,7 +63,18 @@ namespace ave {
 		if (m_poDevice != nullptr)
 			FlushCommandQueue();
 
+		// Temporary
+		delete m_poShader;
+		delete m_poMesh;
+		delete m_poEntityManager;
+		delete m_poBehaviour;
+
 		m_poFactory->Release();
+		m_poSwapChain->Release();
+		m_poDevice->Release();
+
+		m_poFence->Release();
+		m_poCommandQueue->Release();
 		m_poDirectCmdListAlloc->Release();
 		m_poCommandList->Release();
 
@@ -85,10 +85,8 @@ namespace ave {
 
 		m_poRtvHeap->Release();
 		m_poDsvHeap->Release();
-
-		delete m_poBehaviour;
+		m_poCbvHeap->Release();
 	}
-
 
 	GraphicsHandler* GraphicsHandler::Create() {
 		return new GraphicsHandler();
@@ -102,6 +100,7 @@ namespace ave {
 				return false;
 			}
 			debugController->EnableDebugLayer();
+			debugController->Release();
 		}
 #endif
 		m_poAve = poAve;
@@ -109,16 +108,12 @@ namespace ave {
 		m_poShader = new Shader();
 		m_poMesh = new Mesh();
 		m_poEntityManager = new EntityManager();
-
 		
 		Entity* poCameraEntity = m_poEntityManager->NewEntity();
-		poCameraEntity->Initialize();
-
 		Entity* poCubeEntity = m_poEntityManager->NewEntity();
-		poCubeEntity->Initialize();
-
 		Entity* poCubeEntity2 = m_poEntityManager->NewEntity();
-		poCubeEntity2->Initialize();
+		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
+
 		/*float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
 		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
 		float y = 5.0f * cosf(XM_PIDIV4);*/
@@ -140,19 +135,13 @@ namespace ave {
 
 		m_poCamera = poCameraEntity->AddComponent<Camera>();
 		m_poCamera->SetShader(m_poShader);
-		/*m_poCamera->Start();*/
-		/*std::wstring magic = RACISTEXMFLOAT4X4ToString(m_poCamera->GetProjectionMatrix());
-		Logger::PrintLog(magic.c_str());*/
-		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
-		poParticuleEntity->Initialize();
 
-
-		m_poBehaviour = new Particles::ParticleBehaviour();
-		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
-		m_poParticleSystem->SetBehaviour(m_poBehaviour);
-		m_poParticleSystem->SetMesh(m_poMesh);
-		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(10, 1);
+		//m_poBehaviour = new Particles::ParticleBehaviour();
+		//m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
+		//m_poParticleSystem->SetBehaviour(m_poBehaviour);
+		//m_poParticleSystem->SetMesh(m_poMesh);
+		//m_poParticleSystem->SetShader(m_poShader);
+		//m_poParticleSystem->Initialize(10, 1);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -298,15 +287,12 @@ namespace ave {
 	void GraphicsHandler::Update(float deltaTime) {
 		/*m_poCameraEntity->Update(deltaTime);*/
 		
-
 		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 		m_poEntityManager->Update(deltaTime);
 
 		/*XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
 		XMMATRIX world2 = m_poCubeEntity2->m_poTransform->GetWorld();*/
 		/*XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();*/
-		
-		
 
 		/*float rot = XMConvertToRadians(45.0f * deltaTime);*/
 		/*XMFLOAT3 rotate = { 0.0f ,rot, 0.0f };
@@ -342,8 +328,8 @@ namespace ave {
 
 	void GraphicsHandler::Render() {
 		RenderBegin();
-		m_poEntityManager->Render();
 
+		m_poEntityManager->Render();
 
 		RenderCease();
 	}
@@ -559,7 +545,6 @@ namespace ave {
 		ID3D12DescriptorHeap* descriptorHeaps[] = { m_poCbvHeap };
 		m_poCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 	}
-		
 
 	void GraphicsHandler::CloseCommandList() {
 		if (FAILED(m_poCommandList->Close())) {

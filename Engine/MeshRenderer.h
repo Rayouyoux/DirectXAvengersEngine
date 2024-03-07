@@ -21,7 +21,6 @@ namespace ave {
 		void Update(float dT) override;
 		void LateUpdate(float dT) override {};
 		void Render() override;
-		void Destroy();
 		~MeshRenderer();
 
 	protected:

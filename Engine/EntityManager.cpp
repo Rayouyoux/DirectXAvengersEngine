@@ -8,7 +8,7 @@ namespace ave {
 	{}
 
 	EntityManager::~EntityManager(){
-		for (int i = 0; i < m_voAliveEntities.size(); i++) {
+		for (int i = m_voAliveEntities.size()-1; i >= 0; i--) {
 			delete m_voAliveEntities[i];
 		}
 	}

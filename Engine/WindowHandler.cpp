@@ -39,7 +39,7 @@ namespace ave {
 	bool AvengersEngine::Initialize(HINSTANCE hInstance) {
 		m_ohInstance = hInstance;
 
-		Logger::StartMTail();
+		//Logger::StartMTail();
 
 		if (RegisterWndClass() == false) {
 			return false;
@@ -64,13 +64,17 @@ namespace ave {
 
 	int AvengersEngine::Run() {
 		MSG msg = { 0 };
+		m_bRunning = true;
 
-		while (msg.message != WM_QUIT) {
+		while (m_bRunning) {
 			if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE)) {
+				if (msg.message == WM_QUIT) {
+					m_bRunning = false;
+				}
+
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
-			}
-			else {
+			} else {
 				m_poTimer->Tick();
 
 				if (m_bAppPaused == false) {
@@ -85,6 +89,7 @@ namespace ave {
 			}
 		}
 
+		Release();
 		return static_cast<int>(msg.wParam);
 	}
 
