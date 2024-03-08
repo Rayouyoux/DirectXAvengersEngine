@@ -84,7 +84,7 @@ namespace ave {
             return false;
         }
 
-        CreateRootSignature(1);
+        CreateRootSignature(2);
 
         if (m_poDevice->CreateRootSignature((UINT)0, m_poSerializedRootSig->GetBufferPointer(), m_poSerializedRootSig->GetBufferSize(), IID_PPV_ARGS(&m_poRootSignature))) {
             Destroy();
@@ -319,23 +319,23 @@ namespace ave {
                 return false;
             }
         }
-        ID3DBlob* error = nullptr;
-        HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
+        //ID3DBlob* error = nullptr;
+        //HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_poSerializedRootSig, &error);
 
-        if (FAILED(hr))
-        {
-            if (error != nullptr)
-            {
-                ::OutputDebugStringA((char*)error->GetBufferPointer());
-            }
-            else
-            {
-                // Afficher le code d'erreur directement
-                ::OutputDebugStringA("Failed to serialize root signature without error details.\n");
-            }
+        //if (FAILED(hr))
+        //{
+        //    if (error != nullptr)
+        //    {
+        //        ::OutputDebugStringA((char*)error->GetBufferPointer());
+        //    }
+        //    else
+        //    {
+        //        // Afficher le code d'erreur directement
+        //        ::OutputDebugStringA("Failed to serialize root signature without error details.\n");
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
            
     }
     void Shader::AddObject() {

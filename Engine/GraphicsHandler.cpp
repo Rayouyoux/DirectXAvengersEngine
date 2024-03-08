@@ -137,8 +137,10 @@ namespace ave {
 		poMeshRenderer->SetShader(m_poShader);
 		poMeshRenderer->SetFirstTexture(m_poTexture);
 
-		/*XMFLOAT3 scale = { 0.0000001f, 0.0000001f , 0.0000001f };
-		m_poCubeEntity->m_poTransform->Scale(&scale);*/
+		
+		XMFLOAT3 scale = { 0.00001f, 0.00001f , 0.00001f };
+		m_poCubeEntity->m_poTransform->Scale(&scale);
+
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -282,13 +284,13 @@ namespace ave {
 		
 		
 
-		/*float rot = xmconverttoradians(45.0f * deltatime);
-		xmfloat3 rotate = { 0.0f ,rot, 0.0f };*/
+		/*float rot = XMConvertToRadians(45.0f * deltaTime);
+		XMFLOAT3 rotate = { rot ,rot, rot };*/
 
-		XMFLOAT3 scale = { -0.5f * deltaTime, -0.5f* deltaTime , -0.5f * deltaTime};
+		//XMFLOAT3 scale = { -0.5f * deltaTime, -0.5f* deltaTime , -0.5f * deltaTime};
 
 		//m_poCubeEntity->m_poTransform->Rotate(&rotate);
-		m_poCubeEntity->m_poTransform->Scale(&scale);
+		//m_poCubeEntity->m_poTransform->Scale(&scale);
 
 		m_poCubeEntity->m_poTransform->UpdateMatrice();
 
