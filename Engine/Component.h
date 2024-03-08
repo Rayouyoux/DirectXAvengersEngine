@@ -17,7 +17,7 @@ namespace ave {
 		Component();
 
 		// Deconstructor
-		~Component();
+		virtual ~Component();
 
 		// Set Method
 		void			BindEntity(Entity* poEntity);

@@ -1,23 +1,23 @@
 #include "AvengersEngine.h"
-#include "ObjectPooler.h"
+//#include "ObjectPooler.h"
 #include <vector>
 #include <sstream>
 #if defined(DEBUG) | defined(_DEBUG)
 #include <crtdbg.h>
 #endif
 
-using namespace ave::ObjectPooling;
-
-class Particle : public IPullable {
-    virtual void OnInstantiation() override {
-    }
-
-    virtual void OnAcquire() override {
-    }
-
-    virtual void OnRelease() override {
-    }
-};
+//using namespace ave::ObjectPooling;
+//
+//class Particle : public IPullable {
+//    virtual void OnInstantiation() override {
+//    }
+//
+//    virtual void OnAcquire() override {
+//    }
+//
+//    virtual void OnRelease() override {
+//    }
+//};
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) {
 #if defined(DEBUG) | defined(_DEBUG)
@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         return 0;
     }
   
-    int res = gameInstance->Run();
+    gameInstance->Run();
 
 #ifdef _DEBUG
     _CrtMemState memStateEnd, memStateDiff;

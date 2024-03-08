@@ -23,8 +23,9 @@ namespace ave {
 		m_voProjectionMatrix = Maths::MatriceIdentity();
 	}
 
-	Camera::~Camera()
-	{}
+	Camera::~Camera(){
+		delete m_poBuffer;
+	}
 
 	void Camera::SetLens(float fov, float aspect, float zn, float zf)
 	{
@@ -40,10 +41,10 @@ namespace ave {
 		XMStoreFloat4x4(&m_voProjectionMatrix, P);
 	}
 
-	void Camera::Init()
+	void Camera::Start()
 	{
 		SetLens(0.25f * Maths::PI, 800.f/600.f, 1.0f, 1000.0f);
-		m_poBuffer = new UploadBuffer<PassConstants>(m_poDevice, 1, true);
+		m_poBuffer = new UploadBuffer<PassConstants>(GraphicsHandler::GetDevice(), 1, true);
 	}
 
 	void Camera::ChangeAspectRatio(float fWidth, float fHeight) {

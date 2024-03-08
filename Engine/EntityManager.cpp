@@ -13,8 +13,7 @@ namespace ave {
 		}
 	}
 
-	void EntityManager::Update(float fDeltaTime)
-	{
+	void EntityManager::Update(float fDeltaTime) {
 		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
 		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
@@ -26,8 +25,7 @@ namespace ave {
 		}
 	}
 
-	void EntityManager::LateUpdate()
-	{
+	void EntityManager::LateUpdate() {
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			if (m_voAliveEntities[i]->GetIsAlive() == false) {
 				Entity* EntityToDelete = m_voAliveEntities[i];
@@ -37,8 +35,7 @@ namespace ave {
 		}
 	}
 
-	void EntityManager::Render()
-	{
+	void EntityManager::Render() {
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Render();
 		}

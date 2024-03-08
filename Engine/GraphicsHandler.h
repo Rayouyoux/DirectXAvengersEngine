@@ -41,7 +41,7 @@ namespace ave {
 
 		IDXGIFactory4* m_poFactory;
 		IDXGISwapChain* m_poSwapChain;
-		ID3D12Device* m_poDevice;
+		static ID3D12Device* m_poDevice;
 
 		ID3D12Fence* m_poFence;
 		UINT64 m_iCurrentFence;
@@ -151,7 +151,7 @@ namespace ave {
 		virtual DirectX::XMVECTORF32 GetFillColor() const { return m_cFillColor; }
 		virtual void SetFillColor(const DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
 
-		ID3D12Device* GetDevice() { return m_poDevice; }
+		static ID3D12Device* GetDevice() { return m_poDevice; }
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }

@@ -7,6 +7,7 @@
 #include "UploadBuffer.h"
 #include "Vertex.h"
 #include "Texture.h"
+#include "Camera.h"
 #include "Mesh.h"
 #include <iostream>
 #include "ConstantsStruct.h"
@@ -59,10 +60,10 @@ namespace ave {
     //}
 
     //A appeler dans l'init
-    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
+    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera) {
+        m_poCamera = poCamera;
         m_iIndexObject = 0;
         m_poDevice = poGraphicsHandler->GetDevice();
-        CreateUploadBuffer();
         CreateRootSignature(1);
         //m_poCbvHeap =  //Get heap 
 
@@ -126,7 +127,7 @@ namespace ave {
         //Root
         poList->SetGraphicsRootSignature(GetRootSignature());
 
-        poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poPass->Resource()->GetGPUVirtualAddress());
+        poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());
 
         ////Pipeline
         poList->SetPipelineState(GetPso());
@@ -143,11 +144,6 @@ namespace ave {
 
         poList->DrawIndexedInstanced(pMesh->GetIndexCount(), 1, 0, 0, 0);
     }
-
-    //void Shader::UpdateObject() {
-    //    //int index =  //Get l'index de l objet;
-    //    //m_voObjects[1]->CopyData()
-    //}
 
     ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {
         
@@ -309,11 +305,6 @@ namespace ave {
         }
     }
 
-   /* void Shader::AddObject() {
-       UploadBuffer<ObjectConstants>* poBuffer = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
-       m_voObjects.push_back(poBuffer);
-    }*/
-
     ID3D12Device* Shader::GetDevice() {
         return m_poDevice;
     }
@@ -333,11 +324,6 @@ namespace ave {
 
         m_poDevice = nullptr;
     }
-
-    /*void Shader::ResetIndexObject()
-    {
-        m_iIndexObject = 0;
-    }*/
 
     void Shader::End() {
         

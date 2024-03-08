@@ -34,6 +34,7 @@ std::wstring RACISTEXMFLOAT4X4ToString(const DirectX::XMFLOAT4X4& matrix)
 
 namespace ave {
 	ID3D12GraphicsCommandList* GraphicsHandler::m_poCommandList;
+	ID3D12Device* GraphicsHandler::m_poDevice;
 
 	GraphicsHandler::GraphicsHandler() {
 		m_poAve = nullptr;
@@ -74,7 +75,18 @@ namespace ave {
 		if (m_poDevice != nullptr)
 			FlushCommandQueue();
 
+		// Temporary
+		delete m_poShader;
+		delete m_poMesh;
+		delete m_poEntityManager;
+		delete m_poBehaviour;
+
 		m_poFactory->Release();
+		m_poSwapChain->Release();
+		m_poDevice->Release();
+
+		m_poFence->Release();
+		m_poCommandQueue->Release();
 		m_poDirectCmdListAlloc->Release();
 		m_poCommandList->Release();
 
@@ -85,8 +97,7 @@ namespace ave {
 
 		m_poRtvHeap->Release();
 		m_poDsvHeap->Release();
-
-		delete m_poBehaviour;
+		m_poCbvHeap->Release();
 	}
 
 
@@ -130,20 +141,17 @@ namespace ave {
 		XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
 		poCameraEntity->m_poTransform->LookTo(&direction);
 
-		m_view = poCameraEntity->m_poTransform->GetMatrixRotation();
-
 		m_poCamera = poCameraEntity->AddComponent<Camera>();
-		m_poCamera->SetShader(m_poShader);
 
 		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
 
 
-		m_poBehaviour = new Particles::ParticleBehaviour();
+		/*m_poBehaviour = new Particles::ParticleBehaviour();
 		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
 		m_poParticleSystem->SetBehaviour(m_poBehaviour);
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(10, 1);
+		m_poParticleSystem->Initialize(10, 1);*/
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -157,7 +165,7 @@ namespace ave {
 			return false;
 		}
 
-		bool test2 = m_poShader->CreateShader(this)
+		bool test2 = m_poShader->CreateShader(this, m_poCamera)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
 
 		MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
@@ -186,7 +194,7 @@ namespace ave {
 			|| m_poDirectCmdListAlloc == nullptr)
 			return;
 
-		m_poCamera->ChangeAspectRatio(m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight());
+		//m_poCamera->ChangeAspectRatio(m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight());
 		FlushCommandQueue();
 
 		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
@@ -288,48 +296,7 @@ namespace ave {
 	}
 
 	void GraphicsHandler::Update(float deltaTime) {
-		/*m_poCameraEntity->Update(deltaTime);*/
-		
-
-		/*m_poCameraEntity->m_poTransform->GetWorld()*/
 		m_poEntityManager->Update(deltaTime);
-
-		/*XMMATRIX world = m_poCubeEntity->m_poTransform->GetWorld();
-		XMMATRIX world2 = m_poCubeEntity2->m_poTransform->GetWorld();*/
-		/*XMMATRIX view = m_poCameraEntity->m_poTransform->GetWorld();*/
-		
-		
-
-		/*float rot = XMConvertToRadians(45.0f * deltaTime);*/
-		/*XMFLOAT3 rotate = { 0.0f ,rot, 0.0f };
-		XMVECTOR rotateeee = XMLoadFloat3(&rotate);*/
-		
-
-		/*XMFLOAT3 scale = { -0.5f * deltaTime, -0.5f * deltaTime , -0.5f * deltaTime };*/
-
-		/*XMFLOAT3 pos = { 0.005f * deltaTime, 0.005f * deltaTime , 0.005f * deltaTime };*/
-
-		/*m_poCubeEntity->m_poTransform->RotateOnUp(rot);*/
-		/*m_poCubeEntity->m_poTransform->Scale(&scale);*/
-		/*m_poCubeEntity->m_poTransform->Move(&pos);*/
-
-		/*m_poCubeEntity->m_poTransform->UpdateMatrice();*/
-
-		/*XMMATRIX view = m_view;*/
-		XMMATRIX view = m_poCamera->m_poEntity->m_poTransform->GetWorld();
-		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
-
-		//ObjectConstants objConstants;
-		//XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		//m_poShader->UpdateObject(objConstants);
-
-				//mRot = (nullptr, mRot);
-
-		PassConstants passConstants;
-		//XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
-		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(XMMatrixInverse(nullptr, view)));
-		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
-		m_poShader->UpdatePass(passConstants);
 	}
 
 	void GraphicsHandler::LateUpdate() {
@@ -339,8 +306,6 @@ namespace ave {
 	void GraphicsHandler::Render() {
 		RenderBegin();
 		m_poEntityManager->Render();
-
-
 		RenderCease();
 	}
 

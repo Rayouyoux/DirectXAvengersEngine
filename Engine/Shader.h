@@ -12,6 +12,7 @@ namespace ave {
 	class Mesh;
 	class GraphicsHandler;
 	class Texture;
+	class Camera;
 	
 	class Shader
 	{
@@ -30,6 +31,7 @@ namespace ave {
 		ID3DBlob* m_poPS;
 		std::vector<D3D12_INPUT_ELEMENT_DESC> m_oInputLayout;
 		ID3D12PipelineState* m_poPso;
+		Camera* m_poCamera;
 
 
 		int m_iIdRootSignature;
@@ -48,11 +50,10 @@ namespace ave {
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		/*void AddObject();*/
-		bool CreateShader(GraphicsHandler* poGraphicsHandler);
+		bool CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera);
 		void Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
-		void CreateUploadBuffer();
 
 		ID3DBlob* CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint, const std::string& oTarget);
 		
@@ -60,12 +61,7 @@ namespace ave {
 		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
 		UINT GetRootPass();
-		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
 		ID3D12PipelineState* GetPso();
-		UploadBuffer<PassConstants>* GetPass();
-		void UpdatePass(PassConstants data);
-		/*void UpdateObject(ObjectConstants data);
-		void UpdateObject(ObjectConstants data, int index);*/
 
 
 		~Shader();

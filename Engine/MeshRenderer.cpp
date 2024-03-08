@@ -70,7 +70,7 @@ namespace ave {
 	}
 
 	MeshRenderer::~MeshRenderer() {
-		
+		delete m_poBuffer;
 	}
 
 
