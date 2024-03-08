@@ -37,29 +37,31 @@ namespace ave {
 	}
 
 	void MeshRenderer::Render() {
-		ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
+		//ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
-		//Root
-		poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
+		////Root
+		//poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
 
-		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
+		//poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
 
-		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
+		//////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
-		////Pipeline
-		poList->SetPipelineState(m_poShader->GetPso());
+		//////Pipeline
+		//poList->SetPipelineState(m_poShader->GetPso());
 
-		////Topology
-		poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//////Topology
+		//poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		auto oVertexBufferView = m_poMesh->VertexBufferView();
-		auto oIndexBufferView = m_poMesh->IndexBufferView();
-		poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
-		poList->IASetIndexBuffer(&oIndexBufferView);
+		//auto oVertexBufferView = m_poMesh->VertexBufferView();
+		//auto oIndexBufferView = m_poMesh->IndexBufferView();
+		//poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
+		//poList->IASetIndexBuffer(&oIndexBufferView);
 
-		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poBuffer->Resource()->GetGPUVirtualAddress());
+		//poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poBuffer->Resource()->GetGPUVirtualAddress());
 
-		poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(),1,0,0,0);
+		//poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(),1,0,0,0);
+
+		m_poShader->Draw(m_poMesh, m_poBuffer);
 
 	}
 

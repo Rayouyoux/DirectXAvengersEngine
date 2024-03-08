@@ -40,9 +40,6 @@ namespace ave {
         return m_poRootSignature;
     }
 
-    UploadBuffer<PassConstants>* Shader::GetPass() {
-        return m_poPass;
-    }
     //void Shader::Start(ID3D12GraphicsCommandList* pList, ID3D12Device* poDevice) {
 
     //    //Root
@@ -121,51 +118,31 @@ namespace ave {
         return true;
 
     }
-
-    //A appeler dans l'init
-    void Shader::CreateUploadBuffer() {
-        m_poPass = new UploadBuffer<PassConstants> (m_poDevice, 1, true);
-        //m_poObject = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
-        /*AddObject();
-        AddObject();*/
-    }
-
-
-    void Shader::UpdatePass(PassConstants data) {
-        if (m_poPass) {
-            m_poPass->CopyData(0, data);
-        }
-    }
-
-  /*  void Shader::UpdateObject(ObjectConstants data) {
-        if (m_poObject)
-        {
-            m_poObject->CopyData(0, data);
-        }
-    }
-
-    void Shader::UpdateObject(ObjectConstants data, int index) {
-        m_voObjects[index]->CopyData(0, data);
-    }*/
     
 
- //   void Shader::Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2 ) {
+    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer) {
+        ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
- //       D3D12_VERTEX_BUFFER_VIEW vbv = pMesh->VertexBufferView();
- //       D3D12_INDEX_BUFFER_VIEW ibv = pMesh->IndexBufferView();
+        //Root
+        poList->SetGraphicsRootSignature(GetRootSignature());
 
- ///*       if (m_iRootTexture != -1 && pTexture)
- //           pList->SetGraphicsRootDescriptorTable(m_iRootTexture, );*/
+        poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poPass->Resource()->GetGPUVirtualAddress());
 
- //       //if (m_iRootTexture2 != -1 && pTexture2)
- //       //    pList->SetGraphicsRootDescriptorTable(m_iRootTexture2, /*D3D12_GPU_DESCRIPTOR_HANDLE de la classe pTexture */);
+        ////Pipeline
+        poList->SetPipelineState(GetPso());
 
- //       //Manque du code ici pour recuperer l'index de l'objet en question
- //       //pList->SetGraphicsRootConstantBufferView(m_iRootObject, l'index dans le tableau de vecteur m_voObjects->Ressource()->GetGPUVirtualAdress();
- //       //pList->DrawIndexedInstanced(pMesh->GetIndexCount(),1,0,0,0);
- //       // on incremente l'index d'object
- //       //  et on l'ajoute au vecteur
- //   }
+        ////Topology
+        poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        auto oVertexBufferView = pMesh->VertexBufferView();
+        auto oIndexBufferView = pMesh->IndexBufferView();
+        poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
+        poList->IASetIndexBuffer(&oIndexBufferView);
+
+        poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());
+
+        poList->DrawIndexedInstanced(pMesh->GetIndexCount(), 1, 0, 0, 0);
+    }
 
     //void Shader::UpdateObject() {
     //    //int index =  //Get l'index de l objet;

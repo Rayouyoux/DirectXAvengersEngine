@@ -40,14 +40,10 @@ namespace ave {
 		XMStoreFloat4x4(&m_voProjectionMatrix, P);
 	}
 
-	void Camera::Start()
+	void Camera::Init()
 	{
 		SetLens(0.25f * Maths::PI, 800.f/600.f, 1.0f, 1000.0f);
-	}
-
-	void Camera::SetShader(Shader* poShader)
-	{
-		m_poShader = poShader;
+		m_poBuffer = new UploadBuffer<PassConstants>(m_poDevice, 1, true);
 	}
 
 	void Camera::ChangeAspectRatio(float fWidth, float fHeight) {
@@ -56,10 +52,10 @@ namespace ave {
 
 	void Camera::Update(float deltaTime)
 	{
-		/*PassConstants opassConstants;
+		PassConstants opassConstants;
 		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
 		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voProjectionMatrix)));
-		m_poBuffer->CopyData(0, opassConstants);*/
+		m_poBuffer->CopyData(0, opassConstants);
 	}
 	
 	void Camera::LateUpdate(float deltaTime){
@@ -67,10 +63,7 @@ namespace ave {
 	}
 
 	void Camera::Render()
-	{
-		/*ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
-		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poBuffer->GetPass()->Resource()->GetGPUVirtualAddress());*/
-	}
+	{}
 
 	DirectX::XMMATRIX Camera::GetProjectionMatrix() const
 	{

@@ -16,9 +16,8 @@ namespace ave {
 
 		// Frustrum Setter
 		void SetLens(float fovY, float aspect, float zn, float zf);
-		void SetShader(Shader* poShader);
 		void ChangeAspectRatio(float fWidth, float fHeight);
-
+		void Init();
 		// SUR Methods
 		void Start() override;
 		void Update(float deltaTime) override;
@@ -44,9 +43,6 @@ namespace ave {
 		float m_fFarWindowHeight;
 
 		UploadBuffer<PassConstants>* m_poBuffer;
-
-		Shader* m_poShader;
-
 
 		// View Matrix
 		DirectX::XMFLOAT4X4 m_voProjectionMatrix;

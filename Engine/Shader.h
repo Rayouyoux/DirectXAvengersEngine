@@ -49,6 +49,7 @@ namespace ave {
 		void End();
 		/*void AddObject();*/
 		bool CreateShader(GraphicsHandler* poGraphicsHandler);
+		void Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
 		void CreateUploadBuffer();
@@ -65,7 +66,6 @@ namespace ave {
 		void UpdatePass(PassConstants data);
 		/*void UpdateObject(ObjectConstants data);
 		void UpdateObject(ObjectConstants data, int index);*/
-
 
 
 		~Shader();
