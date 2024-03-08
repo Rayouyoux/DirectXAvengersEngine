@@ -25,13 +25,40 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     _CrtMemState memStateInit;
     _CrtMemCheckpoint(&memStateInit);
 #endif
-    ave::AvengersEngine* gameInstance = ave::AvengersEngine::Create();
+    ave::EntityManager* gameInstance = ave::EntityManager::Create();
     if (gameInstance->Initialize(hInstance) == false) {
         MessageBoxA(NULL, "Euh ça bug ?", "ALED", 0);
         return 0;
     }
+
+    ave::Shader* poShader = gameInstance->NewShader();
+    ave::Mesh* poMesh = gameInstance->NewMesh();
+
+    ave::Entity* poCubeEntity = gameInstance->NewEntity();
+    ave::Entity* poCubeEntity2 = gameInstance->NewEntity();
+
+    XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
+    poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
+
+    ave::Entity* poCamera = gameInstance->GetMainCamera();
+    XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+    poCamera->m_poTransform->SetVectorPosition(&pos);
+
+    XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+    poCamera->m_poTransform->LookTo(&direction);
+
+    ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
+    poMeshRenderer->SetMesh(poMesh);
+    poMeshRenderer->SetShader(poShader);
+
+    ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
+    poMeshRenderer2->SetMesh(poMesh);
+    poMeshRenderer2->SetShader(poShader);
+
+    gameInstance->RegisterEntity(poCubeEntity);
+    gameInstance->RegisterEntity(poCubeEntity2);
   
-    gameInstance->Run();
+    int res = gameInstance->Run();
 
 #ifdef _DEBUG
     _CrtMemState memStateEnd, memStateDiff;
@@ -41,5 +68,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
     }
 #endif 
-    return 0;
+    return res;
 }

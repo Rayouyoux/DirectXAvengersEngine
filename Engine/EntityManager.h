@@ -4,9 +4,24 @@
 #include <vector>
 
 namespace ave {
+	class AvengersEngine;
+	class Shader;
+	class GraphicsHandler;
+	class Mesh;
+	class Camera;
 
 	class EntityManager
 	{
+	public:
+
+		// Main Public Members
+		std::vector<Entity*> m_voAliveEntities;
+
+	protected:
+		Camera* m_poMainCamera;
+		AvengersEngine* m_poGameInstance;
+		GraphicsHandler* m_poGraphics;
+
 	public:
 
 		// Constructor
@@ -14,6 +29,12 @@ namespace ave {
 
 		// Deconstructor
 		~EntityManager();
+
+		static EntityManager* Create();
+		bool Initialize(HINSTANCE hInstance);
+		int Run();
+
+		/*void Init();*/
 
 		// SUR Methods
 		void Update(float iDeltaTime);
@@ -32,15 +53,13 @@ namespace ave {
 			return Entities;
 		}
 
+		Entity* GetMainCamera();
+
 		// Main Methods
 		Entity* NewEntity();
+		Shader* NewShader();
+		Mesh* NewMesh();
 		bool RegisterEntity(Entity* poEntity);
-
-	public:
-
-		// Main Public Members
-		std::vector<Entity*> m_voAliveEntities;
-
 	};
 
 }

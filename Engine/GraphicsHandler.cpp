@@ -119,31 +119,31 @@ namespace ave {
 
 		m_poShader = new Shader();
 		m_poMesh = new Mesh();
-		m_poEntityManager = new EntityManager();
-
+		/*m_poEntityManager = new EntityManager();
+		m_poEntityManager->Init();*/
 		
-		Entity* poCameraEntity = m_poEntityManager->NewEntity();
+		//Entity* poCameraEntity = m_poEntityManager->NewEntity();
 
-		Entity* poCubeEntity = m_poEntityManager->NewEntity();
+		//Entity* poCubeEntity = m_poEntityManager->NewEntity();
 
-		Entity* poCubeEntity2 = m_poEntityManager->NewEntity();
-
-
-		XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
-		poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
+		//Entity* poCubeEntity2 = m_poEntityManager->NewEntity();
 
 
-		XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
-		//XMVECTOR pos = XMVectorSet(0.0f, 2.0f, 4.0f, 0.0f);
-		poCameraEntity->m_poTransform->SetVectorPosition(&pos);
-		
-		//XMVECTOR direction = XMVectorSet(4.0f, -2.0f, 0.0f, 0.0f);
-		XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
-		poCameraEntity->m_poTransform->LookTo(&direction);
+		//XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
+		//poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
 
-		m_poCamera = poCameraEntity->AddComponent<Camera>();
 
-		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
+		//XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+		////XMVECTOR pos = XMVectorSet(0.0f, 2.0f, 4.0f, 0.0f);
+		//poCameraEntity->m_poTransform->SetVectorPosition(&pos);
+		//
+		////XMVECTOR direction = XMVectorSet(4.0f, -2.0f, 0.0f, 0.0f);
+		//XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+		//poCameraEntity->m_poTransform->LookTo(&direction);
+
+		//m_poCamera = poCameraEntity->AddComponent<Camera>();
+
+		/*Entity* poParticuleEntity = m_poEntityManager->NewEntity();*/
 
 
 		/*m_poBehaviour = new Particles::ParticleBehaviour();
@@ -165,10 +165,10 @@ namespace ave {
 			return false;
 		}
 
-		bool test2 = m_poShader->CreateShader(this, m_poCamera)
-			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
+		/*bool test2 = m_poShader->CreateShader(this, m_poCamera)
+			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());*/
 
-		MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
+		/*MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
 		poMeshRenderer->SetMesh(m_poMesh);
 		poMeshRenderer->SetShader(m_poShader);
 
@@ -179,13 +179,13 @@ namespace ave {
 		m_poEntityManager->RegisterEntity(poCameraEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity2);
-		m_poEntityManager->RegisterEntity(poParticuleEntity);
+		m_poEntityManager->RegisterEntity(poParticuleEntity);*/
 
 		CloseCommandList();
 		QueueCommandList();
 		FlushCommandQueue();
 
-		return test && test2;
+		return test; /*&& test2;*/
 	}
 
 	void GraphicsHandler::OnResize() {
