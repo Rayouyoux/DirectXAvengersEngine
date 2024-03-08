@@ -113,65 +113,98 @@ namespace ave {
 
 	bool Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList){
 
-		std::array<VERTEX_UV, 24> vertices =
-		{
+		//std::array<VERTEX_UV, 24> vertices =
+		//{
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
 
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
-			VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
-		};
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f)}),
+		//	VERTEX_UV({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}),
+		//};
 
-		std::array<std::uint16_t, 36> indices =
-		{
-			// front face
-			0, 1, 2,
-			0, 2, 3,
+		//std::array<std::uint16_t, 36> indices =
+		//{
+		//	// front face
+		//	0, 1, 2,
+		//	0, 2, 3,
 
-			// back face
-			4, 5, 6,
-			4, 6, 7,
+		//	// back face
+		//	4, 5, 6,
+		//	4, 6, 7,
 
-			8,9,10,
-			8,10,11,
+		//	8,9,10,
+		//	8,10,11,
 
-			12,13,14,
-			12,14,15,
+		//	12,13,14,
+		//	12,14,15,
 
-			16,17,18,
-			16,18,19,
+		//	16,17,18,
+		//	16,18,19,
 
-			20,21,22,
-			20,22,23
-		};
-		 
+		//	20,21,22,
+		//	20,22,23
+		//};
 
-		const UINT vbByteSize = (UINT)vertices.size() * sizeof(VERTEX_UV);
+		std::vector<VERTEX_COLOR> vertices;
+		std::vector<std::uint16_t> indices;
+
+		float numSubDivisions = 60.0f;
+		float radius = 1.0f;
+
+		for (int i = 0; i <= numSubDivisions; i++) {
+			float phi = DirectX::XM_PI * i / numSubDivisions;
+			for (int j = 0; j <= numSubDivisions; j++ ){
+				float theta = 2.0f * DirectX::XM_PI * j / numSubDivisions;
+				float x = radius * sinf(phi) * cosf(theta);
+				float y = radius * cosf(phi);
+				float z = radius * sinf(phi) * sinf(theta);
+
+				VERTEX_COLOR vertex = { XMFLOAT3(x,y,z), XMFLOAT4(Colors::Blue) };
+				vertices.push_back(vertex);
+			}
+		}
+
+
+		for (int i = 0; i < numSubDivisions; i++) {
+			for (int j = 0; j < numSubDivisions; j++) {
+				int vertexIndex = i * (numSubDivisions + 1) + j;
+				indices.push_back(vertexIndex);
+				indices.push_back(vertexIndex + 1);
+				indices.push_back(vertexIndex + numSubDivisions + 1);
+
+				indices.push_back(vertexIndex+1);
+				indices.push_back(vertexIndex + numSubDivisions + 2);
+				indices.push_back(vertexIndex + numSubDivisions + 1);
+			}
+		}
+
+
+		const UINT vbByteSize = (UINT)vertices.size() * sizeof(VERTEX_COLOR);
 		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
 		if (FAILED(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU))) {

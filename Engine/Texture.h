@@ -38,8 +38,8 @@ namespace ave {
 		void Offset(std::string oName);
 
 		ID3D12DescriptorHeap* GetDescriptorHeap() { return m_poSrvDescriptorHeap; };
-		UINT GetDescriptorSize() { return m_oCbvSrvDescriptorSize; };
-		CD3DX12_CPU_DESCRIPTOR_HANDLE GetDescriptorHandle() { return m_pohDescriptor; };
+		UINT* GetDescriptorSize() { return &m_oCbvSrvDescriptorSize; };
+		CD3DX12_CPU_DESCRIPTOR_HANDLE* GetDescriptorHandle() { return &m_pohDescriptor; };
 
 	};
 

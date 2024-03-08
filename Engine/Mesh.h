@@ -1,5 +1,6 @@
 #pragma once
 #include <d3d12.h>
+#include <iostream>
 
 namespace ave {
 	class Mesh
@@ -25,7 +26,6 @@ namespace ave {
 
 		ID3D12Resource* m_poVertexBufferUploader;
 		ID3D12Resource* m_poIndexBufferUploader;
-
 
 		UINT m_oVertexByteStride;
 		UINT m_oVertexBufferByteSize;
