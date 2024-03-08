@@ -32,7 +32,7 @@ namespace ave {
 
 		m_poFactory = nullptr;
 		m_poSwapChain = nullptr;
-		GraphicsHandler::m_poDevice = nullptr;
+		m_poDevice = nullptr;
 
 		m_poFence = nullptr;
 		m_iCurrentFence = 0;
@@ -119,8 +119,6 @@ namespace ave {
 
 		XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
 		//XMVECTOR pos = XMVectorSet(0.0f, 2.0f, 4.0f, 0.0f);
-		XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
-		//XMVECTOR pos = XMVectorSet(0.0f, 2.0f, 4.0f, 0.0f);
 		poCameraEntity->m_poTransform->SetVectorPosition(&pos);
 		
 		//XMVECTOR direction = XMVectorSet(4.0f, -2.0f, 0.0f, 0.0f);
@@ -132,15 +130,12 @@ namespace ave {
 
 		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
 
-		poParticuleEntity->Initialize();
-
-
-		m_poBehaviour = new Particles::ParticleBehaviour();
+		/*m_poBehaviour = new Particles::ParticleBehaviour();
 		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
 		m_poParticleSystem->SetBehaviour(m_poBehaviour);
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(10, 1);
+		m_poParticleSystem->Initialize(10, 1);*/
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -164,6 +159,9 @@ namespace ave {
 		MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<MeshRenderer>();
 		poMeshRenderer2->SetMesh(m_poMesh);
 		poMeshRenderer2->SetShader(m_poShader);
+
+		m_poCamera = poCameraEntity->AddComponent<Camera>();
+		m_poCamera->SetShader(m_poShader);
 
 
 		m_poEntityManager->RegisterEntity(poCameraEntity);
