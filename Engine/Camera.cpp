@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "GraphicsHandler.h"
 #include "Shader.h"
+#include "ConstantsStruct.h"
 
 namespace ave {
 
@@ -49,18 +50,26 @@ namespace ave {
 		m_poShader = poShader;
 	}
 
+	void Camera::ChangeAspectRatio(float fWidth, float fHeight) {
+		SetLens(0.25f * Maths::PI, fWidth / fHeight, 1.0f, 1000.0f);
+	}
+
 	void Camera::Update(float deltaTime)
 	{
-		UpdateProjectionMatrix();
+		/*PassConstants opassConstants;
+		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
+		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voProjectionMatrix)));
+		m_poBuffer->CopyData(0, opassConstants);*/
 	}
 	
-	void Camera::LateUpdate(float deltaTime)
-	{}
+	void Camera::LateUpdate(float deltaTime){
+
+	}
 
 	void Camera::Render()
 	{
 		/*ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
-		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());*/
+		poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poBuffer->GetPass()->Resource()->GetGPUVirtualAddress());*/
 	}
 
 	DirectX::XMMATRIX Camera::GetProjectionMatrix() const

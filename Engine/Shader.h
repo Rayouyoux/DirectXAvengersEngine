@@ -44,7 +44,7 @@ namespace ave {
 		Shader();
 
 		void Destroy();
-		void ResetIndexObject();
+		/*void ResetIndexObject();*/
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		/*void AddObject();*/

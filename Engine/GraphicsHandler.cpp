@@ -112,29 +112,28 @@ namespace ave {
 		Entity* poCameraEntity = m_poEntityManager->NewEntity();
 		Entity* poCubeEntity = m_poEntityManager->NewEntity();
 		Entity* poCubeEntity2 = m_poEntityManager->NewEntity();
+
+		XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
+		poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
+
+
+		XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+		//XMVECTOR pos = XMVectorSet(0.0f, 2.0f, 4.0f, 0.0f);
+		XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+		//XMVECTOR pos = XMVectorSet(0.0f, 2.0f, 4.0f, 0.0f);
+		poCameraEntity->m_poTransform->SetVectorPosition(&pos);
+		
+		//XMVECTOR direction = XMVectorSet(4.0f, -2.0f, 0.0f, 0.0f);
+		XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+		poCameraEntity->m_poTransform->LookTo(&direction);
+
+
+
+
 		Entity* poParticuleEntity = m_poEntityManager->NewEntity();
 
-		/*float x = 5.0f * sinf(XM_PIDIV4) * cosf(1.5f * maths::PI);
-		float z = 5.0f * sinf(XM_PIDIV4) * sinf(1.5f * maths::PI);
-		float y = 5.0f * cosf(XM_PIDIV4);*/
+		poParticuleEntity->Initialize();
 
-		// Build the view matrix.
-		/*XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);*/
-		/*XMVECTOR pos = XMVectorSet(-4.0f, 0.0f, 0.0f, 1.0f);
-		XMVECTOR target = XMVectorZero();
-		XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-		m_view = XMMatrixLookAtLH(pos, target, up);*/
-		//DirectX::XMFLOAT3 mInvLook = { 0.0f, 0.0f, 10.0f }; // A INCLURE DANS LE NAMESPACE MATHS / UTILS
-		//m_poCubeEntity->m_poTransform->Move(&mInvLook);
-		XMVECTOR pos = XMVectorSet(-4.0f, 2.0f, -4.0f, 1.0f);
-		poCameraEntity->m_poTransform->SetVectorPosition(&pos);
-		XMVECTOR target = XMVectorZero();
-		poCameraEntity->m_poTransform->LookAt(&target);
-		m_view = poCameraEntity->m_poTransform->GetMatrixRotation();
-
-		m_poCamera = poCameraEntity->AddComponent<Camera>();
-		m_poCamera->SetShader(m_poShader);
 
 		m_poBehaviour = new Particles::ParticleBehaviour();
 		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
@@ -158,13 +157,14 @@ namespace ave {
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
 
-		//MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
-		//poMeshRenderer->SetMesh(m_poMesh);
-		//poMeshRenderer->SetShader(m_poShader);
+		MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
+		poMeshRenderer->SetMesh(m_poMesh);
+		poMeshRenderer->SetShader(m_poShader);
 
-		//MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<MeshRenderer>();
-		//poMeshRenderer2->SetMesh(m_poMesh);
-		//poMeshRenderer2->SetShader(m_poShader);
+		MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<MeshRenderer>();
+		poMeshRenderer2->SetMesh(m_poMesh);
+		poMeshRenderer2->SetShader(m_poShader);
+
 
 		m_poEntityManager->RegisterEntity(poCameraEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity);
@@ -184,6 +184,7 @@ namespace ave {
 			|| m_poDirectCmdListAlloc == nullptr)
 			return;
 
+		m_poCamera->ChangeAspectRatio(m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight());
 		FlushCommandQueue();
 
 		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
@@ -309,15 +310,19 @@ namespace ave {
 
 		/*m_poCubeEntity->m_poTransform->UpdateMatrice();*/
 
-		XMMATRIX view = m_view;
+		/*XMMATRIX view = m_view;*/
+		XMMATRIX view = m_poCamera->m_poEntity->m_poTransform->GetWorld();
 		XMMATRIX proj = m_poCamera->GetProjectionMatrix();
 
 		//ObjectConstants objConstants;
 		//XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
 		//m_poShader->UpdateObject(objConstants);
 
+				//mRot = (nullptr, mRot);
+
 		PassConstants passConstants;
-		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
+		//XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(view));
+		XMStoreFloat4x4(&passConstants.View, XMMatrixTranspose(XMMatrixInverse(nullptr, view)));
 		XMStoreFloat4x4(&passConstants.Proj, XMMatrixTranspose(proj));
 		m_poShader->UpdatePass(passConstants);
 	}
