@@ -3,6 +3,7 @@
 #include "Vertex.h"
 #include <array>
 #include <vector>
+#include "Shape.h"
 namespace ave {
 	Mesh::Mesh() {
 		m_poIndexBufferGPU = nullptr;
@@ -37,7 +38,7 @@ namespace ave {
 		return ibv;
 	}
 
-	//void Mesh::CreateSphere(UINT uPartCount) {
+	//void Mesh::CreateCylinder(UINT uPartCount) {
 	//	UINT partCount = 50;
 	//	float pipeVerticesCount = partCount * 2 + 2;
 	//	std::vector<VERTEX_UV> vertices;
@@ -170,65 +171,36 @@ namespace ave {
 		//	20,22,23
 		//};
 
-		std::vector<VERTEX_COLOR> vertices;
-		std::vector<std::uint16_t> indices;
+		Shape<VERTEX_COLOR>* oShape = new Shape<VERTEX_COLOR>();
 
-		float numSubDivisions = 60.0f;
-		float radius = 1.0f;
-
-		for (int i = 0; i <= numSubDivisions; i++) {
-			float phi = DirectX::XM_PI * i / numSubDivisions;
-			for (int j = 0; j <= numSubDivisions; j++ ){
-				float theta = 2.0f * DirectX::XM_PI * j / numSubDivisions;
-				float x = radius * sinf(phi) * cosf(theta);
-				float y = radius * cosf(phi);
-				float z = radius * sinf(phi) * sinf(theta);
-
-				VERTEX_COLOR vertex = { XMFLOAT3(x,y,z), XMFLOAT4(Colors::Blue) };
-				vertices.push_back(vertex);
-			}
-		}
-
-
-		for (int i = 0; i < numSubDivisions; i++) {
-			for (int j = 0; j < numSubDivisions; j++) {
-				int vertexIndex = i * (numSubDivisions + 1) + j;
-				indices.push_back(vertexIndex);
-				indices.push_back(vertexIndex + 1);
-				indices.push_back(vertexIndex + numSubDivisions + 1);
-
-				indices.push_back(vertexIndex+1);
-				indices.push_back(vertexIndex + numSubDivisions + 2);
-				indices.push_back(vertexIndex + numSubDivisions + 1);
-			}
-		}
-
-
-		const UINT vbByteSize = (UINT)vertices.size() * sizeof(VERTEX_COLOR);
-		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+		std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>> test;
+		test = oShape->CreateSphere(1.0f, 60.0f);
+		
+		const UINT vbByteSize = (UINT)test[0].first.size() * sizeof(VERTEX_COLOR);
+		const UINT ibByteSize = (UINT)test[0].second.size() * sizeof(std::uint16_t);
 
 		if (FAILED(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU))) {
 			return false;
 		}
-		CopyMemory(m_poVertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+		CopyMemory(m_poVertexBufferCPU->GetBufferPointer(), test[0].first.data(), vbByteSize);
 
 		if (FAILED(D3DCreateBlob(ibByteSize, &m_poIndexBufferCPU))) {
 			return false;
 		}
-		CopyMemory(m_poIndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+		CopyMemory(m_poIndexBufferCPU->GetBufferPointer(), test[0].second.data(), ibByteSize);
 
 		m_poVertexBufferGPU = D3DUtils::CreateDefaultBuffer(poDevice,
-			poCommandList, vertices.data(), vbByteSize, m_poVertexBufferUploader);
+			poCommandList, test[0].first.data(), vbByteSize, m_poVertexBufferUploader);
 
 		m_poIndexBufferGPU = D3DUtils::CreateDefaultBuffer(poDevice,
-			poCommandList, indices.data(), ibByteSize, m_poIndexBufferUploader);
+			poCommandList, test[0].second.data(), ibByteSize, m_poIndexBufferUploader);
 
 		m_oVertexByteStride = sizeof(VERTEX_UV);
 		m_oVertexBufferByteSize = vbByteSize;
 		m_oIndexFormat = DXGI_FORMAT_R16_UINT;
 		m_oIndexBufferByteSize = ibByteSize;
 
-		m_oIndexCount = (UINT)indices.size();
+		m_oIndexCount = (UINT)test[0].second.size();
 
 		return true;
 	};

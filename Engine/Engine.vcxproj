@@ -164,6 +164,7 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Time.h" />
@@ -191,6 +192,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Time.cpp" />
