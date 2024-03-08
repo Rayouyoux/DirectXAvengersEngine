@@ -47,7 +47,7 @@ namespace ave {
 		////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
 
 		////Pipeline
-		poList->SetPipelineState(m_poShader->GetPso());
+		poList->SetPipelineState(m_poShader->GetPso("transparent"));
 
 		////Topology
 		poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

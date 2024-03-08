@@ -136,12 +136,12 @@ namespace ave {
 		m_poCamera = poCameraEntity->AddComponent<Camera>();
 		m_poCamera->SetShader(m_poShader);
 
-		m_poBehaviour = new Particles::ParticleBehaviour();
-		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
-		m_poParticleSystem->SetBehaviour(m_poBehaviour);
-		m_poParticleSystem->SetMesh(m_poMesh);
-		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(10, 1);
+		//m_poBehaviour = new Particles::ParticleBehaviour();
+		//m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
+		//m_poParticleSystem->SetBehaviour(m_poBehaviour);
+		//m_poParticleSystem->SetMesh(m_poMesh);
+		//m_poParticleSystem->SetShader(m_poShader);
+		//m_poParticleSystem->Initialize(10, 1);
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -158,9 +158,9 @@ namespace ave {
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
 
-		//MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
-		//poMeshRenderer->SetMesh(m_poMesh);
-		//poMeshRenderer->SetShader(m_poShader);
+		MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
+		poMeshRenderer->SetMesh(m_poMesh);
+		poMeshRenderer->SetShader(m_poShader);
 
 		//MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<MeshRenderer>();
 		//poMeshRenderer2->SetMesh(m_poMesh);
