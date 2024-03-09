@@ -198,6 +198,44 @@ namespace ave {
 			m_aShapes.push_back(std::make_pair(vertices, indices));
 			return m_aShapes;
 		}
+
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreatePyramid(float fBaseLength, float fHeight) {
+			// Calcul des coordonnées des vertices
+			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, -fBaseLength / 2, 0.0f), XMFLOAT4(1.0f,0.0f,0.0f,0.0f)});
+			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, -fBaseLength / 2, 0.0f), XMFLOAT4(1.0f,1.0f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,1.0f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,0.0f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(0.0f, 0.0f, fHeight), XMFLOAT4(1.0f,0.0f,0.0f,0.0f) });
+
+			// Indices pour former les faces de la pyramide
+			indices.push_back(0);
+			indices.push_back(1);
+			indices.push_back(4);
+
+			indices.push_back(1);
+			indices.push_back(2);
+			indices.push_back(4);
+
+			indices.push_back(2);
+			indices.push_back(3);
+			indices.push_back(4);
+
+			indices.push_back(3);
+			indices.push_back(0);
+			indices.push_back(4);
+
+			// Indices pour la base de la pyramide
+			indices.push_back(0);
+			indices.push_back(1);
+			indices.push_back(2);
+
+			indices.push_back(2);
+			indices.push_back(3);
+			indices.push_back(0);
+
+			m_aShapes.push_back(std::make_pair(vertices,indices));
+			return m_aShapes;
+		}
 		~Shape();
 	};
 

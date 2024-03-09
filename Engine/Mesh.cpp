@@ -60,6 +60,9 @@ namespace ave {
 			{"cone", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
 				return oShape->CreateCone(1.0f,16.0f);
 			}},
+			{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+				return oShape->CreatePyramid(2.0f,3.0f);
+			}},
 		};
 
 		std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> aShapes;
