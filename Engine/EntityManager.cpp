@@ -17,6 +17,8 @@ namespace ave {
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			delete m_voAliveEntities[i];
 		}
+		delete m_poShader;
+		delete m_poMesh;
 	}
 
 	void EntityManager::Init(GraphicsHandler* poGraphics) {
