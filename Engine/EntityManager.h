@@ -21,6 +21,8 @@ namespace ave {
 		Camera* m_poMainCamera;
 		AvengersEngine* m_poGameInstance;
 		GraphicsHandler* m_poGraphics;
+		Shader* m_poShader;
+		Mesh* m_poMesh;
 
 	public:
 
@@ -53,13 +55,18 @@ namespace ave {
 			return Entities;
 		}
 
-		Entity* GetMainCamera();
+		
 
 		// Main Methods
 		Entity* NewEntity();
+		bool RegisterEntity(Entity* poEntity);
+		Camera* GetMainCamera();
+		Shader* GetShader() { return m_poShader; };
+		Mesh* GetMesh() { return m_poMesh; };
+
+	protected:
 		Shader* NewShader();
 		Mesh* NewMesh();
-		bool RegisterEntity(Entity* poEntity);
 	};
 
 }

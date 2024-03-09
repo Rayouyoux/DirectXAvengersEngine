@@ -198,7 +198,7 @@ namespace ave {
 			|| m_poDirectCmdListAlloc == nullptr)
 			return;
 
-		//m_poCamera->ChangeAspectRatio(m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight());
+		m_poEntityManager->GetMainCamera()->ChangeAspectRatio(m_poAve->GetWindowWidth(), m_poAve->GetWindowHeight());
 		FlushCommandQueue();
 
 		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {

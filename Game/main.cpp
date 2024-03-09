@@ -33,16 +33,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 
     ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
 
-    ave::Shader* poShader = manager->NewShader();
-    ave::Mesh* poMesh = manager->NewMesh();
-
     ave::Entity* poCubeEntity = manager->NewEntity();
     ave::Entity* poCubeEntity2 = manager->NewEntity();
 
     XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
     poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
 
-    ave::Entity* poCamera = manager->GetMainCamera();
+    ave::Entity* poCamera = manager->GetMainCamera()->GetEntity();
     XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
     poCamera->m_poTransform->SetVectorPosition(&pos);
 
@@ -50,12 +47,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poCamera->m_poTransform->LookTo(&direction);
 
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer->SetMesh(poMesh);
-    poMeshRenderer->SetShader(poShader);
+    poMeshRenderer->SetMesh(manager->GetMesh());
+    poMeshRenderer->SetShader(manager->GetShader());
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer2->SetMesh(poMesh);
-    poMeshRenderer2->SetShader(poShader);
+    poMeshRenderer2->SetMesh(manager->GetMesh());
+    poMeshRenderer2->SetShader(manager->GetShader());
 
     manager->RegisterEntity(poCubeEntity);
     manager->RegisterEntity(poCubeEntity2);

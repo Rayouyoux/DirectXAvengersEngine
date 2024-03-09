@@ -116,6 +116,13 @@ namespace ave {
 		/// Set the Cbv descriptor with m_poCbvHeap.
 		/// </summary>
 		virtual void SetCbvDescriptor();
+
+
+		ID3D12Resource* CurrentBackBuffer() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
+
+	public:
 		/// <summary>
 		/// Close the command list.
 		/// </summary>
@@ -133,11 +140,6 @@ namespace ave {
 		/// </summary>
 		virtual void FlushCommandQueue();
 
-		ID3D12Resource* CurrentBackBuffer() const;
-		D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;
-		D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
-
-	public:
 		//a voir ???
 		EntityManager* m_poEntityManager;
 
@@ -156,6 +158,8 @@ namespace ave {
 
 		static ID3D12Device* GetDevice() { return m_poDevice; }
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
+
+		ID3D12CommandAllocator* GetCommandAllocator();
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }

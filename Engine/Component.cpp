@@ -18,4 +18,9 @@ namespace ave {
 	{
 		m_poEntity = poEntity;
 	}
+
+	Entity* Component::GetEntity()
+	{
+		return m_poEntity;
+	}
 };

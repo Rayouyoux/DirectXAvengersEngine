@@ -124,7 +124,7 @@ namespace ave {
     void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer) {
         ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
-        //Root
+        ////Root
         poList->SetGraphicsRootSignature(GetRootSignature());
 
         poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());

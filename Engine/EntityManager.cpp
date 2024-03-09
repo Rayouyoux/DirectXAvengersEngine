@@ -24,8 +24,10 @@ namespace ave {
 
 		Entity* poCamera = NewEntity();
 		m_poMainCamera = poCamera->AddComponent<Camera>();
-		m_poMainCamera->BindEntity(poCamera);
 		RegisterEntity(poCamera);
+
+		m_poShader = NewShader();
+		m_poMesh = NewMesh();
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -51,8 +53,8 @@ namespace ave {
 	}*/
 
 	void EntityManager::Update(float fDeltaTime) {
-		/*float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
-		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);*/
+		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
+		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
 		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
 		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
@@ -78,9 +80,9 @@ namespace ave {
 		}
 	}
 
-	Entity* EntityManager::GetMainCamera()
+	Camera* EntityManager::GetMainCamera()
 	{
-		return m_poMainCamera->m_poEntity;
+		return m_poMainCamera;
 	}
 
 	Entity* EntityManager::NewEntity() {
