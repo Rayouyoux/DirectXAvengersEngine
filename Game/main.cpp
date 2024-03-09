@@ -25,22 +25,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     _CrtMemState memStateInit;
     _CrtMemCheckpoint(&memStateInit);
 #endif
-    ave::EntityManager* gameInstance = ave::EntityManager::Create();
+    ave::AvengersEngine* gameInstance = ave::AvengersEngine::Create();
     if (gameInstance->Initialize(hInstance) == false) {
         MessageBoxA(NULL, "Euh ça bug ?", "ALED", 0);
         return 0;
     }
 
-    ave::Shader* poShader = gameInstance->NewShader();
-    ave::Mesh* poMesh = gameInstance->NewMesh();
+    ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
 
-    ave::Entity* poCubeEntity = gameInstance->NewEntity();
-    ave::Entity* poCubeEntity2 = gameInstance->NewEntity();
+    ave::Shader* poShader = manager->NewShader();
+    ave::Mesh* poMesh = manager->NewMesh();
+
+    ave::Entity* poCubeEntity = manager->NewEntity();
+    ave::Entity* poCubeEntity2 = manager->NewEntity();
 
     XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
     poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
 
-    ave::Entity* poCamera = gameInstance->GetMainCamera();
+    ave::Entity* poCamera = manager->GetMainCamera();
     XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
     poCamera->m_poTransform->SetVectorPosition(&pos);
 
@@ -55,8 +57,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poMeshRenderer2->SetMesh(poMesh);
     poMeshRenderer2->SetShader(poShader);
 
-    gameInstance->RegisterEntity(poCubeEntity);
-    gameInstance->RegisterEntity(poCubeEntity2);
+    manager->RegisterEntity(poCubeEntity);
+    manager->RegisterEntity(poCubeEntity2);
   
     int res = gameInstance->Run();
 

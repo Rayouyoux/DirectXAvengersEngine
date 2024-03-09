@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
-//#include "WindowHandler.h"
-//#include "GraphicsHandler.h"
+#include "WindowHandler.h"
+#include "GraphicsHandler.h"
 //#include "GameTime.h"
 #include "Entity.h"
 #include "Camera.h"

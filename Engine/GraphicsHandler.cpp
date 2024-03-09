@@ -76,8 +76,8 @@ namespace ave {
 			FlushCommandQueue();
 
 		// Temporary
-		delete m_poShader;
-		delete m_poMesh;
+		/*delete m_poShader;
+		delete m_poMesh;*/
 		delete m_poEntityManager;
 		delete m_poBehaviour;
 
@@ -117,10 +117,11 @@ namespace ave {
 #endif
 		m_poAve = poAve;
 
-		m_poShader = new Shader();
-		m_poMesh = new Mesh();
-		/*m_poEntityManager = new EntityManager();
-		m_poEntityManager->Init();*/
+
+
+		/*m_poShader = new Shader();
+		m_poMesh = new Mesh();*/
+		
 		
 		//Entity* poCameraEntity = m_poEntityManager->NewEntity();
 
@@ -164,6 +165,9 @@ namespace ave {
 		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
 			return false;
 		}
+
+		m_poEntityManager = new EntityManager();
+		m_poEntityManager->Init(this);
 
 		/*bool test2 = m_poShader->CreateShader(this, m_poCamera)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());*/

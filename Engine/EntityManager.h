@@ -30,11 +30,11 @@ namespace ave {
 		// Deconstructor
 		~EntityManager();
 
-		static EntityManager* Create();
-		bool Initialize(HINSTANCE hInstance);
-		int Run();
+		/*static EntityManager* Create();
+		bool Initialize(HINSTANCE hInstance);*/
+		/*int Run();*/
 
-		/*void Init();*/
+		void Init(GraphicsHandler* poGraphics);
 
 		// SUR Methods
 		void Update(float iDeltaTime);

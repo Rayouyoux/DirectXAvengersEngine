@@ -19,17 +19,20 @@ namespace ave {
 		}
 	}
 
-	/*void EntityManager::Init() {
+	void EntityManager::Init(GraphicsHandler* poGraphics) {
+		m_poGraphics = poGraphics;
+
 		Entity* poCamera = NewEntity();
 		m_poMainCamera = poCamera->AddComponent<Camera>();
+		m_poMainCamera->BindEntity(poCamera);
 		RegisterEntity(poCamera);
-	}*/
-
-	EntityManager* EntityManager::Create() {
-		return new EntityManager();
 	}
 
-	bool EntityManager::Initialize(HINSTANCE hInstance) {
+	/*EntityManager* EntityManager::Create() {
+		return new EntityManager();
+	}*/
+
+	/*bool EntityManager::Initialize(HINSTANCE hInstance) {
 		m_poGameInstance = AvengersEngine::Create();
 		if (m_poGameInstance->Initialize(hInstance) == false) {
 			MessageBoxA(NULL, "Euh ça bug ?", "ALED", 0);
@@ -41,11 +44,11 @@ namespace ave {
 		Entity* poCamera = NewEntity();
 		m_poMainCamera = poCamera->AddComponent<Camera>();
 		RegisterEntity(poCamera);
-	}
+	}*/
 
-	int EntityManager::Run() {
+	/*int EntityManager::Run() {
 		return m_poGameInstance->Run();
-	}
+	}*/
 
 	void EntityManager::Update(float fDeltaTime) {
 		/*float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);

@@ -31,7 +31,7 @@ namespace ave {
 
 		Shader* m_poShader;
 		Mesh* m_poMesh;
-		EntityManager* m_poEntityManager;
+		
 		Camera* m_poCamera;
 		Particles::ParticleBehaviour* m_poBehaviour;
 		Particles::ParticleSystem* m_poParticleSystem;
@@ -138,6 +138,9 @@ namespace ave {
 		D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
 
 	public:
+		//a voir ???
+		EntityManager* m_poEntityManager;
+
 		static GraphicsHandler* Create();
 		virtual bool Initialize(AvengersEngine* poAve);
 
