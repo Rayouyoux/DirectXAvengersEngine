@@ -15,6 +15,7 @@
 #include "Maths.h"
 #include "ConstantsStruct.h"
 #include "Texture.h"
+#include "Vertex.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -156,8 +157,8 @@ namespace ave {
 
 		m_poTexture->Init(m_poDevice);
 		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\image.dds");
-		bool test2 = m_poShader->CreateShader(this)
-			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList())
+		bool test2 = m_poShader->CreateShader(this, ROOTSIGNATURE_VERTEX_UV)
+			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList(), "cube")
 			&& m_poTexture->BuildDescriptorHeaps("wall", m_poCbvHeap);
 
 		CloseCommandList();

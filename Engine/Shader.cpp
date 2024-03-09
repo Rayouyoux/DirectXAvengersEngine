@@ -11,6 +11,9 @@
 #include <iostream>
 #include "ConstantsStruct.h"
 
+#define STRIP_L_PREFIX(str) ((str[0] == 'L' || str[0] == 'l') ? (str + 1) : (str))
+
+
 namespace ave {
     
     Shader::Shader(){
@@ -64,27 +67,37 @@ namespace ave {
     }
   
  
-    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler) {
+    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, int id) {
 
         m_poDevice = poGraphicsHandler->GetDevice();
         CreateUploadBuffer();
         //m_poCbvHeap =  //Get heap 
 
+        std::wstring shader;
+        switch (id) {
+        case 1:
+            shader = L"ROOTSIGNATURE_VERTEX_COLOR";
+            break;
+        case 2:
+            shader = L"ROOTSIGNATURE_VERTEX_UV";
+            break;
+        }
+
         //On compile le Vertex Shader
-        m_poVS = CompileShader(L"..\\Engine\\shader.hlsl", "VS", "vs_5_0");
+        m_poVS = CompileShader(L"..\\Engine\\Shader\\shader_" + shader + L".hlsl", "VS", "vs_5_0");
         if (m_poVS == nullptr) {
             Destroy();
             return false;
         }
 
         //On compile le Pixel Shader
-        m_poPS = CompileShader(L"..\\Engine\\shader.hlsl", "PS", "ps_5_0");
+        m_poPS = CompileShader(L"..\\Engine\\Shader\\shader_" + shader + L".hlsl", "PS", "ps_5_0");
         if (m_poPS == nullptr) {
             Destroy();
             return false;
         }
 
-        CreateRootSignature(1);
+        CreateRootSignature(id);
 
         if (m_poDevice->CreateRootSignature((UINT)0, m_poSerializedRootSig->GetBufferPointer(), m_poSerializedRootSig->GetBufferSize(), IID_PPV_ARGS(&m_poRootSignature))) {
             Destroy();

@@ -192,7 +192,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Time.cpp" />
@@ -207,9 +206,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="shader.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

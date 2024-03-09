@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include <iostream>
+#include <string>
 
 namespace ave {
 	class Mesh
@@ -12,7 +13,7 @@ namespace ave {
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
 
 		UINT GetIndexCount();
-		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList);
+		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape);
 		void Destroy();
 		~Mesh();
 
