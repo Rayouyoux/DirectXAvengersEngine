@@ -24,7 +24,10 @@ namespace ave {
 					float y = fRadius * cosf(phi);
 					float z = fRadius * sinf(phi) * sinf(theta);
 
-					T vertex = { DirectX::XMFLOAT3(x,y,z), DirectX::XMFLOAT4(1.0f,0.0f,0.0f,0.0f) };
+					float u = static_cast<float>(j) / fNumSubDivisions;
+					float v = static_cast<float>(i) / fNumSubDivisions;
+
+					T vertex = { DirectX::XMFLOAT3(x,y,z), DirectX::XMFLOAT4(u,v,0.0f,0.0f) };
 					vertices.push_back(vertex);
 				}
 			}
@@ -92,80 +95,134 @@ namespace ave {
 			return m_aShapes;
 		}
 		
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>>CreateCylinder(UINT uPartCount) {
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>>CreateCylinder(float fHeight, float fStackCount,float fBottomRadius,float fTopRadius) {
 
-			float pipeVerticesCount = uPartCount * 2 + 2;
-			std::vector<T> vertices;
-			UINT pipeIndicesCount = uPartCount * 4 * 3;
-			std::vector<std::uint16_t> indices;
-			int index = 0;
 
-			// On créer les indices du disque du haut 0 étant le point centrale donc tout les
-			// triangles sont fait à partir du centre
-			for (UINT i = 0; i < uPartCount; i++) {
-				indices.push_back(0);
-				if (i == uPartCount - 1)
-					indices.push_back(1);
-				else
-					indices.push_back((i + 1) % uPartCount + 1);
-				indices.push_back(i + 1);
-			}
+			float stackHeight = fHeight / fStackCount;
 
-			// On créer les indices du disque du bas 11 étant le point centrale 
-			// c'est pour sa qu'on fait le start.
-			UINT start = pipeVerticesCount / 2;
-			for (UINT i = start, j = 0; j < uPartCount; i++, j++) {
-				indices.push_back(start);
-				indices.push_back(i + 1);
-				if (j == uPartCount - 1)
-					indices.push_back(start + 1);
-				else
-					indices.push_back(i + 2);
-			}
+			float sliceCount = 60.0f;
+			// Amount to increment radius as we move up each stack level from bottom to top.
+			float radiusStep = (fTopRadius - fBottomRadius) / fStackCount;
 
-			// Side Rectangles
-			for (UINT i = 0; i < uPartCount; i++) {
-				indices.push_back(i + 1);
-				if (i == uPartCount - 1)
-					indices.push_back(1);
-				else
-					indices.push_back(i + 2);
-				indices.push_back(i + start + 1);
+			UINT32 ringCount = fStackCount + 1;
 
-				if (i == uPartCount - 1)
-				{
-					indices.push_back(1);
-					indices.push_back(1 + start);
-				}
-				else
-				{
-					indices.push_back(i + 2);
-					indices.push_back(i + start + 2);
-				}
-				indices.push_back(i + start + 1);
-
-			}
-
-			float x, z, angle;
-			// Center Vertices
-			vertices.push_back(T{ XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT4(1.0f,0.0f,0.0f,0.0f)});
-
-			// Disks Vertcies
-			float step = XM_2PI / uPartCount;
-			for (int disc = 0; disc < 2; disc++)
+			// Compute vertices for each stack ring starting at the bottom and moving up.
+			for (UINT32 i = 0; i < ringCount; ++i)
 			{
-				for (float angle = 0.0f; angle < XM_2PI; angle += step)
+				float y = -0.5f * fHeight + i * stackHeight;
+				float r = fBottomRadius + i * radiusStep;
+
+				// vertices of ring
+				float dTheta = 2.0f * DirectX::XM_PI / sliceCount;
+				for (UINT32 j = 0; j <= sliceCount; ++j)
 				{
-					x = cosf(angle);
-					z = sinf(angle);
-					vertices.push_back(T{ XMFLOAT3(x, disc == 0 ? 1.0f : -1.0f, z), XMFLOAT4(0.0f,1.0f,0.0f,0.0f)});
+					T vertex;
+
+					float c = cosf(j * dTheta);
+					float s = sinf(j * dTheta);
+
+					//vertex.pos = XMFLOAT3(r * c, y, r * s);
+
+					float u = (float)j / sliceCount;
+					float v  = 1.0f - (float)i / fStackCount;
+
+					vertices.push_back(T{ XMFLOAT3(r * c, y, r * s), XMFLOAT4(u,v,0.0f,0.0f) });
 				}
-				vertices.push_back(T{ XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT4(1.0f,1.0f,0.0f,0.0f) });
 			}
+
+			// Add one because we duplicate the first and last vertex per ring
+			// since the texture coordinates are different.
+			UINT32 ringVertexCount = sliceCount + 1;
+
+			// Compute indices for each stack.
+			for (UINT32 i = 0; i < fStackCount; ++i)
+			{
+				for (UINT32 j = 0; j < sliceCount; ++j)
+				{
+					indices.push_back(i * ringVertexCount + j);
+					indices.push_back((i + 1) * ringVertexCount + j);
+					indices.push_back((i + 1) * ringVertexCount + j + 1);
+
+					indices.push_back(i * ringVertexCount + j);
+					indices.push_back((i + 1) * ringVertexCount + j + 1);
+					indices.push_back(i * ringVertexCount + j + 1);
+				}
+			}
+			
+			CreateBottomDisque(fHeight, sliceCount, fBottomRadius);
+			CreateUpDisque(fHeight, sliceCount, fTopRadius);
 			m_aShapes.push_back(std::make_pair(vertices, indices));
 			return m_aShapes;
 		}
+		void CreateBottomDisque(float fHeight, float fSliceCount, float fBottomRadius) {
 
+			//Disque du haut
+			UINT32 baseIndex = (UINT32)vertices.size();
+
+			float yBottomDisque = -0.5f * fHeight;
+			float disqueTheta = 2.0f * XM_PI / fSliceCount;
+
+			// Duplicate cap ring vertices because the texture coordinates and normals differ.
+			for (UINT32 i = 0; i <= fSliceCount; ++i)
+			{
+				float x = fBottomRadius * cosf(i * disqueTheta);
+				float z = fBottomRadius * sinf(i * disqueTheta);
+
+				// Scale down by the height to try and make top cap texture coord area
+				// proportional to base.
+				float u = x / fHeight + 0.5f;
+				float v = z / fHeight + 0.5f;
+
+				vertices.push_back(T{ XMFLOAT3(x,yBottomDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
+			}
+
+			// Cap center vertex.
+			vertices.push_back(T{ XMFLOAT3(0.0f,yBottomDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
+
+			// Index of center vertex.
+			UINT32 centerIndex = (UINT32)vertices.size() - 1;
+
+			for (UINT32 i = 0; i < fSliceCount; ++i)
+			{
+				indices.push_back(centerIndex);
+				indices.push_back(baseIndex + i);
+				indices.push_back(baseIndex + i+1);
+			}
+		}
+		void CreateUpDisque(float fHeight, float fSliceCount, float fTopRadius) {
+			//Disque du haut
+			UINT32 baseIndex = (UINT32)vertices.size();
+
+			float yDisque = 0.5f * fHeight;
+			float disqueTheta = 2.0f * XM_PI / fSliceCount;
+
+			// Duplicate cap ring vertices because the texture coordinates and normals differ.
+			for (UINT32 i = 0; i <= fSliceCount; ++i)
+			{
+				float x = fTopRadius * cosf(i * disqueTheta);
+				float z = fTopRadius * sinf(i * disqueTheta);
+
+				// Scale down by the height to try and make top cap texture coord area
+				// proportional to base.
+				float u = x / fHeight + 0.5f;
+				float v = z / fHeight + 0.5f;
+
+				vertices.push_back(T{ XMFLOAT3(x,yDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
+			}
+
+			// Cap center vertex.
+			vertices.push_back(T{ XMFLOAT3(0.0f,yDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
+
+			// Index of center vertex.
+			UINT32 centerIndex = (UINT32)vertices.size() - 1;
+
+			for (UINT32 i = 0; i < fSliceCount; ++i)
+			{
+				indices.push_back(centerIndex);
+				indices.push_back(baseIndex + i + 1);
+				indices.push_back(baseIndex + i);
+			}
+		}
 		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCone(float fRadius, float fNumSubDivisions) {
 			
 			float fHeight = 2.0f;
