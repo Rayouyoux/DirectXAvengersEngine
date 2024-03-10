@@ -1,12 +1,14 @@
 #pragma once
 
-#include <d3d12.h>
-#include <vector>
-#include <cstring>
-#include <string>
+//#include <d3d12.h>
+//#include "d3dx12.h"
+//#include <vector>
 #include "UploadBuffer.h"
-#include "Texture.h"
+//#include <cstring>
+//#include <string>
+//#include "Texture.h"
 #include "ConstantsStruct.h"
+//#include <vector>
 
 namespace ave {
 	class Mesh;
@@ -14,8 +16,7 @@ namespace ave {
 	class Texture;
 	class Camera;
 	
-	class Shader
-	{
+	class Shader{
 
 	protected:
 
@@ -50,7 +51,7 @@ namespace ave {
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		/*void AddObject();*/
-		bool CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera);
+		bool CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id);
 		void Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
@@ -58,11 +59,16 @@ namespace ave {
 		ID3DBlob* CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint, const std::string& oTarget);
 		
 		ID3D12Device* GetDevice();
+
+		int GetRootTexture();
+		int GetRootTexture2();
+
 		ID3D12RootSignature* GetRootSignature();
 		UINT GetRootObject();
 		UINT GetRootPass();
 		ID3D12PipelineState* GetPso();
 
+		static std::vector<CD3DX12_STATIC_SAMPLER_DESC> GetStaticSamplers();
 
 		~Shader();
 

@@ -2,6 +2,10 @@
 #include "Mesh.h"
 #include "Vertex.h"
 #include <array>
+#include <vector>
+#include "Shape.h"
+#include <unordered_map>
+#include <functional>
 
 namespace ave {
 	Mesh::Mesh() {
@@ -37,75 +41,67 @@ namespace ave {
 		return ibv;
 	}
 
-	bool Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList){
 
-		std::array<VERTEX_COLOR, 8> vertices =
-		{
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-			VERTEX_COLOR({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-			VERTEX_COLOR({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+	bool Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape) {
+
+
+		Shape<VERTEX_UV>* oShape = new Shape<VERTEX_UV>();
+		
+		std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>>()>> shapeCreators = {
+			{"cube", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+				return oShape->CreateCube();
+			}},
+			{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+				return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
+			}},
+			{"sphere", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+				return oShape->CreateSphere(1.0f,50.0f);
+			}},
+			{"cone", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+				return oShape->CreateCone(1.0f,16.0f);
+			}},
+			{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+				return oShape->CreatePyramid(2.0f,3.0f);
+			}},
 		};
 
-		std::array<std::uint16_t, 36> indices =
-		{
-			// front face
-			0, 1, 2,
-			0, 2, 3,
-
-			// back face
-			4, 6, 5,
-			4, 7, 6,
-
-			// left face
-			4, 5, 1,
-			4, 1, 0,
-
-			// right face
-			3, 2, 6,
-			3, 6, 7,
-
-			// top face
-			1, 5, 6,
-			1, 6, 2,
-
-			// bottom face
-			4, 0, 3,
-			4, 3, 7
-		};
-
-		const UINT vbByteSize = (UINT)vertices.size() * sizeof(VERTEX_COLOR);
-		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+		std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> aShapes;
+		auto it = shapeCreators.find(nameShape);
+		if (it != shapeCreators.end()) {
+			aShapes = it->second();  // Appel de la fonction de création
+		}
+		else {
+			std::cout << "Invalid shape type." << std::endl;
+		}
+		
+		const UINT vbByteSize = (UINT)aShapes[0].first.size() * sizeof(VERTEX_UV);
+		const UINT ibByteSize = (UINT)aShapes[0].second.size() * sizeof(std::uint16_t);
 
 		if (FAILED(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU))) {
 			return false;
 		}
-		CopyMemory(m_poVertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+		CopyMemory(m_poVertexBufferCPU->GetBufferPointer(), aShapes[0].first.data(), vbByteSize);
 
 		if (FAILED(D3DCreateBlob(ibByteSize, &m_poIndexBufferCPU))) {
 			return false;
 		}
-		CopyMemory(m_poIndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+		CopyMemory(m_poIndexBufferCPU->GetBufferPointer(), aShapes[0].second.data(), ibByteSize);
 
 		m_poVertexBufferGPU = D3DUtils::CreateDefaultBuffer(poDevice,
-			poCommandList, vertices.data(), vbByteSize, m_poVertexBufferUploader);
+			poCommandList, aShapes[0].first.data(), vbByteSize, m_poVertexBufferUploader);
 
 		m_poIndexBufferGPU = D3DUtils::CreateDefaultBuffer(poDevice,
-			poCommandList, indices.data(), ibByteSize, m_poIndexBufferUploader);
+			poCommandList, aShapes[0].second.data(), ibByteSize, m_poIndexBufferUploader);
 
-		m_oVertexByteStride = sizeof(VERTEX_COLOR);
+		m_oVertexByteStride = sizeof(VERTEX_UV);
 		m_oVertexBufferByteSize = vbByteSize;
 		m_oIndexFormat = DXGI_FORMAT_R16_UINT;
 		m_oIndexBufferByteSize = ibByteSize;
 
-		m_oIndexCount = (UINT)indices.size();
+		m_oIndexCount = (UINT)aShapes[0].second.size();
 
 		return true;
-	}
+	};
 
 	void Mesh::Destroy() {
 		m_poVertexBufferCPU->Release();

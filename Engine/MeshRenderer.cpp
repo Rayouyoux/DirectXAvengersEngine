@@ -10,6 +10,7 @@
 #include "ConstantsStruct.h"
 #include "Entity.h"
 #include "Transform.h"
+#include "Texture.h"
 
 namespace ave {
 	MeshRenderer::MeshRenderer() : Component(){
@@ -24,6 +25,9 @@ namespace ave {
 	void MeshRenderer::SetShader(Shader* poShader) {
 		m_poShader = poShader;
 		m_poBuffer = new UploadBuffer<ObjectConstants>(m_poShader->GetDevice(), 1, true);
+	}
+	void MeshRenderer::SetFirstTexture(Texture* poTexture) {
+		m_poTexture = poTexture;
 	}
 
 	void MeshRenderer::Start() {
@@ -59,7 +63,22 @@ namespace ave {
 
 		//poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poBuffer->Resource()->GetGPUVirtualAddress());
 
-		//poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(),1,0,0,0);
+ 
+  //      if (m_poShader->GetRootTexture() != -1 && m_poTexture)
+		//{ 
+		//	CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTexture->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+
+		//	//
+ 	//		
+		//	poList->SetGraphicsRootDescriptorTable(m_poShader->GetRootTexture(), tex);
+
+		//}
+
+
+		//auto oVertexBufferView = m_poMesh->VertexBufferView();
+		//auto oIndexBufferView = m_poMesh->IndexBufferView();
+		//poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
+		//poList->IASetIndexBuffer(&oIndexBufferView);
 
 		m_poShader->Draw(m_poMesh, m_poBuffer);
 

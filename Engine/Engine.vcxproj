@@ -167,7 +167,9 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="GlobalTime.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UploadBuffer.h" />
@@ -197,6 +199,7 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="GlobalTime.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
@@ -209,9 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="shader.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

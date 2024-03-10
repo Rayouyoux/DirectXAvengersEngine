@@ -23,6 +23,8 @@ namespace ave {
 	
 	class EntityManager;
 	
+	class Texture;
+	
 	class Mesh;
 
 	class GraphicsHandler {
@@ -35,6 +37,7 @@ namespace ave {
 		Camera* m_poCamera;
 		Particles::ParticleBehaviour* m_poBehaviour;
 		Particles::ParticleSystem* m_poParticleSystem;
+		Texture* m_poTexture;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;

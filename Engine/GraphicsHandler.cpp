@@ -14,6 +14,8 @@
 #include "Transform.h"
 #include "Maths.h"
 #include "ConstantsStruct.h"
+#include "Texture.h"
+#include "Vertex.h"
 #include "EntityManager.h"
 #include "ParticleSystem.h"
 
@@ -153,6 +155,15 @@ namespace ave {
 		m_poParticleSystem->SetMesh(m_poMesh);
 		m_poParticleSystem->SetShader(m_poShader);
 		m_poParticleSystem->Initialize(10, 1);*/
+		/*MeshRenderer* poMeshRenderer = m_poCubeEntity->AddComponent<MeshRenderer>();
+		poMeshRenderer->SetMesh(m_poMesh);
+		poMeshRenderer->SetShader(m_poShader);
+		poMeshRenderer->SetFirstTexture(m_poTexture);*/
+
+		
+		/*XMFLOAT3 scale = { 0.00001f, 0.00001f , 0.00001f };
+		m_poCubeEntity->m_poTransform->Scale(&scale);*/
+
 
 		bool test = CreateFactory()
 			&& CreateDevice()
@@ -164,8 +175,13 @@ namespace ave {
 
 		if (FAILED(m_poCommandList->Reset(m_poDirectCmdListAlloc, nullptr))) {
 			return false;
-		}
+		} 
 
+		/*m_poTexture->Init(m_poDevice);
+		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\image.dds");
+		bool test2 = m_poShader->CreateShader(this, ROOTSIGNATURE_VERTEX_UV)
+			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList(), "pyramid")
+			&& m_poTexture->BuildDescriptorHeaps("wall", m_poCbvHeap);*/
 		m_poEntityManager = new EntityManager();
 		m_poEntityManager->Init(this);
 
