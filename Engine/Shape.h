@@ -231,25 +231,33 @@ namespace ave {
 				float theta = 2.0f * DirectX::XM_PI * i / fNumSubDivisions;
 				float x = fRadius * cosf(theta);
 				float y = fRadius * sinf(theta);
-				vertices.push_back(T{ XMFLOAT3(x, y, 0.0f), XMFLOAT4(1.0f,0.0f,0.0f,0.0f)});
+				float u = static_cast<float>(i) / (fNumSubDivisions - 1); // Ajustement des coordonnées de texture
+				float v = 1.0f;
+
+				vertices.push_back(T{ XMFLOAT3(x, y, 0.0f), XMFLOAT4(u,v,0.0f,0.0f)});
 			}
 
 			// Ajouter le sommet du cône
-			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, fHeight), XMFLOAT4(0.0f,1.0f,0.0f,0.0f)});
+			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, fHeight), XMFLOAT4(0.5f,0.5f,0.0f,0.0f)});
 
 			// Ajouter le centre du disque du bas
-			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f,1.0f,0.0f,0.0f)});
+			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f)});
 
 			for (int i = 0; i < fNumSubDivisions; ++i) {
+
+
+				// Indices pour les triangles du disque du bas
+				indices.push_back(fNumSubDivisions * 2);
+				indices.push_back(fNumSubDivisions + (i + 1) % (int)fNumSubDivisions);
+				indices.push_back(fNumSubDivisions + 1);  // Centre du disque du 
+
 				// Indices pour les triangles formés par les points de la base et le sommet
 				indices.push_back(i);
 				indices.push_back((i + 1) % (int)fNumSubDivisions);
 				indices.push_back(fNumSubDivisions);
 
-				// Indices pour les triangles du disque du bas
-				indices.push_back(fNumSubDivisions * 2);
-				indices.push_back(fNumSubDivisions + (i + 1) % (int)fNumSubDivisions);
-				indices.push_back(fNumSubDivisions + 1);  // Centre du disque du bas
+
+
 			}
 			
 			m_aShapes.push_back(std::make_pair(vertices, indices));
