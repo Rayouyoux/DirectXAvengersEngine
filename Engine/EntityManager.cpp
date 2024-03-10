@@ -95,13 +95,13 @@ namespace ave {
 
 	Shader* EntityManager::NewShader() {
 		Shader* poShader = new Shader();
-		poShader->CreateShader(m_poGraphics, m_poMainCamera);
+		poShader->CreateShader(m_poGraphics, m_poMainCamera, 1);
 		return poShader;
 	}
 
 	Mesh* EntityManager::NewMesh() {
 		Mesh* poMesh = new Mesh();
-		poMesh->BuildBoxGeometry(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList());
+		poMesh->BuildBoxGeometry(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), "cube");
 		return poMesh;
 	}
 

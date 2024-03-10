@@ -45,27 +45,27 @@ namespace ave {
 	bool Mesh::BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape) {
 
 
-		Shape<VERTEX_UV>* oShape = new Shape<VERTEX_UV>();
+		Shape<VERTEX_COLOR>* oShape = new Shape<VERTEX_COLOR>();
 		
-		std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>>()>> shapeCreators = {
-			{"cube", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+		std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>>()>> shapeCreators = {
+			{"cube", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>> {
 				return oShape->CreateCube();
 			}},
-			{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+			{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>> {
 				return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
 			}},
-			{"sphere", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+			{"sphere", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>> {
 				return oShape->CreateSphere(1.0f,50.0f);
 			}},
-			{"cone", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+			{"cone", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>> {
 				return oShape->CreateCone(1.0f,16.0f);
 			}},
-			{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> {
+			{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>> {
 				return oShape->CreatePyramid(2.0f,3.0f);
 			}},
 		};
 
-		std::vector<std::pair<std::vector<VERTEX_UV>, std::vector<uint16_t>>> aShapes;
+		std::vector<std::pair<std::vector<VERTEX_COLOR>, std::vector<uint16_t>>> aShapes;
 		auto it = shapeCreators.find(nameShape);
 		if (it != shapeCreators.end()) {
 			aShapes = it->second();  // Appel de la fonction de création
@@ -74,7 +74,7 @@ namespace ave {
 			std::cout << "Invalid shape type." << std::endl;
 		}
 		
-		const UINT vbByteSize = (UINT)aShapes[0].first.size() * sizeof(VERTEX_UV);
+		const UINT vbByteSize = (UINT)aShapes[0].first.size() * sizeof(VERTEX_COLOR);
 		const UINT ibByteSize = (UINT)aShapes[0].second.size() * sizeof(std::uint16_t);
 
 		if (FAILED(D3DCreateBlob(vbByteSize, &m_poVertexBufferCPU))) {
@@ -93,7 +93,7 @@ namespace ave {
 		m_poIndexBufferGPU = D3DUtils::CreateDefaultBuffer(poDevice,
 			poCommandList, aShapes[0].second.data(), ibByteSize, m_poIndexBufferUploader);
 
-		m_oVertexByteStride = sizeof(VERTEX_UV);
+		m_oVertexByteStride = sizeof(VERTEX_COLOR);
 		m_oVertexBufferByteSize = vbByteSize;
 		m_oIndexFormat = DXGI_FORMAT_R16_UINT;
 		m_oIndexBufferByteSize = ibByteSize;
