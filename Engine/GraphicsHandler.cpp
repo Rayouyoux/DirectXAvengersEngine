@@ -158,7 +158,7 @@ namespace ave {
 		m_poTexture->Init(m_poDevice);
 		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\image.dds");
 		bool test2 = m_poShader->CreateShader(this, ROOTSIGNATURE_VERTEX_UV)
-			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList(), "cone")
+			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList(), "pyramid")
 			&& m_poTexture->BuildDescriptorHeaps("wall", m_poCbvHeap);
 
 		CloseCommandList();

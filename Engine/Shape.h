@@ -154,75 +154,7 @@ namespace ave {
 			m_aShapes.push_back(std::make_pair(vertices, indices));
 			return m_aShapes;
 		}
-		void CreateBottomDisque(float fHeight, float fSliceCount, float fBottomRadius) {
-
-			//Disque du haut
-			UINT32 baseIndex = (UINT32)vertices.size();
-
-			float yBottomDisque = -0.5f * fHeight;
-			float disqueTheta = 2.0f * XM_PI / fSliceCount;
-
-			// Duplicate cap ring vertices because the texture coordinates and normals differ.
-			for (UINT32 i = 0; i <= fSliceCount; ++i)
-			{
-				float x = fBottomRadius * cosf(i * disqueTheta);
-				float z = fBottomRadius * sinf(i * disqueTheta);
-
-				// Scale down by the height to try and make top cap texture coord area
-				// proportional to base.
-				float u = x / fHeight + 0.5f;
-				float v = z / fHeight + 0.5f;
-
-				vertices.push_back(T{ XMFLOAT3(x,yBottomDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
-			}
-
-			// Cap center vertex.
-			vertices.push_back(T{ XMFLOAT3(0.0f,yBottomDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
-
-			// Index of center vertex.
-			UINT32 centerIndex = (UINT32)vertices.size() - 1;
-
-			for (UINT32 i = 0; i < fSliceCount; ++i)
-			{
-				indices.push_back(centerIndex);
-				indices.push_back(baseIndex + i);
-				indices.push_back(baseIndex + i+1);
-			}
-		}
-		void CreateUpDisque(float fHeight, float fSliceCount, float fTopRadius) {
-			//Disque du haut
-			UINT32 baseIndex = (UINT32)vertices.size();
-
-			float yDisque = 0.5f * fHeight;
-			float disqueTheta = 2.0f * XM_PI / fSliceCount;
-
-			// Duplicate cap ring vertices because the texture coordinates and normals differ.
-			for (UINT32 i = 0; i <= fSliceCount; ++i)
-			{
-				float x = fTopRadius * cosf(i * disqueTheta);
-				float z = fTopRadius * sinf(i * disqueTheta);
-
-				// Scale down by the height to try and make top cap texture coord area
-				// proportional to base.
-				float u = x / fHeight + 0.5f;
-				float v = z / fHeight + 0.5f;
-
-				vertices.push_back(T{ XMFLOAT3(x,yDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
-			}
-
-			// Cap center vertex.
-			vertices.push_back(T{ XMFLOAT3(0.0f,yDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
-
-			// Index of center vertex.
-			UINT32 centerIndex = (UINT32)vertices.size() - 1;
-
-			for (UINT32 i = 0; i < fSliceCount; ++i)
-			{
-				indices.push_back(centerIndex);
-				indices.push_back(baseIndex + i + 1);
-				indices.push_back(baseIndex + i);
-			}
-		}
+	
 		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCone(float fRadius, float fNumSubDivisions) {
 			
 			float fHeight = 2.0f;
@@ -266,11 +198,11 @@ namespace ave {
 
 		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreatePyramid(float fBaseLength, float fHeight) {
 			// Calcul des coordonnées des vertices
-			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, -fBaseLength / 2, 0.0f), XMFLOAT4(1.0f,0.0f,0.0f,0.0f)});
+			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, -fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,1.0f,0.0f,0.0f)});
 			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, -fBaseLength / 2, 0.0f), XMFLOAT4(1.0f,1.0f,0.0f,0.0f) });
 			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,1.0f,0.0f,0.0f) });
 			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,0.0f,0.0f,0.0f) });
-			vertices.push_back(T{ DirectX::XMFLOAT3(0.0f, 0.0f, fHeight), XMFLOAT4(1.0f,0.0f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(0.0f, 0.0f, fHeight), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
 
 			// Indices pour former les faces de la pyramide
 			indices.push_back(0);
@@ -291,17 +223,90 @@ namespace ave {
 
 			// Indices pour la base de la pyramide
 			indices.push_back(0);
-			indices.push_back(1);
+			indices.push_back(3);
 			indices.push_back(2);
 
-			indices.push_back(2);
-			indices.push_back(3);
 			indices.push_back(0);
+			indices.push_back(2);
+			indices.push_back(1);
+
+		
 
 			m_aShapes.push_back(std::make_pair(vertices,indices));
 			return m_aShapes;
 		}
 		~Shape();
+
+	protected:
+			void CreateBottomDisque(float fHeight, float fSliceCount, float fBottomRadius) {
+
+				//Disque du haut
+				UINT32 baseIndex = (UINT32)vertices.size();
+
+				float yBottomDisque = -0.5f * fHeight;
+				float disqueTheta = 2.0f * XM_PI / fSliceCount;
+
+				// Duplicate cap ring vertices because the texture coordinates and normals differ.
+				for (UINT32 i = 0; i <= fSliceCount; ++i)
+				{
+					float x = fBottomRadius * cosf(i * disqueTheta);
+					float z = fBottomRadius * sinf(i * disqueTheta);
+
+					// Scale down by the height to try and make top cap texture coord area
+					// proportional to base.
+					float u = x / fHeight + 0.5f;
+					float v = z / fHeight + 0.5f;
+
+					vertices.push_back(T{ XMFLOAT3(x,yBottomDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
+				}
+
+				// Cap center vertex.
+				vertices.push_back(T{ XMFLOAT3(0.0f,yBottomDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
+
+				// Index of center vertex.
+				UINT32 centerIndex = (UINT32)vertices.size() - 1;
+
+				for (UINT32 i = 0; i < fSliceCount; ++i)
+				{
+					indices.push_back(centerIndex);
+					indices.push_back(baseIndex + i);
+					indices.push_back(baseIndex + i + 1);
+				}
+			}
+			void CreateUpDisque(float fHeight, float fSliceCount, float fTopRadius) {
+				//Disque du haut
+				UINT32 baseIndex = (UINT32)vertices.size();
+
+				float yDisque = 0.5f * fHeight;
+				float disqueTheta = 2.0f * XM_PI / fSliceCount;
+
+				// Duplicate cap ring vertices because the texture coordinates and normals differ.
+				for (UINT32 i = 0; i <= fSliceCount; ++i)
+				{
+					float x = fTopRadius * cosf(i * disqueTheta);
+					float z = fTopRadius * sinf(i * disqueTheta);
+
+					// Scale down by the height to try and make top cap texture coord area
+					// proportional to base.
+					float u = x / fHeight + 0.5f;
+					float v = z / fHeight + 0.5f;
+
+					vertices.push_back(T{ XMFLOAT3(x,yDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
+				}
+
+				// Cap center vertex.
+				vertices.push_back(T{ XMFLOAT3(0.0f,yDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
+
+				// Index of center vertex.
+				UINT32 centerIndex = (UINT32)vertices.size() - 1;
+
+				for (UINT32 i = 0; i < fSliceCount; ++i)
+				{
+					indices.push_back(centerIndex);
+					indices.push_back(baseIndex + i + 1);
+					indices.push_back(baseIndex + i);
+				}
+			}
 	};
 
 
