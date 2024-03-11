@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "GraphicsHandler.h"
+#include "Texture.h"
 
 namespace ave {
 
@@ -23,6 +24,8 @@ namespace ave {
 
 	void EntityManager::Init(GraphicsHandler* poGraphics) {
 		m_poGraphics = poGraphics;
+		m_poTextures = new Texture();
+		m_poTextures->Init(poGraphics->GetDevice());
 
 		Entity* poCamera = NewEntity();
 		m_poMainCamera = poCamera->AddComponent<Camera>();
@@ -30,6 +33,8 @@ namespace ave {
 
 		m_poShader = NewShader();
 		m_poMesh = NewMesh();
+
+		NewTexture("victor", L"image");
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -95,7 +100,7 @@ namespace ave {
 
 	Shader* EntityManager::NewShader() {
 		Shader* poShader = new Shader();
-		poShader->CreateShader(m_poGraphics, m_poMainCamera, 1);
+		poShader->CreateShader(m_poGraphics, m_poMainCamera, 2, m_poTextures);
 		return poShader;
 	}
 
@@ -103,6 +108,12 @@ namespace ave {
 		Mesh* poMesh = new Mesh();
 		poMesh->BuildBoxGeometry(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), "cube");
 		return poMesh;
+	}
+
+	void EntityManager::NewTexture(std::string name, std::wstring filename) {
+
+		m_poTextures->LoadTexture(name, L"..\\Engine\\Textures\\" + filename + L".dds");
+		m_poTextures->BuildDescriptorHeaps(name, m_poGraphics->GetCbvDescriptor());
 	}
 
 	bool EntityManager::RegisterEntity(Entity* poEntity) {

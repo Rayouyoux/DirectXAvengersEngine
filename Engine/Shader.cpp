@@ -65,10 +65,11 @@ namespace ave {
 
 
 
-    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id) {
+    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id, Texture* poTextures) {
         m_poCamera = poCamera;
         m_iIndexObject = 0;
         m_poDevice = poGraphicsHandler->GetDevice();
+        m_poTextures = poTextures;
         //m_poCbvHeap =  //Get heap 
 
         std::wstring shader;
@@ -154,6 +155,12 @@ namespace ave {
         auto oIndexBufferView = pMesh->IndexBufferView();
         poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
         poList->IASetIndexBuffer(&oIndexBufferView);
+
+        if (GetRootTexture() != -1 && m_poTextures)
+        { 
+            CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), tex);
+        }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());
 

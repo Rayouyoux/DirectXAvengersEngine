@@ -9,6 +9,7 @@ namespace ave {
 	class GraphicsHandler;
 	class Mesh;
 	class Camera;
+	class Texture;
 
 	class EntityManager
 	{
@@ -23,6 +24,7 @@ namespace ave {
 		GraphicsHandler* m_poGraphics;
 		Shader* m_poShader;
 		Mesh* m_poMesh;
+		Texture* m_poTextures;
 
 	public:
 
@@ -63,6 +65,8 @@ namespace ave {
 		Camera* GetMainCamera();
 		Shader* GetShader() { return m_poShader; };
 		Mesh* GetMesh() { return m_poMesh; };
+
+		void NewTexture(std::string name, std::wstring filename);
 
 	protected:
 		Shader* NewShader();

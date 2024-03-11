@@ -33,6 +33,7 @@ namespace ave {
 		std::vector<D3D12_INPUT_ELEMENT_DESC> m_oInputLayout;
 		ID3D12PipelineState* m_poPso;
 		Camera* m_poCamera;
+		Texture* m_poTextures;
 
 
 		int m_iIdRootSignature;
@@ -51,7 +52,7 @@ namespace ave {
 		//void Draw(ID3D12GraphicsCommandList* pList,Mesh* pMesh,Texture* pTexture,Texture* pTexture2);
 		void End();
 		/*void AddObject();*/
-		bool CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id);
+		bool CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id, Texture* poTextures = nullptr);
 		void Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);

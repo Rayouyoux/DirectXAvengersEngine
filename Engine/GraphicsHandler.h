@@ -162,7 +162,8 @@ namespace ave {
 		static ID3D12Device* GetDevice() { return m_poDevice; }
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
 
-		ID3D12CommandAllocator* GetCommandAllocator();
+		ID3D12DescriptorHeap* GetCbvDescriptor() { return m_poCbvHeap; };
+
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }
