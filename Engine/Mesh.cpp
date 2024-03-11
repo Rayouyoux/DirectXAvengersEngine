@@ -40,7 +40,7 @@ namespace ave {
 		return ibv;
 	}
 
-	void Mesh::~Mesh() {
+	Mesh::~Mesh() {
 		m_poVertexBufferCPU->Release();
 		m_poIndexBufferCPU->Release();
 		m_poVertexBufferGPU->Release();

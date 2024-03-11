@@ -190,10 +190,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\transparent_shader.hlsl">
+    <FxCompile Include="Shader\shader_ROOTSIGNATURE_VERTEX_COLOR.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shader.hlsl">
+    <FxCompile Include="Shader\shader_ROOTSIGNATURE_VERTEX_UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

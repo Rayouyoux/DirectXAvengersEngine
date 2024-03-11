@@ -188,7 +188,7 @@ namespace ave {
         poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());
 
         ////Pipeline
-        poList->SetPipelineState(GetPso());
+        poList->SetPipelineState(GetPso("transparent"));
 
         ////Topology
         poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

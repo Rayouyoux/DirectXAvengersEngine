@@ -150,7 +150,7 @@ namespace ave {
 
 
 
-		m_poEntityManager->RegisterEntity(poCameraEntity);
+		/*m_poEntityManager->RegisterEntity(poCameraEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity2);
 		m_poEntityManager->RegisterEntity(poParticuleEntity);*/

@@ -216,8 +216,8 @@
     <None Include="cursor1.cur" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shader.hlsl" />
-    <FxCompile Include="Shaders\transparent_shader.hlsl" />
+    <FxCompile Include="Shader\shader_ROOTSIGNATURE_VERTEX_COLOR.hlsl" />
+    <FxCompile Include="Shader\shader_ROOTSIGNATURE_VERTEX_UV.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
