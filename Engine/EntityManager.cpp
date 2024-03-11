@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "GraphicsHandler.h"
 #include "Texture.h"
+#include "Vertex.h"
 
 namespace ave {
 
@@ -20,6 +21,7 @@ namespace ave {
 		}
 		delete m_poShader;
 		delete m_poMesh;
+		delete m_poTextures;
 	}
 
 	void EntityManager::Init(GraphicsHandler* poGraphics) {
@@ -32,9 +34,10 @@ namespace ave {
 		RegisterEntity(poCamera);
 
 		m_poShader = NewShader();
-		m_poMesh = NewMesh();
+		
+		m_poMesh = NewMesh("cube");
 
-		NewTexture("victor", L"image");
+		NewTexture("image");
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -104,15 +107,19 @@ namespace ave {
 		return poShader;
 	}
 
-	Mesh* EntityManager::NewMesh() {
+	Mesh* EntityManager::NewMesh(std::string name) {
+		/*std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid" };
+		for (int i = 0; i < names->length(); i++) {
+			Mesh* poMesh = new Mesh();
+			poMesh->BuildBoxGeometry<VERTEX_UV>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), name);
+		}*/
 		Mesh* poMesh = new Mesh();
-		poMesh->BuildBoxGeometry(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), "cube");
+		poMesh->BuildBoxGeometry<VERTEX_UV>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), name);
 		return poMesh;
 	}
 
-	void EntityManager::NewTexture(std::string name, std::wstring filename) {
-
-		m_poTextures->LoadTexture(name, L"..\\Engine\\Textures\\" + filename + L".dds");
+	void EntityManager::NewTexture(std::string name) {
+		m_poTextures->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds");
 		m_poTextures->BuildDescriptorHeaps(name, m_poGraphics->GetCbvDescriptor());
 	}
 

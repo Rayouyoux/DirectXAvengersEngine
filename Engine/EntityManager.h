@@ -66,11 +66,11 @@ namespace ave {
 		Shader* GetShader() { return m_poShader; };
 		Mesh* GetMesh() { return m_poMesh; };
 
-		void NewTexture(std::string name, std::wstring filename);
+		void NewTexture(std::string name);
 
 	protected:
 		Shader* NewShader();
-		Mesh* NewMesh();
+		Mesh* NewMesh(std::string name);
 	};
 
 }

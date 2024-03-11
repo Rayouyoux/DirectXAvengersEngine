@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+using namespace DirectX;
 namespace ave {
 	template<typename T>
 	class Shape
