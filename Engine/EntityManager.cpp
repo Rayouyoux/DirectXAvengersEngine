@@ -38,6 +38,8 @@ namespace ave {
 		m_poMesh = NewMesh("cube");
 
 		NewTexture("image");
+		NewTexture("bricks");
+
 	}
 
 	/*EntityManager* EntityManager::Create() {

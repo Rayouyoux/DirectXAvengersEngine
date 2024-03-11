@@ -30,8 +30,7 @@ namespace ave {
 			m_poRessource,m_poUploadHeap))) {
 			return;
 		}
-
-		m_mTextures[m_oName] = std::move(this);
+		m_mTextures.insert({ m_oName, this});
 
 	}
 

@@ -202,6 +202,7 @@ namespace ave {
         { 
             CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
             poList->SetGraphicsRootDescriptorTable(GetRootTexture(), tex);
+            m_poTextures->Offset("bricks");
         }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());
