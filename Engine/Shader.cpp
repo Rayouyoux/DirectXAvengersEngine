@@ -374,11 +374,6 @@ namespace ave {
         }
     }
 
-   /* void Shader::AddObject() {
-       UploadBuffer<ObjectConstants>* poBuffer = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
-       m_voObjects.push_back(poBuffer);
-    }*/
-
     ID3D12Device* Shader::GetDevice() {
         return m_poDevice;
     }
