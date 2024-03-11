@@ -186,7 +186,6 @@ namespace ave {
         poList->SetGraphicsRootSignature(GetRootSignature());
 
         poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());
-
         ////Pipeline
         poList->SetPipelineState(GetPso("transparent"));
 
@@ -201,8 +200,9 @@ namespace ave {
         if (GetRootTexture() != -1 && m_poTextures)
         { 
             CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+
+            tex.Offset(1, *m_poTextures->GetDescriptorSize());
             poList->SetGraphicsRootDescriptorTable(GetRootTexture(), tex);
-            m_poTextures->Offset("bricks");
         }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());

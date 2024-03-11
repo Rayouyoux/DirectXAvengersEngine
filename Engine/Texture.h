@@ -11,7 +11,7 @@ namespace ave {
 	protected:
 		std::string m_oName;
 
-		std::map<std::string, Texture*> m_mTextures;
+		std::map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>> m_mTextures;
 
 		ID3D12Device* m_poDevice;
 

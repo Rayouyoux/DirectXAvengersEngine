@@ -8,6 +8,7 @@ namespace ave {
 
 	Texture::Texture() {
 
+		m_poSrvDesc = {};
 		m_poDevice = nullptr;
 		m_poUploadHeap = nullptr;
 		m_poSrvDescriptorHeap = nullptr;
@@ -30,25 +31,25 @@ namespace ave {
 			m_poRessource,m_poUploadHeap))) {
 			return;
 		}
-		m_mTextures.insert({ m_oName, this});
+		m_mTextures.insert({ m_oName, m_poRessource});
 
 	}
 
 	bool Texture::BuildDescriptorHeaps(std::string oName, ID3D12DescriptorHeap* CbvDescriptorHeap) {
 
 		m_poSrvDescriptorHeap = CbvDescriptorHeap;
+
 		m_pohDescriptor = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-		auto texture = m_mTextures[oName]->m_poRessource;
+		auto texture = m_mTextures[oName];
 
-		m_poSrvDesc = {};
+		
 		m_poSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		m_poSrvDesc.Format = texture->GetDesc().Format;
 		m_poSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 		m_poSrvDesc.Texture2D.MostDetailedMip = 0;
 		m_poSrvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
 		m_poSrvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-
 
 
 		m_poDevice->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
@@ -58,14 +59,15 @@ namespace ave {
 
 	void Texture::Offset(std::string oName) {
 
-		auto offset = m_mTextures[oName]->m_poRessource;
+		if (m_mTextures.size() > 1) {
+			auto offset = m_mTextures[oName];
 
-		m_pohDescriptor.Offset(1, m_oCbvSrvDescriptorSize);
-		m_poSrvDesc.Format = offset->GetDesc().Format;
-		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
+			m_pohDescriptor.Offset(1, m_oCbvSrvDescriptorSize);
+			m_poSrvDesc.Format = offset->GetDesc().Format;
+			m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
 
-		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
-
+			m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
+		}
 	}
 
 	Texture::~Texture() {

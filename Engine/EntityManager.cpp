@@ -38,7 +38,9 @@ namespace ave {
 		m_poMesh = NewMesh("cube");
 
 		NewTexture("image");
+		m_poTextures->BuildDescriptorHeaps("image", m_poGraphics->GetCbvDescriptor());
 		NewTexture("bricks");
+
 
 	}
 
@@ -122,7 +124,7 @@ namespace ave {
 
 	void EntityManager::NewTexture(std::string name) {
 		m_poTextures->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds");
-		m_poTextures->BuildDescriptorHeaps(name, m_poGraphics->GetCbvDescriptor());
+		m_poTextures->Offset(name);
 	}
 
 	bool EntityManager::RegisterEntity(Entity* poEntity) {
