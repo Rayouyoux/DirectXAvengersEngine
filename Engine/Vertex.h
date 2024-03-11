@@ -25,7 +25,7 @@ namespace ave {
 	struct VERTEX_UV {
 
 		XMFLOAT3 pos;
-		XMFLOAT2 uv;
+		XMFLOAT4 uv;
 
 	};
 	struct VERTEX_COLOR_UV {

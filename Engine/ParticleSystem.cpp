@@ -145,7 +145,7 @@ namespace ave {
 			poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
 
 			////Pass
-			poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
+			/*poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());*/
 
 			////Pipeline
 			poList->SetPipelineState(m_poShader->GetPso("transparent"));

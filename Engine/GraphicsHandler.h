@@ -23,6 +23,8 @@ namespace ave {
 	
 	class EntityManager;
 	
+	class Texture;
+	
 	class Mesh;
 
 	class GraphicsHandler {
@@ -31,17 +33,18 @@ namespace ave {
 
 		Shader* m_poShader;
 		Mesh* m_poMesh;
-		EntityManager* m_poEntityManager;
+		
 		Camera* m_poCamera;
 		Particles::ParticleBehaviour* m_poBehaviour;
 		Particles::ParticleSystem* m_poParticleSystem;
+		Texture* m_poTexture;
 
 		bool m_b4xMsaaState;
 		UINT m_i4xMsaaQuality;
 
 		IDXGIFactory4* m_poFactory;
 		IDXGISwapChain* m_poSwapChain;
-		ID3D12Device* m_poDevice;
+		static ID3D12Device* m_poDevice;
 
 		ID3D12Fence* m_poFence;
 		UINT64 m_iCurrentFence;
@@ -116,6 +119,13 @@ namespace ave {
 		/// Set the Cbv descriptor with m_poCbvHeap.
 		/// </summary>
 		virtual void SetCbvDescriptor();
+
+
+		ID3D12Resource* CurrentBackBuffer() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
+
+	public:
 		/// <summary>
 		/// Close the command list.
 		/// </summary>
@@ -133,11 +143,9 @@ namespace ave {
 		/// </summary>
 		virtual void FlushCommandQueue();
 
-		ID3D12Resource* CurrentBackBuffer() const;
-		D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView() const;
-		D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
+		//a voir ???
+		EntityManager* m_poEntityManager;
 
-	public:
 		static GraphicsHandler* Create();
 		virtual bool Initialize(AvengersEngine* poAve);
 
@@ -151,8 +159,11 @@ namespace ave {
 		virtual DirectX::XMVECTORF32 GetFillColor() const { return m_cFillColor; }
 		virtual void SetFillColor(const DirectX::XMVECTORF32& cfillColor) { m_cFillColor = cfillColor; }
 
-		ID3D12Device* GetDevice() { return m_poDevice; }
+		static ID3D12Device* GetDevice() { return m_poDevice; }
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
+
+		ID3D12DescriptorHeap* GetCbvDescriptor() { return m_poCbvHeap; };
+
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }

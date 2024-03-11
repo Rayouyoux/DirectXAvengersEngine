@@ -1,23 +1,23 @@
 #include "AvengersEngine.h"
-#include "ObjectPooler.h"
+//#include "ObjectPooler.h"
 #include <vector>
 #include <sstream>
 #if defined(DEBUG) | defined(_DEBUG)
 #include <crtdbg.h>
 #endif
 
-using namespace ave::ObjectPooling;
-
-class Particle : public IPullable {
-    virtual void OnInstantiation() override {
-    }
-
-    virtual void OnAcquire() override {
-    }
-
-    virtual void OnRelease() override {
-    }
-};
+//using namespace ave::ObjectPooling;
+//
+//class Particle : public IPullable {
+//    virtual void OnInstantiation() override {
+//    }
+//
+//    virtual void OnAcquire() override {
+//    }
+//
+//    virtual void OnRelease() override {
+//    }
+//};
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) {
 #if defined(DEBUG) | defined(_DEBUG)
@@ -30,6 +30,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         MessageBoxA(NULL, "Euh ça bug ?", "ALED", 0);
         return 0;
     }
+
+    ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
+
+    ave::Entity* poCubeEntity = manager->NewEntity();
+    ave::Entity* poCubeEntity2 = manager->NewEntity();
+
+    XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
+    poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
+
+    ave::Entity* poCamera = manager->GetMainCamera()->GetEntity();
+    XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+    poCamera->m_poTransform->SetVectorPosition(&pos);
+
+    XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+    poCamera->m_poTransform->LookTo(&direction);
+
+    ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
+    poMeshRenderer->SetMesh(manager->GetMesh());
+    poMeshRenderer->SetShader(manager->GetShader());
+
+    ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
+    poMeshRenderer2->SetMesh(manager->GetMesh());
+    poMeshRenderer2->SetShader(manager->GetShader());
+
+    manager->RegisterEntity(poCubeEntity);
+    manager->RegisterEntity(poCubeEntity2);
   
     int res = gameInstance->Run();
 
@@ -41,5 +67,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         MessageBoxA(NULL, "UWU", "DISCLAIMER", 0);
     }
 #endif 
-    return 0;
+    return res;
 }

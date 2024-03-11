@@ -40,8 +40,8 @@ namespace ave {
 		template <typename Comp>
 		Comp* GetComponent() {
 			for (int i = 0; i < m_loComponents.size(); i++) {
-				if (typeid(m_loComponents[i]).name() == Comp) {
-					return static_cast<Comp>(m_loComponents[i]);
+				if (typeid(m_loComponents[i]) == typeid(Comp)) {
+					return (Comp*)m_loComponents[i];
 				}
 			}
 		}

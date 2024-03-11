@@ -7,6 +7,7 @@ namespace ave {
 	class Mesh;
 	class Shader;
 	struct ObjectConstants;
+	class Texture;
 
 	class MeshRenderer : public Component
 	{
@@ -17,6 +18,8 @@ namespace ave {
 		void SetMesh(Mesh* poMesh);
 		void SetShader(Shader* SetShader);
 
+		void SetFirstTexture(Texture* poTexture);
+
 		void Start() override;
 		void Update(float dT) override;
 		void LateUpdate(float dT) override {};
@@ -25,8 +28,9 @@ namespace ave {
 
 	protected:
 		Mesh* m_poMesh;
-		Shader* m_poShader;
 		UploadBuffer<ObjectConstants>* m_poBuffer;
+		Texture* m_poTexture;
+		Shader* m_poShader;
 	};
 }
 

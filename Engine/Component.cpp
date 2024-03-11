@@ -15,4 +15,9 @@ namespace ave {
 	void Component::BindEntity(Entity* poEntity) {
 		m_poEntity = poEntity;
 	}
+
+	Entity* Component::GetEntity()
+	{
+		return m_poEntity;
+	}
 };
