@@ -33,16 +33,17 @@ VertexOut VS(VertexIn vin)
     //Transform to homogeneous to space
     float4 pos = mul(float4(vin.pos, 1.0f), gWorld);
     vout.pos = mul(pos, mul(gView, gProj));
-    vout.color = vin.color;
-    //vout.uv = vin.uv;
-    
+    //vout.color = vin.color;
+    vout.uv = vin.uv;
+   
     return vout;
 }
 
 float4 PS(VertexOut pin) : SV_Target
 {
     float4 res = pin.color;
-    return res * 0;
+    res.a = sin(pin.pos.y);
+    return res;
     //return gTex.Sample(gSampler, pin.uv);
 }
 

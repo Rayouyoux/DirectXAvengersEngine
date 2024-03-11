@@ -89,53 +89,74 @@ namespace ave {
             return false;
         }
 
-        D3D12_GRAPHICS_PIPELINE_STATE_DESC oPestoVerdeDesc;
-        ZeroMemory(&oPestoVerdeDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-        oPestoVerdeDesc.InputLayout = { m_oInputLayout.data(), (UINT)m_oInputLayout.size() };
-        oPestoVerdeDesc.pRootSignature = m_poRootSignature;
-        oPestoVerdeDesc.VS =
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC oOpaquePSO;
+        ZeroMemory(&oOpaquePSO, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+        oOpaquePSO.InputLayout = { m_oInputLayout.data(), (UINT)m_oInputLayout.size() };
+        oOpaquePSO.pRootSignature = m_poRootSignature;
+        oOpaquePSO.VS =
         {
             reinterpret_cast<BYTE*>(m_poVS->GetBufferPointer()),
             m_poVS->GetBufferSize()
         };
-        oPestoVerdeDesc.PS =
+        oOpaquePSO.PS =
         {
             reinterpret_cast<BYTE*>(m_poPS->GetBufferPointer()),
             m_poPS->GetBufferSize()
         };
-        oPestoVerdeDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-        oPestoVerdeDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-        oPestoVerdeDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-        oPestoVerdeDesc.SampleMask = UINT_MAX;
-        oPestoVerdeDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-        oPestoVerdeDesc.NumRenderTargets = 1;
-        oPestoVerdeDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-        oPestoVerdeDesc.SampleDesc.Count = poGraphicsHandler->Get4xMsaaState() ? 4 : 1;
-        oPestoVerdeDesc.SampleDesc.Quality = poGraphicsHandler->Get4xMsaaState() ? (poGraphicsHandler->Get4xMsaaQuality() - 1) : 0;
-        oPestoVerdeDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        if (m_poDevice->CreateGraphicsPipelineState(&oPestoVerdeDesc, IID_PPV_ARGS(&m_dPSOs["opaque"])) != S_OK)
+        oOpaquePSO.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        oOpaquePSO.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        oOpaquePSO.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+        oOpaquePSO.SampleMask = UINT_MAX;
+        oOpaquePSO.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        oOpaquePSO.NumRenderTargets = 1;
+        oOpaquePSO.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        oOpaquePSO.SampleDesc.Count = poGraphicsHandler->Get4xMsaaState() ? 4 : 1;
+        oOpaquePSO.SampleDesc.Quality = poGraphicsHandler->Get4xMsaaState() ? (poGraphicsHandler->Get4xMsaaQuality() - 1) : 0;
+        oOpaquePSO.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        if (m_poDevice->CreateGraphicsPipelineState(&oOpaquePSO, IID_PPV_ARGS(&m_dPSOs["opaque"])) != S_OK)
         {
             Destroy();
             return false;
         }
 
-        D3D12_GRAPHICS_PIPELINE_STATE_DESC oPestoRossoDesc = oPestoVerdeDesc;
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC oTransparentPSO = oOpaquePSO;
 
         D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc;
         transparencyBlendDesc.BlendEnable = true;
         transparencyBlendDesc.LogicOpEnable = false;
-        transparencyBlendDesc.SrcBlend = D3D12_BLEND_ZERO;
-        transparencyBlendDesc.DestBlend = D3D12_BLEND_SRC_COLOR;
+        transparencyBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+        transparencyBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
         transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-        transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-        transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+        transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
+        transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
         transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
         transparencyBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
         transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
-        oPestoRossoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
+        oTransparentPSO.BlendState.RenderTarget[0] = transparencyBlendDesc;
         if (m_poDevice->CreateGraphicsPipelineState(
-            &oPestoRossoDesc, IID_PPV_ARGS(&m_dPSOs["transparent"]))) {
+            &oTransparentPSO, IID_PPV_ARGS(&m_dPSOs["transparent"]))) {
+            Destroy();
+            return false;
+        }
+
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC oParticlePSO = oOpaquePSO;
+
+        D3D12_RENDER_TARGET_BLEND_DESC particleBlendDesc;
+        particleBlendDesc.BlendEnable = true;
+        particleBlendDesc.LogicOpEnable = false;
+        particleBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+        particleBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+        particleBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+        particleBlendDesc.SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
+        particleBlendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+        particleBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+        particleBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
+        particleBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+        
+        oParticlePSO.BlendState.RenderTarget[0] = particleBlendDesc;
+        if (m_poDevice->CreateGraphicsPipelineState(
+            &oParticlePSO, IID_PPV_ARGS(&m_dPSOs["particle"]))) {
             Destroy();
             return false;
         }
@@ -363,8 +384,6 @@ namespace ave {
     }
 
     void Shader::Destroy() {
-        
-        // Release all pestos :)
         for (const auto& pair : m_dPSOs)
             pair.second->Release();
 
