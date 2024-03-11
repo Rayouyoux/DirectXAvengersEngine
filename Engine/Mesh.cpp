@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Mesh.h"
 #include "Vertex.h"
+#include "AABB.h"
 #include <array>
 
 
@@ -16,6 +17,8 @@ namespace ave {
 		m_oVertexByteStride = 0;
 		m_oVertexBufferByteSize = 0;
 		m_oIndexCount = 0;
+
+		AABB m_oContainingBox;
 	}
 
 	UINT Mesh::GetIndexCount() {
