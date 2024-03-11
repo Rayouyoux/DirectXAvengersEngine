@@ -12,6 +12,7 @@ cbuffer cbPerPass : register(b1)
     float4x4 gView;
     float4x4 gProj;
 }
+
 struct VertexIn
 {
     float3 pos : POSITION;
@@ -33,8 +34,8 @@ VertexOut VS(VertexIn vin)
     //Transform to homogeneous to space
     float4 pos = mul(float4(vin.pos, 1.0f), gWorld);
     vout.pos = mul(pos, mul(gView, gProj));
-    //vout.color = vin.color;
-    vout.uv = vin.uv;
+    vout.color = vin.color;
+    //vout.uv = vin.uv;
    
     return vout;
 }

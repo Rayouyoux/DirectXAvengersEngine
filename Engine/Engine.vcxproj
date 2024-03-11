@@ -212,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.hlsl" />
+    <FxCompile Include="Shaders\transparent_shader.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
