@@ -30,6 +30,9 @@ namespace ave {
 				{"cube", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCube();
 				}},
+				{"plane", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreatePlane();
+				}},
 				{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
 				}},

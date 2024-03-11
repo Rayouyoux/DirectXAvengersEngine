@@ -40,19 +40,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
 
     ave::Entity* poCamera = manager->GetMainCamera()->GetEntity();
-    XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+    XMVECTOR pos = XMVectorSet(0.0f, 0.0f, 4.0f, 0.0f);
     poCamera->m_poTransform->SetVectorPosition(&pos);
 
     XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
     poCamera->m_poTransform->LookTo(&direction);
 
-    ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
+    /*ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
     poMeshRenderer->SetMesh(manager->GetMesh());
     poMeshRenderer->SetShader(manager->GetShader());
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
     poMeshRenderer2->SetMesh(manager->GetMesh());
-    poMeshRenderer2->SetShader(manager->GetShader());
+    poMeshRenderer2->SetShader(manager->GetShader());*/
+
+    ave::UI::SpriteRenderer* sprite = poCubeEntity->AddComponent<ave::UI::SpriteRenderer>();
+    sprite->SetMesh(manager->GetMesh());
+    sprite->SetShader(manager->GetShader());
 
     manager->RegisterEntity(poCubeEntity);
     manager->RegisterEntity(poCubeEntity2);

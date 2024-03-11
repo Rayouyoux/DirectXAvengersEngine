@@ -16,7 +16,7 @@ namespace ave {
 	public:
 
 		// Main Public Members
-		std::vector<Entity*> m_voAliveEntities;
+		std::vector<Entity*> m_voEntities;
 
 	protected:
 		Camera* m_poMainCamera;
@@ -49,9 +49,9 @@ namespace ave {
 		template <typename Comp>
 		std::vector<Entity*> GetEntitiesByComponent() {
 			std::vector<Entity*> Entities;
-			for (int i = 0; i < m_voAliveEntities.size(); i++) {
-				if (m_voAliveEntities[i]->HasComponent<Comp>()) {
-					Entities.push_back(m_voAliveEntities[i]);
+			for (int i = 0; i < m_voEntities.size(); i++) {
+				if (m_voEntities[i]->HasComponent<Comp>()) {
+					Entities.push_back(m_voEntities[i]);
 				}
 			}
 			return Entities;

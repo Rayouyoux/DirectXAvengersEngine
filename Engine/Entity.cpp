@@ -48,6 +48,12 @@ namespace ave {
 		}
 	}
 
+	void Entity::Render2D() {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->Render2D();
+		}
+	}
+
 	bool Entity::GetIsAlive() {
 		return m_bIsAlive;
 	}

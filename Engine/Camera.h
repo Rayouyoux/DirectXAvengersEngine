@@ -22,6 +22,7 @@ namespace ave {
 		void Update(float deltaTime) override;
 		void LateUpdate(float deltaTime) override;
 		void Render() override;
+		void Render2D() override;
 
 		// Get Methods
 		DirectX::XMMATRIX GetProjectionMatrix() const;
@@ -40,11 +41,13 @@ namespace ave {
 		float m_fFOV;
 		float m_fNearZ;
 		float m_fFarZ;
+		float m_fNearWindowWidth;
 		float m_fNearWindowHeight;
 		float m_fFarWindowHeight;
 
 		// View Matrix
-		DirectX::XMFLOAT4X4 m_voProjectionMatrix;
+		DirectX::XMFLOAT4X4 m_voPerspectiveProj;
+		DirectX::XMFLOAT4X4 m_voOrthographicProj;
 
 		// Outdated View Flag
 		bool m_bIsValidView;

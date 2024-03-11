@@ -20,7 +20,7 @@ namespace ave {
 		m_fNearWindowHeight = 0.0f;
 		m_fFarWindowHeight = 0.0f;
 		m_bIsValidView = true;
-		m_voProjectionMatrix = Maths::MatriceIdentity();
+		m_voPerspectiveProj = Maths::MatriceIdentity();
 	}
 
 	Camera::~Camera(){
@@ -34,11 +34,14 @@ namespace ave {
 		m_fNearZ = zn;
 		m_fFarZ = zf;
 
+		m_fNearWindowWidth = 2.0f * m_fNearZ * tanf(0.5f * m_fFOV) * m_fAspect;
 		m_fNearWindowHeight = 2.0f * m_fNearZ * tanf(0.5f * m_fFOV);
 		m_fFarWindowHeight = 2.0f * m_fFarZ * tanf(0.5f * m_fFOV);
 
 		XMMATRIX P = XMMatrixPerspectiveFovLH(m_fFOV, m_fAspect, m_fNearZ, m_fFarZ);
-		XMStoreFloat4x4(&m_voProjectionMatrix, P);
+		XMMATRIX O = XMMatrixOrthographicLH(m_fNearWindowWidth, m_fNearWindowHeight, m_fNearZ, m_fFarZ);
+		XMStoreFloat4x4(&m_voPerspectiveProj, P);
+		XMStoreFloat4x4(&m_voOrthographicProj, O);
 	}
 
 	void Camera::Start()
@@ -53,22 +56,29 @@ namespace ave {
 
 	void Camera::Update(float deltaTime)
 	{
-		PassConstants opassConstants;
-		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
-		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voProjectionMatrix)));
-		m_poBuffer->CopyData(0, opassConstants);
 	}
 	
 	void Camera::LateUpdate(float deltaTime){
 
 	}
 
-	void Camera::Render()
-	{}
+	void Camera::Render() {
+		PassConstants opassConstants;
+		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
+		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voPerspectiveProj)));
+		m_poBuffer->CopyData(0, opassConstants);
+	}
+
+	void Camera::Render2D() {
+		PassConstants opassConstants;
+		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
+		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voOrthographicProj)));
+		m_poBuffer->CopyData(0, opassConstants);
+	}
 
 	DirectX::XMMATRIX Camera::GetProjectionMatrix() const
 	{
-		return DirectX::XMLoadFloat4x4(&m_voProjectionMatrix);
+		return DirectX::XMLoadFloat4x4(&m_voPerspectiveProj);
 	}
 
 	void Camera::UpdateProjectionMatrix()

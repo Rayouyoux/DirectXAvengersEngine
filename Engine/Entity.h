@@ -25,6 +25,7 @@ namespace ave {
 		void Start();
 		void Update(float iDeltaTime);
 		void Render();
+		void Render2D();
 
 		// Adds a Component to the Entity
 		template <typename Comp>

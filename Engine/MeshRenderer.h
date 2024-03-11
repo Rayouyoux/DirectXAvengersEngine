@@ -28,9 +28,9 @@ namespace ave {
 
 	protected:
 		Mesh* m_poMesh;
-		UploadBuffer<ObjectConstants>* m_poBuffer;
 		Texture* m_poTexture;
 		Shader* m_poShader;
+		UploadBuffer<ObjectConstants>* m_poBuffer;
 	};
 }
 

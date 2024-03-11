@@ -16,8 +16,8 @@ namespace ave {
 	}
 
 	EntityManager::~EntityManager(){
-		for (int i = m_voAliveEntities.size()-1; i >= 0; i--) {
-			delete m_voAliveEntities[i];
+		for (int i = m_voEntities.size()-1; i >= 0; i--) {
+			delete m_voEntities[i];
 		}
 		delete m_poShader;
 		delete m_poMesh;
@@ -35,9 +35,9 @@ namespace ave {
 
 		m_poShader = NewShader();
 		
-		m_poMesh = NewMesh("cube");
+		m_poMesh = NewMesh("plane");
 
-		NewTexture("image");
+		NewTexture("one");
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -63,30 +63,34 @@ namespace ave {
 	}*/
 
 	void EntityManager::Update(float fDeltaTime) {
-		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
-		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
+		float rot = DirectX::XMConvertToRadians(45000.0f * fDeltaTime);
+		//m_voAliveEntities[1]->m_poTransform->RotateOnDir(rot);
 		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
 		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
 
-		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			m_voAliveEntities[i]->Update(fDeltaTime);
+		for (int i = 0; i < m_voEntities.size(); i++) {
+			m_voEntities[i]->Update(fDeltaTime);
 		}
 	}
 
 	void EntityManager::LateUpdate() {
-		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			if (m_voAliveEntities[i]->GetIsAlive() == false) {
-				Entity* EntityToDelete = m_voAliveEntities[i];
-				m_voAliveEntities.erase(m_voAliveEntities.begin() + i);
+		for (int i = 0; i < m_voEntities.size(); i++) {
+			if (m_voEntities[i]->GetIsAlive() == false) {
+				Entity* EntityToDelete = m_voEntities[i];
+				m_voEntities.erase(m_voEntities.begin() + i);
 				delete EntityToDelete;
 			}
 		}
 	}
 
 	void EntityManager::Render() {
-		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			m_voAliveEntities[i]->Render();
+		for (int i = 0; i < m_voEntities.size(); i++) {
+			m_voEntities[i]->Render();
+		}
+
+		for (int i = 0; i < m_voEntities.size(); i++) {
+			m_voEntities[i]->Render2D();
 		}
 	}
 
@@ -124,7 +128,7 @@ namespace ave {
 	}
 
 	bool EntityManager::RegisterEntity(Entity* poEntity) {
-		m_voAliveEntities.push_back(poEntity);
+		m_voEntities.push_back(poEntity);
 		poEntity->Start();
 		return true;
 	}

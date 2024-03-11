@@ -108,18 +108,7 @@ namespace ave {
 #endif
 		m_poAve = poAve;
 
-
-
-	
-
-
-
-
-
-
-
 		/*Entity* poParticuleEntity = m_poEntityManager->NewEntity();*/
-
 
 		/*m_poBehaviour = new Particles::ParticleBehaviour();
 		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
@@ -147,8 +136,6 @@ namespace ave {
 			&& m_poTexture->BuildDescriptorHeaps("wall", m_poCbvHeap);*/
 		m_poEntityManager = new EntityManager();
 		m_poEntityManager->Init(this);
-
-
 
 		/*m_poEntityManager->RegisterEntity(poCameraEntity);
 		m_poEntityManager->RegisterEntity(poCubeEntity);
