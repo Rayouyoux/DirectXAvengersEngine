@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <map>
 #include "UploadBuffer.h"
 #include "Texture.h"
 #include "ConstantsStruct.h"
@@ -29,8 +30,7 @@ namespace ave {
 		ID3DBlob* m_poVS;
 		ID3DBlob* m_poPS;
 		std::vector<D3D12_INPUT_ELEMENT_DESC> m_oInputLayout;
-		ID3D12PipelineState* m_poPso;
-
+		std::map<const char*, ID3D12PipelineState*> m_dPSOs;
 
 		int m_iIdRootSignature;
 		int m_iRootTexture;
@@ -60,7 +60,7 @@ namespace ave {
 		UINT GetRootObject();
 		UINT GetRootPass();
 		D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAdress();
-		ID3D12PipelineState* GetPso();
+		ID3D12PipelineState* GetPso(const char* blend);
 		UploadBuffer<PassConstants>* GetPass();
 		void UpdatePass(PassConstants data);
 		/*void UpdateObject(ObjectConstants data);

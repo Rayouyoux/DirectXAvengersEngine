@@ -17,8 +17,8 @@ namespace ave {
     Shader::Shader() {
 
     }
-    ID3D12PipelineState* Shader::GetPso() {
-        return m_poPso;
+    ID3D12PipelineState* Shader::GetPso(const char* blend) {
+        return m_dPSOs[blend];
     }
 
     UINT Shader::GetRootObject() {
@@ -70,14 +70,14 @@ namespace ave {
         //m_poCbvHeap =  //Get heap 
 
         //On compile le Vertex Shader
-        m_poVS = CompileShader(L"..\\Engine\\shader.hlsl", "VS", "vs_5_0");
+        m_poVS = CompileShader(L"..\\Engine\\Shaders\\transparent_shader.hlsl", "VS", "vs_5_0");
         if (m_poVS == nullptr) {
             Destroy();
             return false;
         }
 
         //On compile le Pixel Shader
-        m_poPS = CompileShader(L"..\\Engine\\shader.hlsl", "PS", "ps_5_0");
+        m_poPS = CompileShader(L"..\\Engine\\Shaders\\transparent_shader.hlsl", "PS", "ps_5_0");
         if (m_poPS == nullptr) {
             Destroy();
             return false;
@@ -89,37 +89,79 @@ namespace ave {
             return false;
         }
 
-        D3D12_GRAPHICS_PIPELINE_STATE_DESC oPestoDesc;
-        ZeroMemory(&oPestoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-        oPestoDesc.InputLayout = { m_oInputLayout.data(), (UINT)m_oInputLayout.size() };
-        oPestoDesc.pRootSignature = m_poRootSignature;
-        oPestoDesc.VS =
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC oOpaquePSO;
+        ZeroMemory(&oOpaquePSO, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+        oOpaquePSO.InputLayout = { m_oInputLayout.data(), (UINT)m_oInputLayout.size() };
+        oOpaquePSO.pRootSignature = m_poRootSignature;
+        oOpaquePSO.VS =
         {
             reinterpret_cast<BYTE*>(m_poVS->GetBufferPointer()),
             m_poVS->GetBufferSize()
         };
-        oPestoDesc.PS =
+        oOpaquePSO.PS =
         {
             reinterpret_cast<BYTE*>(m_poPS->GetBufferPointer()),
             m_poPS->GetBufferSize()
         };
-        oPestoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-        oPestoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-        oPestoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-        oPestoDesc.SampleMask = UINT_MAX;
-        oPestoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-        oPestoDesc.NumRenderTargets = 1;
-        oPestoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-        oPestoDesc.SampleDesc.Count = poGraphicsHandler->Get4xMsaaState() ? 4 : 1;
-        oPestoDesc.SampleDesc.Quality = poGraphicsHandler->Get4xMsaaState() ? (poGraphicsHandler->Get4xMsaaQuality() - 1) : 0;
-        oPestoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        if (m_poDevice->CreateGraphicsPipelineState(&oPestoDesc, IID_PPV_ARGS(&m_poPso)) != S_OK)
+        oOpaquePSO.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        oOpaquePSO.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        oOpaquePSO.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+        oOpaquePSO.SampleMask = UINT_MAX;
+        oOpaquePSO.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        oOpaquePSO.NumRenderTargets = 1;
+        oOpaquePSO.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        oOpaquePSO.SampleDesc.Count = poGraphicsHandler->Get4xMsaaState() ? 4 : 1;
+        oOpaquePSO.SampleDesc.Quality = poGraphicsHandler->Get4xMsaaState() ? (poGraphicsHandler->Get4xMsaaQuality() - 1) : 0;
+        oOpaquePSO.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        if (m_poDevice->CreateGraphicsPipelineState(&oOpaquePSO, IID_PPV_ARGS(&m_dPSOs["opaque"])) != S_OK)
         {
             Destroy();
             return false;
         }
-        return true;
 
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC oTransparentPSO = oOpaquePSO;
+
+        D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc;
+        transparencyBlendDesc.BlendEnable = true;
+        transparencyBlendDesc.LogicOpEnable = false;
+        transparencyBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+        transparencyBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+        transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+        transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
+        transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+        transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+        transparencyBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
+        transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+        oTransparentPSO.BlendState.RenderTarget[0] = transparencyBlendDesc;
+        if (m_poDevice->CreateGraphicsPipelineState(
+            &oTransparentPSO, IID_PPV_ARGS(&m_dPSOs["transparent"]))) {
+            Destroy();
+            return false;
+        }
+
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC oParticlePSO = oOpaquePSO;
+
+        D3D12_RENDER_TARGET_BLEND_DESC particleBlendDesc;
+        particleBlendDesc.BlendEnable = true;
+        particleBlendDesc.LogicOpEnable = false;
+        particleBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+        particleBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+        particleBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+        particleBlendDesc.SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
+        particleBlendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+        particleBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+        particleBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
+        particleBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+        
+        oParticlePSO.BlendState.RenderTarget[0] = particleBlendDesc;
+        if (m_poDevice->CreateGraphicsPipelineState(
+            &oParticlePSO, IID_PPV_ARGS(&m_dPSOs["particle"]))) {
+            Destroy();
+            return false;
+        }
+
+        return true;
     }
 
     //A appeler dans l'init
@@ -332,17 +374,14 @@ namespace ave {
         }
     }
 
-   /* void Shader::AddObject() {
-       UploadBuffer<ObjectConstants>* poBuffer = new UploadBuffer<ObjectConstants>(m_poDevice, 1, true);
-       m_voObjects.push_back(poBuffer);
-    }*/
-
     ID3D12Device* Shader::GetDevice() {
         return m_poDevice;
     }
 
     void Shader::Destroy() {
-        m_poPso->Release();
+        for (const auto& pair : m_dPSOs)
+            pair.second->Release();
+
         delete m_poPass;
         delete m_poObject;
         for (int i = 0; i < m_voObjects.size(); i++) {

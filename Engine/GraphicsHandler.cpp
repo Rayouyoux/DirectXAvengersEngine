@@ -152,16 +152,6 @@ namespace ave {
 		bool test2 = m_poShader->CreateShader(this)
 			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList());
 
-		MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<MeshRenderer>();
-		poMeshRenderer->SetMesh(m_poMesh);
-		poMeshRenderer->SetShader(m_poShader);
-
-		MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<MeshRenderer>();
-		poMeshRenderer2->SetMesh(m_poMesh);
-		poMeshRenderer2->SetShader(m_poShader);
-
-		m_poCamera = poCameraEntity->AddComponent<Camera>();
-		m_poCamera->SetShader(m_poShader);
 
 
 		m_poEntityManager->RegisterEntity(poCameraEntity);

@@ -10,7 +10,6 @@ namespace ave {
 	}
 	
 	Component::~Component() {
-
 	}
 
 	void Component::BindEntity(Entity* poEntity) {
