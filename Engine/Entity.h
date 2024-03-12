@@ -22,8 +22,8 @@ namespace ave {
 		void Initialize(Entity* poParent = nullptr);
 
 		// SUR Methods
-		void Start();
-		void Update(float iDeltaTime);
+		virtual void Start();
+		virtual void Update(float iDeltaTime);
 		void Render();
 		void Render2D();
 

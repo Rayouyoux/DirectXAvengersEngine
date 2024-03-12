@@ -39,8 +39,9 @@ namespace ave {
 		m_fFarWindowHeight = 2.0f * m_fFarZ * tanf(0.5f * m_fFOV);
 
 		XMMATRIX P = XMMatrixPerspectiveFovLH(m_fFOV, m_fAspect, m_fNearZ, m_fFarZ);
-		XMMATRIX O = XMMatrixOrthographicLH(m_fNearWindowWidth, m_fNearWindowHeight, m_fNearZ, m_fFarZ);
 		XMStoreFloat4x4(&m_voPerspectiveProj, P);
+
+		XMMATRIX O = XMMatrixOrthographicLH(m_fNearWindowWidth, m_fNearWindowHeight, m_fNearZ, m_fFarZ);
 		XMStoreFloat4x4(&m_voOrthographicProj, O);
 	}
 
@@ -54,8 +55,8 @@ namespace ave {
 		SetLens(0.25f * Maths::PI, fWidth / fHeight, 1.0f, 1000.0f);
 	}
 
-	void Camera::Update(float deltaTime)
-	{
+	void Camera::Update(float deltaTime) {
+	
 	}
 	
 	void Camera::LateUpdate(float deltaTime){

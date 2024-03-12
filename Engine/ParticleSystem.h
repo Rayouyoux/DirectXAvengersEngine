@@ -16,12 +16,6 @@ namespace ave {
 			TowardsCamera,
 		};
 
-		enum ParticleRenderingType {
-			Mesh,
-			Texture,
-			Flipbook
-		};
-
 		struct ParticleBehaviour {
 			float MaxLifetime = 0.8;
 
@@ -40,8 +34,6 @@ namespace ave {
 			float Size = 0.5f;
 			bool SizeOverTime = true;
 			float EndSize = 0;
-
-			ParticleRenderingType RenderingType = Mesh;
 		};
 
 		class Particle : public ObjectPooling::IPullable {
@@ -67,8 +59,6 @@ namespace ave {
 
 			virtual void Update(float deltaTime);
 			virtual void Render();
-
-			virtual void HandleMeshRendering();
 		};
 
 		class ParticleSystem : public Component {

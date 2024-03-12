@@ -33,8 +33,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 
     ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
 
-    ave::Entity* poCubeEntity = manager->NewEntity();
-    ave::Entity* poCubeEntity2 = manager->NewEntity();
+    ave::Entity* poCubeEntity = manager.NewEntity();
+    ave::Entity* poCubeEntity2 = manager.NewEntity();
 
     XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
     poCubeEntity->m_poTransform->SetVectorPosition(&posCube);

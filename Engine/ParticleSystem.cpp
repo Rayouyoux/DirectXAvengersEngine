@@ -128,39 +128,7 @@ namespace ave {
 		}
 
 		void Particle::Render() {
-			switch (m_poBehaviour->RenderingType) {
-			case Mesh:
-				HandleMeshRendering();
-				break;
-			case Texture:
-				break;
-			case Flipbook:
-				break;
-			}
-		}
-
-		void Particle::HandleMeshRendering() {
-			ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
-
-			poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
-
-			////Pass
-			/*poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());*/
-
-			////Pipeline
-			poList->SetPipelineState(m_poShader->GetPso("transparent"));
-
-			////Topology
-			poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-			auto oVertexBufferView = m_poMesh->VertexBufferView();
-			auto oIndexBufferView = m_poMesh->IndexBufferView();
-			poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
-			poList->IASetIndexBuffer(&oIndexBufferView);
-
-			poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poBuffer->Resource()->GetGPUVirtualAddress());
-
-			poList->DrawIndexedInstanced(m_poMesh->GetIndexCount(), 1, 0, 0, 0);
+			
 		}
 
 #pragma endregion

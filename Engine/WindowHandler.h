@@ -1,6 +1,7 @@
 #pragma once
 
 #include <windows.h>
+#include "EntityManager.h"
 
 // Enable more details for debugging
 #if defined(DEBUG) || defined(_DEBUG)
@@ -62,5 +63,8 @@ namespace ave {
 
 		int GetWindowWidth() const { return m_iClientWidth; }
 		int GetWindowHeight() const { return m_iClientHeight; }
+
+		GraphicsHandler* AccessGraphics() { return m_poGraphics; }
+		EntityManager* AccessEntityManager() { return m_poGraphics->m_poEntityManager; }
 	};
 }

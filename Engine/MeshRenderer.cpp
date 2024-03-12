@@ -41,46 +41,7 @@ namespace ave {
 	}
 
 	void MeshRenderer::Render() {
-		//ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
-
-		////Root
-		//poList->SetGraphicsRootSignature(m_poShader->GetRootSignature());
-
-		//poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootPass(), m_poShader->GetPass()->Resource()->GetGPUVirtualAddress());
-
-		//////Create((BYTE*)L"shader.hlsl", sizeof(BYTE*));
-
-		//////Pipeline
-		//poList->SetPipelineState(m_poShader->GetPso());
-
-		//////Topology
-		//poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		//auto oVertexBufferView = m_poMesh->VertexBufferView();
-		//auto oIndexBufferView = m_poMesh->IndexBufferView();
-		//poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
-		//poList->IASetIndexBuffer(&oIndexBufferView);
-
-		//poList->SetGraphicsRootConstantBufferView(m_poShader->GetRootObject(), m_poBuffer->Resource()->GetGPUVirtualAddress());
-
- 
-  //      if (m_poShader->GetRootTexture() != -1 && m_poTexture)
-		//{ 
-		//	CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTexture->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-
-		////Pipeline
-		/*poList->SetPipelineState(m_poShader->GetPso("transparent"));*/
-
-		//}
-
-
-		//auto oVertexBufferView = m_poMesh->VertexBufferView();
-		//auto oIndexBufferView = m_poMesh->IndexBufferView();
-		//poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
-		//poList->IASetIndexBuffer(&oIndexBufferView);
-
 		m_poShader->Draw(m_poMesh, m_poBuffer);
-
 	}
 
 	MeshRenderer::~MeshRenderer() {
