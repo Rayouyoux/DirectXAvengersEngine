@@ -7,13 +7,12 @@ private:
 	ave::GraphicsHandler* m_poGraphics;
 	ave::EntityManager* m_poManager;
 
+	ave::Entity* m_poMainCam;
 	ave::Entity* m_poRotCube;
 
-private:
+public:
 	GameManager();
 	~GameManager();
-
-public:
 	void Initialize(ave::AvengersEngine& engine);
 
 	void Start() override;

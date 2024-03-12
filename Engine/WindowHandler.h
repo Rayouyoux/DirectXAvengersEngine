@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include "EntityManager.h"
+#include "GraphicsHandler.h"
 
 // Enable more details for debugging
 #if defined(DEBUG) || defined(_DEBUG)
@@ -11,6 +12,7 @@
 
 namespace ave {
 	class GraphicsHandler;
+	class EntityManager;
 	class GameTime;
 
 	class AvengersEngine
