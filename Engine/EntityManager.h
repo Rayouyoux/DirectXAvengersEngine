@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include <vector>
+#include <map>
 
 namespace ave {
 	class AvengersEngine;
@@ -22,8 +23,8 @@ namespace ave {
 		Camera* m_poMainCamera;
 		AvengersEngine* m_poGameInstance;
 		GraphicsHandler* m_poGraphics;
-		Shader* m_poShader;
-		Mesh* m_poMesh;
+		std::map<std::string, Mesh*> m_poMeshs;
+		std::map<std::string, Shader*> m_poShaders;
 		Texture* m_poTextures;
 
 	public:
@@ -63,14 +64,13 @@ namespace ave {
 		Entity* NewEntity();
 		bool RegisterEntity(Entity* poEntity);
 		Camera* GetMainCamera();
-		Shader* GetShader() { return m_poShader; };
-		Mesh* GetMesh() { return m_poMesh; };
-
-		void NewTexture(std::string name);
+		Mesh* GetMesh(std::string name);
+		Shader* GetShader(std::string name);
+		void NewTexture(std::string name, std::string filename);
 
 	protected:
-		Shader* NewShader();
-		Mesh* NewMesh(std::string name);
+		void CreateShader();
+		void CreateMesh();
 	};
 
 }

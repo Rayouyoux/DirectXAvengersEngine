@@ -19,8 +19,6 @@ namespace ave {
 		for (int i = m_voAliveEntities.size()-1; i >= 0; i--) {
 			delete m_voAliveEntities[i];
 		}
-		delete m_poShader;
-		delete m_poMesh;
 		delete m_poTextures;
 	}
 
@@ -33,11 +31,10 @@ namespace ave {
 		m_poMainCamera = poCamera->AddComponent<Camera>();
 		RegisterEntity(poCamera);
 
-		m_poShader = NewShader();
-		
-		m_poMesh = NewMesh("cube");
+		CreateShader();
+		CreateMesh();
 
-		NewTexture("image");
+		NewTexture("victor", "..\\Engine\\Textures\\image.dds");
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -101,25 +98,39 @@ namespace ave {
 		return poEntity;
 	}
 
-	Shader* EntityManager::NewShader() {
+	void EntityManager::CreateShader() {
 		Shader* poShader = new Shader();
+		poShader->CreateShader(m_poGraphics, m_poMainCamera, 1);
+		m_poShaders.insert(std::pair<std::string, Shader*>("Color", poShader));
+
+		Shader* poShaderTexture = new Shader();
 		poShader->CreateShader(m_poGraphics, m_poMainCamera, 2, m_poTextures);
-		return poShader;
+		m_poShaders.insert(std::pair<std::string, Shader*>("Texture", poShader));
 	}
 
-	Mesh* EntityManager::NewMesh(std::string name) {
-		/*std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid" };
+	void EntityManager::CreateMesh() {
+		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid" };
 		for (int i = 0; i < names->length(); i++) {
 			Mesh* poMesh = new Mesh();
-			poMesh->BuildBoxGeometry<VERTEX_UV>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), name);
-		}*/
-		Mesh* poMesh = new Mesh();
-		poMesh->BuildBoxGeometry<VERTEX_UV>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), name);
-		return poMesh;
+			poMesh->BuildBoxGeometry<VERTEX_COLOR>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i]);
+			m_poMeshs.insert(std::pair<std::string, Mesh*>(names[i], poMesh));
+
+			Mesh* poMeshTexture = new Mesh();
+			poMeshTexture->BuildBoxGeometry<VERTEX_UV>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i]);
+			m_poMeshs.insert(std::pair<std::string, Mesh*>(names[i] + "Texture", poMeshTexture));
+		}
 	}
 
-	void EntityManager::NewTexture(std::string name) {
-		m_poTextures->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds");
+	Mesh* EntityManager::GetMesh(std::string name) {
+		return m_poMeshs.find(name)->second;
+	}
+
+	Shader* EntityManager::GetShader(std::string name) {
+		return m_poShaders.find(name)->second;
+	}
+
+	void EntityManager::NewTexture(std::string name, std::string filename) {
+		m_poTextures->LoadTexture(name, std::wstring(filename.begin(), filename.end()));
 		m_poTextures->BuildDescriptorHeaps(name, m_poGraphics->GetCbvDescriptor());
 	}
 

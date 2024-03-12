@@ -46,13 +46,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
     poCamera->m_poTransform->LookTo(&direction);
 
+    /*manager->NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
+
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer->SetMesh(manager->GetMesh());
-    poMeshRenderer->SetShader(manager->GetShader());
+    poMeshRenderer->SetMesh(manager->GetMesh("cubeTexture"));
+    poMeshRenderer->SetShader(manager->GetShader("Texture"));
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer2->SetMesh(manager->GetMesh());
-    poMeshRenderer2->SetShader(manager->GetShader());
+    poMeshRenderer2->SetMesh(manager->GetMesh("cubeTexture"));
+    poMeshRenderer2->SetShader(manager->GetShader("Texture"));
 
     manager->RegisterEntity(poCubeEntity);
     manager->RegisterEntity(poCubeEntity2);
