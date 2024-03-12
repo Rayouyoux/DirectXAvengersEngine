@@ -31,7 +31,7 @@ void GameManager::InitComponents() {
 	XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
 	m_poRotCube->m_poTransform->SetVectorPosition(&posCube);
 
-	XMVECTOR pos = XMVectorSet(0.0f, 0.0f, 4.0f, 0.0f);
+	XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
 	m_poMainCam->m_poTransform->SetVectorPosition(&pos);
 
 	XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
