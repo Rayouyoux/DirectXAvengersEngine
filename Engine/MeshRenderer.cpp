@@ -26,8 +26,8 @@ namespace ave {
 		m_poShader = poShader;
 		m_poBuffer = new UploadBuffer<ObjectConstants>(m_poShader->GetDevice(), 1, true);
 	}
-	void MeshRenderer::SetName(std::string oName) {
-		m_oName = oName;
+	void MeshRenderer::SetTexture(Texture* oTexture) {
+		m_poTexture = oTexture;
 	}
 
 	void MeshRenderer::Start() {
@@ -79,7 +79,7 @@ namespace ave {
 		//poList->IASetIndexBuffer(&oIndexBufferView);
 		
 
-		m_poShader->Draw(m_poMesh, m_poBuffer, m_oName);
+		m_poShader->Draw(m_poMesh, m_poBuffer, m_poTexture);
 
 	}
 

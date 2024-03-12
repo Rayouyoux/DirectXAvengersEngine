@@ -61,8 +61,6 @@ namespace ave {
     }
 
   
- 
-
 
 
     bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id, Texture* poTextures) {
@@ -179,7 +177,7 @@ namespace ave {
     }
     
 
-    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, std::string oName) {
+    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture) {
         ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
         ////Root
@@ -204,7 +202,7 @@ namespace ave {
             //std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName)) / 2
             //tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName))/2, *m_poTextures->GetDescriptorSize());
             
-            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), m_poTextures->GetTexture()->find(oName)->second->GetGPUVirtualAddress());
+            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), *oTexture->GetDescriptorGpuHandle());
         }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());

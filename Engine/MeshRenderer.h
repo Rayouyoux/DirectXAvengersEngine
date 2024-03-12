@@ -19,7 +19,7 @@ namespace ave {
 		void SetMesh(Mesh* poMesh);
 		void SetShader(Shader* SetShader);
 
-		void SetName(std::string oName);
+		void SetTexture(Texture* oTexture);
 
 		void Start() override;
 		void Update(float dT) override;
@@ -29,6 +29,7 @@ namespace ave {
 
 	protected:
 		Mesh* m_poMesh;
+		Texture* m_poTexture;
 		UploadBuffer<ObjectConstants>* m_poBuffer;
 		std::string m_oName;
 		Shader* m_poShader;

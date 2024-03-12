@@ -49,12 +49,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
     poMeshRenderer->SetMesh(manager->GetMesh());
     poMeshRenderer->SetShader(manager->GetShader());
-    poMeshRenderer->SetName("image");
+    poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
+
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
     poMeshRenderer2->SetMesh(manager->GetMesh());
     poMeshRenderer2->SetShader(manager->GetShader());
-    poMeshRenderer2->SetName("bricks");
+    poMeshRenderer2->SetTexture(manager->GetTexture("image"));
+
 
     manager->RegisterEntity(poCubeEntity);
 

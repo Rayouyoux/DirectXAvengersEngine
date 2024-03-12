@@ -2,6 +2,8 @@
 
 #include "Entity.h"
 #include <vector>
+#include <map>
+#include <string>
 
 namespace ave {
 	class AvengersEngine;
@@ -24,7 +26,8 @@ namespace ave {
 		GraphicsHandler* m_poGraphics;
 		Shader* m_poShader;
 		Mesh* m_poMesh;
-		Texture* m_poTextures;
+		Texture* m_poTexture;
+		std::map<std::string, Texture*> m_poTextures;
 
 	public:
 
@@ -65,7 +68,7 @@ namespace ave {
 		Camera* GetMainCamera();
 		Shader* GetShader() { return m_poShader; };
 		Mesh* GetMesh() { return m_poMesh; };
-
+		Texture* GetTexture(std::string oName) { return m_poTextures.find(oName)->second; };
 		void NewTexture(std::string name);
 
 	protected:
