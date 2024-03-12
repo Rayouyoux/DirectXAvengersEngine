@@ -7,8 +7,8 @@
 namespace ave {
 
 	Texture::Texture() {
-
 		m_poSrvDesc = {};
+
 		m_poDevice = nullptr;
 		m_poUploadHeap = nullptr;
 		m_poSrvDescriptorHeap = nullptr;
@@ -24,14 +24,16 @@ namespace ave {
 
 	void Texture::LoadTexture(std::string oName, std::wstring oFilename) {
 
-		m_oName = oName;
+		Microsoft::WRL::ComPtr<ID3D12Resource> poRessource;
 
 		if (FAILED(DirectX::CreateDDSTextureFromFile12(m_poDevice,
 			GraphicsHandler::GetCommandList(),oFilename.c_str(),
-			m_poRessource,m_poUploadHeap))) {
+			poRessource, m_poUploadHeap))) {
 			return;
 		}
-		m_mTextures.insert({ m_oName, m_poRessource});
+
+		m_mTextures[oName] = poRessource;
+		//m_mTextures.insert(std::make_pair(oName, poRessource));
 
 	}
 
@@ -39,31 +41,24 @@ namespace ave {
 
 		m_poSrvDescriptorHeap = CbvDescriptorHeap;
 
+		//m_pohDescriptor = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 		m_pohDescriptor = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
 		auto texture = m_mTextures["image"];
 
-		
 		m_poSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		m_poSrvDesc.Format = texture->GetDesc().Format;
 		m_poSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 		m_poSrvDesc.Texture2D.MostDetailedMip = 0;
 		m_poSrvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
 		m_poSrvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+		
+		m_poDevice->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
 
-		m_poDevice->CreateShaderResourceView(nullptr, &m_poSrvDesc, m_pohDescriptor);
-
-		auto offset = m_mTextures["bricks"];
-
-		m_pohDescriptor.Offset(1, m_oCbvSrvDescriptorSize);
-		m_poSrvDesc.Format = offset->GetDesc().Format;
-		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
-
-		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
 		return true;
 	}
 
-	/*void Texture::Offset(std::string oName) {
+	void Texture::Offset(std::string oName) {
 
 		auto offset = m_mTextures[oName];
 
@@ -72,8 +67,8 @@ namespace ave {
 		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
 
 		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
-		
-	}*/
+
+	}
 
 	Texture::~Texture() {
 		m_mTextures.clear();

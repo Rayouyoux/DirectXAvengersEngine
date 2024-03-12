@@ -37,12 +37,13 @@ namespace ave {
 		
 		m_poMesh = NewMesh("cube");
 
-		NewTexture("image");
 		NewTexture("bricks");
+		NewTexture("image");
 
 		m_poTextures->BuildDescriptorHeaps(m_poGraphics->GetCbvDescriptor());
 
-	/*	m_poTextures->Offset("image");
+		m_poTextures->Offset("image");
+		/*	m_poTextures->Offset("image");
 		m_poTextures->Offset("bricks");*/
 
 	}
