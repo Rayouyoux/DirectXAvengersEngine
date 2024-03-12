@@ -14,3 +14,4 @@
 //#include "Vertex.h"
 #include "EntityManager.h"
 #include "SpriteRenderer.h"
+#include "Script.h"

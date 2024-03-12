@@ -1,5 +1,5 @@
 #include "AvengersEngine.h"
-//#include "ObjectPooler.h"
+#include "GameManager.h"
 #include <vector>
 #include <sstream>
 #if defined(DEBUG) | defined(_DEBUG)
@@ -31,9 +31,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         return 0;
     }
 
-    ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
+    ave::Entity* gameManagerEntity = gameInstance->AccessEntityManager()->NewEntity();
+    GameManager* gameManager = gameManagerEntity->AddComponent<GameManager>();
+    gameManager->Initialize(*gameInstance);
+    gameInstance->AccessEntityManager()->RegisterEntity(gameManagerEntity);
 
-    ave::Entity* poCubeEntity = manager.NewEntity();
+    //ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
+
+    /*ave::Entity* poCubeEntity = manager.NewEntity();
     ave::Entity* poCubeEntity2 = manager.NewEntity();
 
     XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
@@ -44,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poCamera->m_poTransform->SetVectorPosition(&pos);
 
     XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
-    poCamera->m_poTransform->LookTo(&direction);
+    poCamera->m_poTransform->LookTo(&direction);*/
 
     /*ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
     poMeshRenderer->SetMesh(manager->GetMesh());
@@ -54,13 +59,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poMeshRenderer2->SetMesh(manager->GetMesh());
     poMeshRenderer2->SetShader(manager->GetShader());*/
 
-    ave::UI::SpriteRenderer* sprite = poCubeEntity->AddComponent<ave::UI::SpriteRenderer>();
-    sprite->SetMesh(manager->GetMesh());
-    sprite->SetShader(manager->GetShader());
+    //ave::UI::SpriteRenderer* sprite = poCubeEntity->AddComponent<ave::UI::SpriteRenderer>();
+    //sprite->SetMesh(manager->GetMesh());
+    //sprite->SetShader(manager->GetShader());
 
-    manager->RegisterEntity(poCubeEntity);
-    manager->RegisterEntity(poCubeEntity2);
+    //manager->RegisterEntity(poCubeEntity);
+    //manager->RegisterEntity(poCubeEntity2);
   
+
+
     int res = gameInstance->Run();
 
 #ifdef _DEBUG

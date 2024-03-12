@@ -1,18 +1,19 @@
 #pragma once
 #include <AvengersEngine.h>
 
-class App : public ave::Entity {
+class GameManager : public ave::Script {
 private:
-	static App* Instance;
+	static GameManager* Instance;
 	ave::GraphicsHandler* m_poGraphics;
 	ave::EntityManager* m_poManager;
 
+	ave::Entity* m_poRotCube;
+
 private:
-	App();
-	~App();
+	GameManager();
+	~GameManager();
 
 public:
-	bool Create();
 	void Initialize(ave::AvengersEngine& engine);
 
 	void Start() override;
@@ -20,4 +21,5 @@ public:
 
 	void InitEntities();
 	void InitComponents();
+	void RegisterEntities();
 };
