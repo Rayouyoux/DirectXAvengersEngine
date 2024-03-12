@@ -35,13 +35,13 @@ namespace ave {
 
 	}
 
-	bool Texture::BuildDescriptorHeaps(std::string oName, ID3D12DescriptorHeap* CbvDescriptorHeap) {
+	bool Texture::BuildDescriptorHeaps(ID3D12DescriptorHeap* CbvDescriptorHeap) {
 
 		m_poSrvDescriptorHeap = CbvDescriptorHeap;
 
 		m_pohDescriptor = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-		auto texture = m_mTextures[oName];
+		auto texture = m_mTextures["image"];
 
 		
 		m_poSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -51,24 +51,29 @@ namespace ave {
 		m_poSrvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
 		m_poSrvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
+		m_poDevice->CreateShaderResourceView(nullptr, &m_poSrvDesc, m_pohDescriptor);
 
-		m_poDevice->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
-		
+		auto offset = m_mTextures["bricks"];
+
+		m_pohDescriptor.Offset(1, m_oCbvSrvDescriptorSize);
+		m_poSrvDesc.Format = offset->GetDesc().Format;
+		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
+
+		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
 		return true;
 	}
 
-	void Texture::Offset(std::string oName) {
+	/*void Texture::Offset(std::string oName) {
 
-		if (m_mTextures.size() > 1) {
-			auto offset = m_mTextures[oName];
+		auto offset = m_mTextures[oName];
 
-			m_pohDescriptor.Offset(1, m_oCbvSrvDescriptorSize);
-			m_poSrvDesc.Format = offset->GetDesc().Format;
-			m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
+		m_pohDescriptor.Offset(1, m_oCbvSrvDescriptorSize);
+		m_poSrvDesc.Format = offset->GetDesc().Format;
+		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
 
-			m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
-		}
-	}
+		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
+		
+	}*/
 
 	Texture::~Texture() {
 		m_mTextures.clear();

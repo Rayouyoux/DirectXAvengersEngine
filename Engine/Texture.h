@@ -34,12 +34,14 @@ namespace ave {
 		void Init(ID3D12Device* poDevice);
 
 		void LoadTexture(std::string oName, std::wstring oFilename);
-		bool BuildDescriptorHeaps(std::string oName, ID3D12DescriptorHeap* CbvDescriptorHeap);
+		bool BuildDescriptorHeaps(ID3D12DescriptorHeap* CbvDescriptorHeap);
 		void Offset(std::string oName);
 
 		ID3D12DescriptorHeap* GetDescriptorHeap() { return m_poSrvDescriptorHeap; };
 		UINT* GetDescriptorSize() { return &m_oCbvSrvDescriptorSize; };
 		CD3DX12_CPU_DESCRIPTOR_HANDLE* GetDescriptorHandle() { return &m_pohDescriptor; };
+		std::map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>>* GetTexture() { return &m_mTextures; };
+
 
 	};
 

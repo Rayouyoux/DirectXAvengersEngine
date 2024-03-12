@@ -179,7 +179,7 @@ namespace ave {
     }
     
 
-    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer) {
+    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, std::string oName) {
         ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
         ////Root
@@ -200,8 +200,8 @@ namespace ave {
         if (GetRootTexture() != -1 && m_poTextures)
         { 
             CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-
-            tex.Offset(1, *m_poTextures->GetDescriptorSize());
+            tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName)), *m_poTextures->GetDescriptorSize());
+            
             poList->SetGraphicsRootDescriptorTable(GetRootTexture(), tex);
         }
 
