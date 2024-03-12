@@ -31,7 +31,7 @@ namespace ave {
 
 		void Init(ID3D12Device* poDevice);
 
-		void LoadTexture(std::string oName, std::wstring oFilename);
+		void LoadTexture(std::string oName, std::wstring oFilename, ID3D12DescriptorHeap* CbvDescriptorHeap);
 		bool BuildDescriptorHeaps(ID3D12DescriptorHeap* CbvDescriptorHeap);
 		void Offset(std::string oName);
 
@@ -40,7 +40,7 @@ namespace ave {
 		CD3DX12_CPU_DESCRIPTOR_HANDLE* GetDescriptorHandle() { return &m_pohDescriptor; };
 		std::map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>>* GetTexture() { return &m_mTextures; };
 
-
+		CD3DX12_GPU_DESCRIPTOR_HANDLE gpu
 	};
 
 }

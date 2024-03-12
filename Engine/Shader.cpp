@@ -199,12 +199,12 @@ namespace ave {
 
         if (GetRootTexture() != -1 && m_poTextures)
         {
-            CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-            auto test = std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName));
+            //CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+            //auto test = std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName));
             //std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName)) / 2
-            tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName))/2, *m_poTextures->GetDescriptorSize());
+            //tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName))/2, *m_poTextures->GetDescriptorSize());
             
-            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), tex);
+            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), m_poTextures->GetTexture()->find(oName)->second->GetGPUVirtualAddress());
         }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());
