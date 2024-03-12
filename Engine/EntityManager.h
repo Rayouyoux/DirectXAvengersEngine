@@ -11,6 +11,7 @@ namespace ave {
 	class Mesh;
 	class Camera;
 	class Texture;
+	class InputManager;
 
 	class EntityManager
 	{
@@ -26,6 +27,7 @@ namespace ave {
 		std::map<std::string, Mesh*> m_poMeshs;
 		std::map<std::string, Shader*> m_poShaders;
 		Texture* m_poTextures;
+		InputManager* m_poInput;
 
 	public:
 

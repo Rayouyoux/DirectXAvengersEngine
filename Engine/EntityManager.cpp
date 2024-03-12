@@ -8,6 +8,7 @@
 #include "GraphicsHandler.h"
 #include "Texture.h"
 #include "Vertex.h"
+#include "InputManager.h"
 
 namespace ave {
 
@@ -24,6 +25,8 @@ namespace ave {
 
 	void EntityManager::Init(GraphicsHandler* poGraphics) {
 		m_poGraphics = poGraphics;
+		m_poInput = new InputManager();
+		m_poInput->Init(poGraphics->GetWindow());
 		m_poTextures = new Texture();
 		m_poTextures->Init(poGraphics->GetDevice());
 
@@ -65,6 +68,8 @@ namespace ave {
 		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
 		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
+
+		m_poInput->UpdateKeyStates();
 
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Update(fDeltaTime);
