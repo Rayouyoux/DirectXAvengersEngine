@@ -34,7 +34,7 @@ namespace ave {
 		CreateShader();
 		CreateMesh();
 
-		NewTexture("victor", "..\\Engine\\Textures\\image.dds");
+		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
 	}
 
 	/*EntityManager* EntityManager::Create() {
