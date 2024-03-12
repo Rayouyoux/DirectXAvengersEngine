@@ -1,4 +1,5 @@
 #pragma once
+#include "AABB.h"
 #include <d3d12.h>
 #include <iostream>
 #include <string>
@@ -23,8 +24,28 @@ namespace ave {
 		template <typename T>
 		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape) {
 
-
 			Shape<T>* oShape = new Shape<T>();
+
+			switch (nameShape) {
+			case("cube"):
+				m_oContainingBox.m_vMin = XMFLOAT3(-0.5f, -0.5f, -0.5f);
+				m_oContainingBox.m_vMax = XMFLOAT3(0.5f, 0.5f, 0.5f);
+				break;
+			case("cylindre"):
+				m_oContainingBox.m_vMin = XMFLOAT3(-1.0f, -1.0f, -1.0f);
+				m_oContainingBox.m_vMax = XMFLOAT3(1.0f, 1.0f, 1.0f);
+				break;
+			case("sphere"):
+				m_oContainingBox.m_vMin = XMFLOAT3(-1.0f, -1.0f, -1.0f);
+				m_oContainingBox.m_vMax = XMFLOAT3(1.0f, 1.0f, 1.0f);
+				break;
+			case("cone"):
+				m_oContainingBox.m_vMin = XMFLOAT3(-1.0f, 0.0f, -1.0f);
+				m_oContainingBox.m_vMax = XMFLOAT3(1.0f, 2.0f, 1.0f);
+				break;
+			case("pyramid"):
+				break;
+			}
 
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
 				{"cube", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
@@ -100,6 +121,8 @@ namespace ave {
 		UINT m_oIndexBufferByteSize;
 
 		UINT m_oIndexCount;
+
+		AABB m_oContainingBox;
 	};
 
 

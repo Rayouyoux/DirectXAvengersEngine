@@ -5,6 +5,6 @@
 using namespace DirectX;
 
 struct AABB {
-    XMFLOAT4 pCenter;
-    XMFLOAT4 vRadius;
+    XMFLOAT3 m_vMin;
+    XMFLOAT3 m_vMax;
 };
