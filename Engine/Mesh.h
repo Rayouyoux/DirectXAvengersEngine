@@ -26,10 +26,12 @@ namespace ave {
 
 			Shape<T>* oShape = new Shape<T>();
 
+			XMVECTOR color = XMVectorSet(0.2f, 0.2f, 0.8f, 1.0f);
+			bool isSkybox = true;
+
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
-				{"cube", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					XMVECTOR color = XMVectorSet(0.1f, 0.1f, 0.8f, 1.0f);
-					return oShape->CreateCube(nullptr,true);
+				{"cube", [oShape,color, isSkybox]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateCube(nullptr,isSkybox);
 				}},
 				{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
