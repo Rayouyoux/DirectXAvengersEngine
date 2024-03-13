@@ -6,11 +6,12 @@
 namespace ave {
 	class Mesh;
 	class Shader;
+	class Texture;
 
 	namespace UI {
 		class SpriteRenderer : public Component {
 		protected:
-			// Ref to sprite & Setter to render \ aka Texture
+			Texture* m_poSprite;
 			Mesh* m_poPlane;
 			Shader* m_poShader;
 			UploadBuffer<ObjectConstants>* m_poBuffer;
@@ -32,6 +33,10 @@ namespace ave {
 
 			void SetShader(Shader* poShader) {
 				m_poShader = poShader;
+			}
+
+			void SetSprite(Texture* sprite) {
+				m_poSprite = sprite;
 			}
 
 			void SetPixelPosition(XMVECTOR& position) {

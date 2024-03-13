@@ -38,8 +38,9 @@ void GameManager::InitComponents() {
 	m_poMainCam->m_poTransform->LookTo(&direction);
 
 	ave::MeshRenderer* renderer = m_poRotCube->AddComponent<ave::MeshRenderer>();
-	renderer->SetMesh(m_poManager->GetMesh());
-	renderer->SetShader(m_poManager->GetShader());
+	renderer->SetMesh(m_poManager->GetMesh("cubeTexture"));
+	renderer->SetShader(m_poManager->GetShader("Texture"));
+	renderer->SetTexture(m_poManager->GetTexture("image"));
 }
 
 void GameManager::RegisterEntities() {

@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Transform.h"
 #include "GraphicsHandler.h"
+#include "Texture.h"
 
 namespace ave {
 	namespace UI {
@@ -44,7 +45,7 @@ namespace ave {
 		}
 
 		void SpriteRenderer::Render2D() {
-			m_poShader->Draw(m_poPlane, m_poBuffer);
+			m_poShader->Draw(m_poPlane, m_poBuffer, m_poSprite);
 		}
 	}
 }

@@ -53,7 +53,7 @@ namespace ave {
 		void End();
 		/*void AddObject();*/
 		bool CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id);
-		void Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture);
+		void Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture = nullptr);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
 

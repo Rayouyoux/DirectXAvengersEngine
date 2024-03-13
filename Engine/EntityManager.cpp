@@ -37,8 +37,6 @@ namespace ave {
 		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
 		NewTexture("bricks");
 		NewTexture("image");
-
-
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -65,7 +63,7 @@ namespace ave {
 
 	void EntityManager::Update(float fDeltaTime) {
 		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
-		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
+		m_voEntities[1]->m_poTransform->RotateOnUp(rot);
 
 
 		/*m_poInput->UpdateKeyStates();*/

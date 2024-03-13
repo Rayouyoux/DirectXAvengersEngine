@@ -33,7 +33,6 @@ namespace ave {
 		UploadBuffer<ObjectConstants>* m_poBuffer;
 		std::string m_oName;
 		Shader* m_poShader;
-		UploadBuffer<ObjectConstants>* m_poBuffer;
 	};
 }
 
