@@ -46,7 +46,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
     poCamera->m_poTransform->LookTo(&direction);
 
-    manager->NewTexture("victor", "..\\Engine\\Textures\\image.dds");
+    /*manager->NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
+    /*manager->NewTexture("bricks");
+    manager->NewTexture("image");*/
 
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
     poMeshRenderer->SetMesh(manager->GetMesh("cubeTexture"));
@@ -54,7 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer2->SetMesh(manager->GetMesh("cubeTexture"));
+    poMeshRenderer2->SetMesh(manager->GetMesh("skyboxTexture"));
     poMeshRenderer2->SetShader(manager->GetShader("Texture"));
     poMeshRenderer2->SetTexture(manager->GetTexture("image"));
     XMVECTOR scale = XMVectorSet(4.5f, 4.5f, 4.5f, 4.5f);

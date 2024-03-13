@@ -31,13 +31,13 @@ namespace ave {
 		}
 	}
 
-	bool Texture::BuildSrvDesc(ID3D12DescriptorHeap* CbvDescriptorHeap, std::map<std::string, Texture*> voTextures) {
+	bool Texture::BuildSrvDesc(ID3D12DescriptorHeap* CbvDescriptorHeap, int size) {
 
 		m_poSrvDescriptorHeap = CbvDescriptorHeap;
 
 		m_poDescriptorCPU = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-		m_poDescriptorCPU.Offset(voTextures.size()-1, m_oCbvSrvDescriptorSize);
+		m_poDescriptorCPU.Offset(size-1, m_oCbvSrvDescriptorSize);
 
 		m_poSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		m_poSrvDesc.Format = m_poRessource->GetDesc().Format;
@@ -49,7 +49,7 @@ namespace ave {
 		m_poDevice->CreateShaderResourceView(m_poRessource.Get(), &m_poSrvDesc, m_poDescriptorCPU);
 		
 		m_poDescriptorGPU = m_poSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
-		m_poDescriptorGPU.Offset(voTextures.size() - 1, m_oCbvSrvDescriptorSize);
+		m_poDescriptorGPU.Offset(size- 1, m_oCbvSrvDescriptorSize);
 		
 		return true;
 	}

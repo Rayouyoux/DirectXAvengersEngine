@@ -37,7 +37,7 @@ namespace ave {
 		void Init(ID3D12Device* poDevice);
 
 		void LoadTexture(std::string oName, std::wstring oFilename, ID3D12DescriptorHeap* CbvDescriptorHeap);
-		bool BuildSrvDesc(ID3D12DescriptorHeap* CbvDescriptorHeap, std::map<std::string, Texture*> voTextures);
+		bool BuildSrvDesc(ID3D12DescriptorHeap* CbvDescriptorHeap, int size);
 
 		ID3D12DescriptorHeap* GetDescriptorHeap() { return m_poSrvDescriptorHeap; };
 		UINT* GetDescriptorSize() { return &m_oCbvSrvDescriptorSize; };
