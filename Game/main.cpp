@@ -1,5 +1,5 @@
-#include "AvengersEngine.h"
-//#include "ObjectPooler.h"
+#include <AvengersEngine.h>
+#include "GameManager.h"
 #include <vector>
 #include <sstream>
 #if defined(DEBUG) | defined(_DEBUG)
@@ -18,40 +18,46 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
         return 0;
     }
 
-    ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
+    ave::EntityManager* manager = gameInstance->GetManager();
+    ave::Entity* gameManagerEntity = manager->NewEntity();
+    GameManager* gameManager = gameManagerEntity->AddComponent<GameManager>();
+    gameManager->Initialize(gameInstance);
+    manager->RegisterEntity(gameManagerEntity);
 
-    ave::Entity* poCubeEntity = manager->NewEntity();
-    ave::Entity* poCubeEntity2 = manager->NewEntity();
+    //ave::EntityManager* manager = gameInstance->GetGraphics()->m_poEntityManager;
 
-    XMVECTOR posCube = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
-    poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
+    //ave::Entity* poCubeEntity = manager->NewEntity();
+    //ave::Entity* poCubeEntity2 = manager->NewEntity();
 
-    ave::Entity* poCamera = manager->GetMainCamera()->GetEntity();
-    XMVECTOR pos = XMVectorSet(0.0f, 0.0f, 4.0f, 0.0f);
-    poCamera->m_poTransform->SetVectorPosition(&pos);
+    //XMVECTOR posCube = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
+    //poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
 
-    XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
-    poCamera->m_poTransform->LookTo(&direction);
+    //ave::Entity* poCamera = manager->GetMainCamera()->GetEntity();
+    //XMVECTOR pos = XMVectorSet(0.0f, 0.0f, 4.0f, 0.0f);
+    //poCamera->m_poTransform->SetVectorPosition(&pos);
+
+    //XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+    //poCamera->m_poTransform->LookTo(&direction);
 
     /*manager->NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
     /*manager->NewTexture("bricks");
     manager->NewTexture("image");*/
 
-    ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer->SetMesh(manager->GetMesh("cubeTexture"));
-    poMeshRenderer->SetShader(manager->GetShader("Texture"));
-    poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
+    //ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
+    //poMeshRenderer->SetMesh(manager->GetMesh("cubeTexture"));
+    //poMeshRenderer->SetShader(manager->GetShader("Texture"));
+    //poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
 
-    ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer2->SetMesh(manager->GetMesh("skyboxTexture"));
-    poMeshRenderer2->SetShader(manager->GetShader("Texture"));
-    poMeshRenderer2->SetTexture(manager->GetTexture("image"));
-    XMVECTOR scale = XMVectorSet(4.5f, 4.5f, 4.5f, 4.5f);
-    poCubeEntity2->m_poTransform->Scale(&scale);
+    //ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
+    //poMeshRenderer2->SetMesh(manager->GetMesh("skyboxTexture"));
+    //poMeshRenderer2->SetShader(manager->GetShader("Texture"));
+    //poMeshRenderer2->SetTexture(manager->GetTexture("image"));
+    //XMVECTOR scale = XMVectorSet(4.5f, 4.5f, 4.5f, 4.5f);
+    //poCubeEntity2->m_poTransform->Scale(&scale);
 
-    manager->RegisterEntity(poCubeEntity);
+    //manager->RegisterEntity(poCubeEntity);
 
-    manager->RegisterEntity(poCubeEntity2);
+    //manager->RegisterEntity(poCubeEntity2);
   
     int res = gameInstance->Run();
 
