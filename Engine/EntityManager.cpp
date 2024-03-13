@@ -36,7 +36,7 @@ namespace ave {
 
 		m_poShader = NewShader();
 		
-		m_poMesh = NewMesh("cube");
+		m_poMesh = NewMesh("skybox");
 
 	}
 
@@ -64,7 +64,7 @@ namespace ave {
 
 	void EntityManager::Update(float fDeltaTime) {
 		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
-		m_voAliveEntities[2]->m_poTransform->RotateOnUp(rot);
+		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
 		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
 		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
