@@ -33,6 +33,14 @@ namespace ave {
 			void SetShader(Shader* poShader) {
 				m_poShader = poShader;
 			}
+
+			void SetPixelPosition(XMVECTOR& position) {
+				XMStoreFloat2(&m_vPositionPx, position);
+			}
+
+			void SetPixelSize(XMVECTOR& size) {
+				XMStoreFloat2(&m_vSizePx, size);
+			}
 		};
 	}
 }
