@@ -1,7 +1,6 @@
 #include "GameManager.h"
 #include "PlayerController.h"
 #include "HealthActor.h"
-#include "CustomComponentIDs.h"
 
 GameManager* GameManager::Instance = nullptr;
 
@@ -13,6 +12,9 @@ GameManager::GameManager() {
 	m_poPlayer = nullptr;
 	m_poRotCube = nullptr;
 	m_poSkybox = nullptr;
+
+	if (GameManager::Instance) return;
+	GameManager::Instance = this;
 }
 
 GameManager::~GameManager() {

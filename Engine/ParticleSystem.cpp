@@ -236,9 +236,5 @@ namespace ave {
 				particle->Render();
 			}
 		}
-
-		int ParticleSystem::GetComponentID() {
-			return PARTICLE_SYSTEM_ID;
-		}
 	}
 }

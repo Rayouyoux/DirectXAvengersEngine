@@ -30,10 +30,10 @@
     <ClInclude Include="Bullet.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="HealthActor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerController.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthActor.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -51,7 +51,7 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="HealthActor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

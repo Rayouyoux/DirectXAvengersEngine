@@ -78,16 +78,10 @@ namespace ave {
 		//poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
 		//poList->IASetIndexBuffer(&oIndexBufferView);
 		
-
 		m_poShader->Draw(m_poMesh, m_poBuffer, m_poTexture);
-
 	}
 
 	MeshRenderer::~MeshRenderer() {
 		delete m_poBuffer;
-	}
-
-	int MeshRenderer::GetComponentID() {
-		return MESH_RENDERER_ID;
 	}
 }

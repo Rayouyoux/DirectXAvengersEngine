@@ -3,7 +3,7 @@
 
 using namespace ave;
 
-class HealthActor : Script {
+class HealthActor : public Script {
 private:
 	float m_fMaxHealth;
 	float m_fHealth;

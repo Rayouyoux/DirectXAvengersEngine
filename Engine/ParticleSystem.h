@@ -71,7 +71,7 @@ namespace ave {
 			virtual void HandleMeshRendering();
 		};
 
-		class ParticleSystem : public Component<ParticleSystem> {
+		class ParticleSystem : public Component {
 		private:
 			ObjectPooling::ObjectPool* m_poParticlePool;
 			int m_iCapacity;
