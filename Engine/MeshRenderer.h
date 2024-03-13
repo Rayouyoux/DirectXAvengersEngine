@@ -20,6 +20,7 @@ namespace ave {
 		void SetShader(Shader* SetShader);
 
 		void SetTexture(Texture* oTexture);
+		DirectX::XMFLOAT4 SetColor(DirectX::FXMVECTOR* vColor);
 
 		void Start() override;
 		void Update(float dT) override;

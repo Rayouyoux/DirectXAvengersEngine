@@ -67,10 +67,9 @@ namespace ave {
 		bool RegisterEntity(Entity* poEntity);
 		Camera* GetMainCamera();
 		Texture* GetTexture(std::string oName) { return m_poTextures.find(oName)->second; };
-		void NewTexture(std::string name);
 		Mesh* GetMesh(std::string name);
 		Shader* GetShader(std::string name);
-		/*void NewTexture(std::string name, std::string filename);*/
+		void NewTexture(std::string name, std::string filename);
 
 	protected:
 		void CreateShader();

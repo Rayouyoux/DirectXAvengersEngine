@@ -34,9 +34,10 @@ namespace ave {
 		CreateShader();
 		CreateMesh();
 
+		/*NewTexture("bricks", "../Engine/Textures/bricks.dds");
+		NewTexture("image", "../Engine/Textures/image.dds");*/
 		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
-		NewTexture("bricks");
-		NewTexture("image");
+	
 
 
 	}
@@ -71,7 +72,7 @@ namespace ave {
 		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
 
 		/*m_poInput->UpdateKeyStates();*/
-
+		
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Update(fDeltaTime);
 		}
@@ -112,7 +113,7 @@ namespace ave {
 		Shader* poShaderTexture = new Shader();
 		poShader->CreateShader(m_poGraphics, m_poMainCamera, 2);
 		m_poShaders.insert(std::pair<std::string, Shader*>("Texture", poShader));
-	}
+	} 
 
 	void EntityManager::CreateMesh() {
 		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox"};
@@ -135,12 +136,12 @@ namespace ave {
 		return m_poShaders.find(name)->second;
 	}
 
-	void EntityManager::NewTexture(std::string name) {
+	void EntityManager::NewTexture(std::string name, std::string filename) {
 
 		Texture* poTexture = new Texture();
 		m_poTextures.insert(std::make_pair(name, poTexture));
 		poTexture->Init(m_poGraphics->GetDevice());
-		poTexture->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds", m_poGraphics->GetCbvDescriptor());
+		poTexture->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds", m_poGraphics->GetCbvDescriptor(),m_poGraphics);
 		poTexture->BuildSrvDesc(m_poGraphics->GetCbvDescriptor(), m_poTextures.size());
 	}
 

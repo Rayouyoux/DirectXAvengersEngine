@@ -35,9 +35,19 @@ namespace ave {
 	}
 
 	void MeshRenderer::Update(float deltaTime) {
+		XMVECTOR color = XMVectorSet(0.5f, 0.3f, 0.2f, 1.0f);
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
+		//objConstants.Color = SetColor(&color);
 		m_poBuffer->CopyData(0, objConstants);
+	};
+
+	DirectX::XMFLOAT4 MeshRenderer::SetColor(DirectX::FXMVECTOR* vColor) {
+		XMFLOAT4 color;
+		if (vColor != nullptr) {
+			XMStoreFloat4(&color, *vColor);
+			return color;
+		};
 	}
 
 	void MeshRenderer::Render() {
