@@ -7,6 +7,7 @@
 #include "Shape.h"
 #include <unordered_map>
 #include <functional>
+#include "Logger.h"
 
 namespace ave {
 	class Mesh
@@ -26,42 +27,55 @@ namespace ave {
 
 			Shape<T>* oShape = new Shape<T>();
 
-			switch (nameShape) {
-			case("cube"):
-				m_oContainingBox.m_vMin = XMFLOAT3(-0.5f, -0.5f, -0.5f);
-				m_oContainingBox.m_vMax = XMFLOAT3(0.5f, 0.5f, 0.5f);
-				break;
-			case("cylindre"):
-				m_oContainingBox.m_vMin = XMFLOAT3(-1.0f, -1.0f, -1.0f);
-				m_oContainingBox.m_vMax = XMFLOAT3(1.0f, 1.0f, 1.0f);
-				break;
-			case("sphere"):
-				m_oContainingBox.m_vMin = XMFLOAT3(-1.0f, -1.0f, -1.0f);
-				m_oContainingBox.m_vMax = XMFLOAT3(1.0f, 1.0f, 1.0f);
-				break;
-			case("cone"):
-				m_oContainingBox.m_vMin = XMFLOAT3(-1.0f, 0.0f, -1.0f);
-				m_oContainingBox.m_vMax = XMFLOAT3(1.0f, 2.0f, 1.0f);
-				break;
-			case("pyramid"):
-				break;
+			float fCubeSidesSize = 0.5f;
+			float fSphereRadius = 1.0f;
+			float fSphereNumSubDivisions = 50.0f;
+			float fCylinderHeight = 2.0f;
+			float fCylinderStackCount = 5.0f;
+			float fCylinderBottomRadius = 1.0f;
+			float fCylinderTopRadius = fCylinderBottomRadius;
+			float fConeRadius = 1.0f;
+			float fConeNumSubDivisions = 16.0f;
+			float fConeHeight = 2.0f;
+			float fPyramidBaseLength = 2.0f;
+			float fPyramidHeight = 3.0f;
+
+			if (nameShape == "cube") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fCubeSidesSize, -fCubeSidesSize, -fCubeSidesSize);
+				m_oContainingBox.m_vMax = XMFLOAT3(fCubeSidesSize, fCubeSidesSize, fCubeSidesSize);
+			}
+			else if (nameShape == "cylindre") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fCylinderBottomRadius, -fCylinderHeight / 2, -fCylinderBottomRadius);
+				m_oContainingBox.m_vMax = XMFLOAT3(fCylinderBottomRadius, fCylinderHeight / 2, fCylinderBottomRadius);
+			}
+			else if (nameShape == "sphere") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fSphereRadius, -fSphereRadius, -fSphereRadius);
+				m_oContainingBox.m_vMax = XMFLOAT3(fSphereRadius, fSphereRadius, fSphereRadius);
+			}
+			else if (nameShape == "cone") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fConeRadius, 0.0f, -fConeRadius);
+				m_oContainingBox.m_vMax = XMFLOAT3(fConeRadius, fConeHeight, fConeRadius);
+			}
+			else if (nameShape == "pyramid") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fPyramidBaseLength / 2, 0.0f, -fPyramidBaseLength / 2);
+				m_oContainingBox.m_vMax = XMFLOAT3(fPyramidBaseLength, fPyramidHeight, fPyramidBaseLength);
 			}
 
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
 				{"cube", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCube();
+					return oShape->CreateCube(0.5f);
 				}},
 				{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
+					return oShape->CreateCylinder(2.0f, 5.0f, 1.0f, 1.0f);
 				}},
 				{"sphere", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateSphere(1.0f,50.0f);
 				}},
 				{"cone", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCone(1.0f,16.0f);
+					return oShape->CreateCone(1.0f, 16.0f, 2.0f);
 				}},
 				{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreatePyramid(2.0f,3.0f);
+					return oShape->CreatePyramid(2.0f, 3.0f);
 				}},
 			};
 

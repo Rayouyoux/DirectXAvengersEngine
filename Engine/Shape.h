@@ -48,37 +48,37 @@ namespace ave {
 			return m_aShapes;
 		}
 
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCube() {
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCube(float fSideSize) {
 
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, -fSideSize, -fSideSize), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, +fSideSize, -fSideSize), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, +fSideSize, -fSideSize), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, -fSideSize, -fSideSize), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
 
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, -fSideSize, +fSideSize), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, +fSideSize, +fSideSize), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, +fSideSize, +fSideSize), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, -fSideSize, +fSideSize), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
 
-			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, +fSideSize, -fSideSize), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, +fSideSize, +fSideSize), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, +fSideSize, +fSideSize), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, +fSideSize, -fSideSize), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
 
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, -fSideSize, -fSideSize), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, -fSideSize, -fSideSize), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, -fSideSize, +fSideSize), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, -fSideSize, +fSideSize), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
 
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, +0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, -fSideSize, +fSideSize), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, +fSideSize, +fSideSize), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, +fSideSize, -fSideSize), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-fSideSize, -fSideSize, -fSideSize), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
 
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, +0.5f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, +0.5f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, -fSideSize, -fSideSize), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, +fSideSize, -fSideSize), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, +fSideSize, +fSideSize), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+fSideSize, -fSideSize, +fSideSize), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f)}));
 
 
 			for (int i = 0; i < 6; i++) {
@@ -156,9 +156,7 @@ namespace ave {
 			return m_aShapes;
 		}
 	
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCone(float fRadius, float fNumSubDivisions) {
-			
-			float fHeight = 2.0f;
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCone(float fRadius, float fNumSubDivisions, float fHeight) {
 
 			for (int i = 0; i < fNumSubDivisions; i++) {
 				float theta = 2.0f * DirectX::XM_PI * i / fNumSubDivisions;
