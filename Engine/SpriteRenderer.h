@@ -9,7 +9,7 @@ namespace ave {
 	class Texture;
 
 	namespace UI {
-		class SpriteRenderer : public Component {
+		class SpriteRenderer : public Component{
 		protected:
 			Texture* m_poSprite;
 			Mesh* m_poPlane;

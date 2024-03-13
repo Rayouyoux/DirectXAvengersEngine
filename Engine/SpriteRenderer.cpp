@@ -47,5 +47,9 @@ namespace ave {
 		void SpriteRenderer::Render2D() {
 			m_poShader->Draw(m_poPlane, m_poBuffer, m_poSprite);
 		}
+
+		int SpriteRenderer::GetComponentID() {
+			return SPRITE_RENDERER_ID;
+		}
 	}
 }

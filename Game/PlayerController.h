@@ -1,5 +1,6 @@
 #pragma once
 #include <AvengersEngine.h>
+#include "HealthActor.h"
 
 class PlayerController : public ave::Script {
 private:

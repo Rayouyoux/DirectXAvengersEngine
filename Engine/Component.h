@@ -6,9 +6,7 @@ namespace ave {
 
 	class Component 
 	{
-
 	public :
-
 		Entity*			m_poEntity;
 
 	public :
@@ -31,5 +29,8 @@ namespace ave {
 		virtual void	Render() {};
 		virtual void	Render2D() {};
 
+		virtual void    OnCollisionEnter(Entity* collider) {};
+		virtual void    OnCollisionStay(Entity* collider) {};
+		virtual void    OnCollisionExit(Entity* collider) {};
 	};
 };

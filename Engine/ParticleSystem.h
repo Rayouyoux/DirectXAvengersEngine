@@ -71,7 +71,7 @@ namespace ave {
 			virtual void HandleMeshRendering();
 		};
 
-		class ParticleSystem : public Component {
+		class ParticleSystem : public Component<ParticleSystem> {
 		private:
 			ObjectPooling::ObjectPool* m_poParticlePool;
 			int m_iCapacity;
@@ -99,6 +99,8 @@ namespace ave {
 			void Update(float deltaTime) override;
 			void LateUpdate(float deltaTime) override;
 			void Render() override;
+
+			static int GetComponentID();
 		};
 	}
 }

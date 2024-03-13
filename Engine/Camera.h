@@ -17,7 +17,7 @@ namespace ave {
 		// Frustrum Setter
 		void SetLens(float fovY, float aspect, float zn, float zf);
 		void ChangeAspectRatio(float fWidth, float fHeight);
-		// SUR Methods
+		
 		void Start() override;
 		void Update(float deltaTime) override;
 		void LateUpdate(float deltaTime) override;
@@ -48,6 +48,5 @@ namespace ave {
 
 		// Outdated View Flag
 		bool m_bIsValidView;
-
 	};
 }

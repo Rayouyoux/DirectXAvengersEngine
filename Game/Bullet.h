@@ -1,5 +1,6 @@
 #pragma once
-class Bullet
-{
-};
+#include <AvengersEngine.h>
 
+class Bullet : ave::Script {
+
+};

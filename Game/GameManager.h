@@ -13,6 +13,8 @@ private:
 	static GameManager* Instance;
 
 	ave::Entity* m_poMainCam;
+	ave::Entity* m_poPlayer;
+
 	ave::Entity* m_poRotCube;
 	ave::Entity* m_poSkybox;
 

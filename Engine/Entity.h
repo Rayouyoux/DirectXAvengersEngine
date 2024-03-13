@@ -27,13 +27,16 @@ namespace ave {
 		void Render();
 		void Render2D();
 
+		void OnCollisionEnter(Entity* collider);
+		void OnCollisionStay(Entity* collider);
+		void OnCollisionExit(Entity* collider);
+
 		// Adds a Component to the Entity
 		template <typename Comp>
 		Comp* AddComponent() {
 			Comp* poComponent = new Comp();
 			m_loComponents.push_back(poComponent);
 			poComponent->BindEntity(this);
-			/*poComponent->Start();*/
 			return poComponent;
 		}
 
@@ -41,9 +44,8 @@ namespace ave {
 		template <typename Comp>
 		Comp* GetComponent() {
 			for (int i = 0; i < m_loComponents.size(); i++) {
-				if (typeid(m_loComponents[i]) == typeid(Comp)) {
-					return (Comp*)m_loComponents[i];
-				}
+				Comp* res = dynamic_cast<Comp>(*(m_loComponents[i]));
+				if()
 			}
 		}
 

@@ -86,4 +86,8 @@ namespace ave {
 	MeshRenderer::~MeshRenderer() {
 		delete m_poBuffer;
 	}
+
+	int MeshRenderer::GetComponentID() {
+		return MESH_RENDERER_ID;
+	}
 }
