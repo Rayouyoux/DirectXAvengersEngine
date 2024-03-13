@@ -25,7 +25,7 @@ namespace ave {
 	void EntityManager::Init(GraphicsHandler* poGraphics) {
 		m_poGraphics = poGraphics;
 		m_poInput = new InputManager();
-		/*m_poInput->Init(poGraphics->GetWindow());*/
+		m_poInput->Init(poGraphics->GetWindow());
 
 		Entity* poCamera = NewEntity();
 		m_poMainCamera = poCamera->AddComponent<Camera>();
@@ -70,7 +70,16 @@ namespace ave {
 		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
 		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
 
-		/*m_poInput->UpdateKeyStates();*/
+		m_poInput->UpdateKeyStates();
+
+		if (m_poInput->GetKeyDown(ave::KeyCode::Z)) {
+			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -0.5f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
+		else if (m_poInput->GetKeyDown(ave::KeyCode::S)) {
+			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, 0.5f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
 
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Update(fDeltaTime);

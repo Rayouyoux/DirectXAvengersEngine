@@ -162,7 +162,7 @@ namespace ave {
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
 
 		ID3D12DescriptorHeap* GetCbvDescriptor() { return m_poCbvHeap; };
-		//HWND GetWindow();
+		HWND GetWindow();
 
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
