@@ -1,4 +1,4 @@
-#include "AvengersEngine.h"
+#include <AvengersEngine.h>
 //#include "ObjectPooler.h"
 #include <vector>
 #include <sstream>
@@ -51,9 +51,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     manager->NewTexture("image");*/
 
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer->SetMesh(manager->GetMesh("cubeTexture"));
-    poMeshRenderer->SetShader(manager->GetShader("Texture"));
-    poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
+    poMeshRenderer->SetMesh(manager->GetMesh("cube"));
+    poMeshRenderer->SetShader(manager->GetShader("Color"));
+    //poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
     poMeshRenderer2->SetMesh(manager->GetMesh("skyboxTexture"));

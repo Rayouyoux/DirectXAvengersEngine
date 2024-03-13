@@ -80,6 +80,14 @@ namespace ave {
 			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, 0.5f, 0.0f);
 			m_voAliveEntities[0]->m_poTransform->Move(&pos);
 		}
+		else if (m_poInput->GetKeyDown(ave::KeyCode::Q)) {
+			XMVECTOR pos = DirectX::XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
+		else if (m_poInput->GetKeyDown(ave::KeyCode::D)) {
+			XMVECTOR pos = DirectX::XMVectorSet(-0.5f, 0.0f, 0.0f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
 
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Update(fDeltaTime);
