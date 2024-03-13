@@ -6,19 +6,6 @@
 #include <crtdbg.h>
 #endif
 
-//using namespace ave::ObjectPooling;
-//
-//class Particle : public IPullable {
-//    virtual void OnInstantiation() override {
-//    }
-//
-//    virtual void OnAcquire() override {
-//    }
-//
-//    virtual void OnRelease() override {
-//    }
-//};
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) {
 #if defined(DEBUG) | defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);

@@ -29,6 +29,7 @@ namespace ave {
 		virtual void	Update(float deltaTime) {};
 		virtual void	LateUpdate(float deltaTime) {};
 		virtual void	Render() {};
+		virtual void	Render2D() {};
 
 	};
 };

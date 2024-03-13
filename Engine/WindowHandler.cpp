@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "WindowHandler.h"
-#include "GraphicsHandler.h"
+#include "EntityManager.h"
 #include "GameTime.h"
 #include "Logger.h"
 #include "Maths.h"
