@@ -21,7 +21,7 @@ namespace ave {
 		~Mesh();
 
 		template <typename T>
-		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape) {
+		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape, FXMVECTOR* oColor = nullptr) {
 
 
 			Shape<T>* oShape = new Shape<T>();
