@@ -39,7 +39,6 @@ VertexOut VS(VertexIn vin)
 float4 PS(VertexOut pin) : SV_Target
 {
     float4 res = gTex.Sample(gSampler, pin.uv);
-    res.a = 1;
     return res;
 }
 
