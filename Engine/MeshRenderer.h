@@ -2,6 +2,9 @@
 #include <d3d12.h>
 #include "Component.h"
 #include "UploadBuffer.h"
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 namespace ave {
 	class Mesh;
@@ -24,6 +27,12 @@ namespace ave {
 		void Update(float dT) override;
 		void LateUpdate(float dT) override {};
 		void Render() override;
+		
+		void UpdateAABBAfterRotation(const XMMATRIX& vRotationMatrix);
+		void UpdateAABBAfterTranslation(const XMVECTOR& vTranslation);
+		void UpdateAABBAfterScale(const XMVECTOR& vScale);
+		void UpdateAABB(XMFLOAT3& vertex);
+
 		~MeshRenderer();
 
 	protected:

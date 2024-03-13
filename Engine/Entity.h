@@ -26,6 +26,11 @@ namespace ave {
 		void Update(float iDeltaTime);
 		void Render();
 
+		// Collision Methods
+		void OnCollisionEnter(Entity* collider);
+		void OnCollisionStay(Entity* collider);
+		void OnCollisionExit(Entity* collider);
+
 		// Adds a Component to the Entity
 		template <typename Comp>
 		Comp* AddComponent() {

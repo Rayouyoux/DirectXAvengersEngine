@@ -19,6 +19,12 @@ namespace ave {
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
 
 		UINT GetIndexCount();
+
+		AABB* GetAABB();
+		void SetAABB(XMFLOAT3 vMin, XMFLOAT3 vMax);
+		void SetAABB(AABB oAABB);
+		void SetVertice(XMFLOAT3 vVertice);
+		std::vector<XMFLOAT3> GetVertices();
 		
 		~Mesh();
 
@@ -88,6 +94,10 @@ namespace ave {
 				std::cout << "Invalid shape type." << std::endl;
 			}
 
+			for (int i = 0; i < aShapes.size(); i++) {
+				this->SetVertice(aShapes[i].first[0].pos);
+			}
+
 			const UINT vbByteSize = (UINT)aShapes[0].first.size() * sizeof(T);
 			const UINT ibByteSize = (UINT)aShapes[0].second.size() * sizeof(std::uint16_t);
 
@@ -116,6 +126,10 @@ namespace ave {
 
 			return true;
 		};
+
+	public:
+
+		std::vector<XMFLOAT3> m_vVertices;
 
 	protected:
 		

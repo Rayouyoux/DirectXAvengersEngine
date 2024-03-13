@@ -30,5 +30,9 @@ namespace ave {
 		virtual void	LateUpdate(float deltaTime) {};
 		virtual void	Render() {};
 
+		virtual void    OnCollisionEnter(Entity* collider) {};
+		virtual void    OnCollisionStay(Entity* collider) {};
+		virtual void    OnCollisionExit(Entity* collider) {};
+
 	};
 };

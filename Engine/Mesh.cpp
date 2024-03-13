@@ -40,6 +40,28 @@ namespace ave {
 		return ibv;
 	}
 
+
+	AABB* Mesh::GetAABB() {
+		return &m_oContainingBox;
+	}
+
+	void Mesh::SetAABB(XMFLOAT3 vMin, XMFLOAT3 vMax) {
+		m_oContainingBox.m_vMin = vMin;
+		m_oContainingBox.m_vMax = vMax;
+	}
+
+	void Mesh::SetAABB(AABB oAABB) {
+		m_oContainingBox = oAABB;
+	}
+
+	void Mesh::SetVertice(XMFLOAT3 vVertice) {
+		m_vVertices.push_back(vVertice);
+	}
+
+	std::vector<XMFLOAT3> Mesh::GetVertices() {
+		return m_vVertices;
+	}
+
 	Mesh::~Mesh() {
 		m_poVertexBufferCPU->Release();
 		m_poIndexBufferCPU->Release();
