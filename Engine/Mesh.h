@@ -29,7 +29,7 @@ namespace ave {
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
 				{"cube", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					XMVECTOR color = XMVectorSet(0.1f, 0.1f, 0.8f, 1.0f);
-					return oShape->CreateCube();
+					return oShape->CreateCube(nullptr,true);
 				}},
 				{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);

@@ -51,12 +51,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poMeshRenderer->SetShader(manager->GetShader());
     poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
 
-
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
     poMeshRenderer2->SetMesh(manager->GetMesh());
     poMeshRenderer2->SetShader(manager->GetShader());
     poMeshRenderer2->SetTexture(manager->GetTexture("image"));
-
+    XMVECTOR scale = XMVectorSet(4.5f, 4.5f, 4.5f, 4.5f);
+    poCubeEntity2->m_poTransform->Scale(&scale);
 
     manager->RegisterEntity(poCubeEntity);
 

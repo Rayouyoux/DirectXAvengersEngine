@@ -48,7 +48,7 @@ namespace ave {
 			return m_aShapes;
 		}
 
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCube(FXMVECTOR* vColor = nullptr) {
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCube(FXMVECTOR* vColor = nullptr, bool isSkybox = false) {
 			XMFLOAT4 color;
 
 			if (vColor != nullptr) {
@@ -89,12 +89,18 @@ namespace ave {
 				int index = i * 4;
 
 				indices.push_back(index);
-				indices.push_back(index + 1);
+				if(isSkybox == false)
+					indices.push_back(index + 1);
 				indices.push_back(index + 2);
+				if (isSkybox == true)
+					indices.push_back(index + 1);
 
 				indices.push_back(index);
-				indices.push_back(index + 2);
+				if (isSkybox == false)
+					indices.push_back(index + 2);
 				indices.push_back(index + 3);
+				if (isSkybox == true)
+					indices.push_back(index + 2);
 			};
 			m_aShapes.push_back(std::make_pair(vertices, indices));
 			return m_aShapes;
