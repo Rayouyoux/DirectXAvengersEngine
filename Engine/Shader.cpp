@@ -61,15 +61,12 @@ namespace ave {
     }
 
   
- 
 
 
-
-    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id, Texture* poTextures) {
+    bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id) {
         m_poCamera = poCamera;
         m_iIndexObject = 0;
         m_poDevice = poGraphicsHandler->GetDevice();
-        m_poTextures = poTextures;
         //m_poCbvHeap =  //Get heap 
 
         std::wstring shader;
@@ -179,14 +176,13 @@ namespace ave {
     }
     
 
-    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer) {
+    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture) {
         ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
         ////Root
         poList->SetGraphicsRootSignature(GetRootSignature());
 
         poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());
-
         ////Pipeline
         poList->SetPipelineState(GetPso("transparent"));
 
@@ -198,10 +194,14 @@ namespace ave {
         poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
         poList->IASetIndexBuffer(&oIndexBufferView);
 
-        if (GetRootTexture() != -1 && m_poTextures)
-        { 
-            CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), tex);
+        if (GetRootTexture() != -1 && oTexture)
+        {
+            //CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+            //auto test = std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName));
+            //std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName)) / 2
+            //tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName))/2, *m_poTextures->GetDescriptorSize());
+            
+            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), *oTexture->GetDescriptorGpuHandle());
         }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());

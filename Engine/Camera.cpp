@@ -29,7 +29,7 @@ namespace ave {
 
 	void Camera::SetLens(float fov, float aspect, float zn, float zf)
 	{
-		m_fFOV = fov;
+		m_fFOV = XMConvertToRadians(fov);
 		m_fAspect = aspect;
 		m_fNearZ = zn;
 		m_fFarZ = zf;
@@ -47,12 +47,12 @@ namespace ave {
 
 	void Camera::Start()
 	{
-		SetLens(0.25f * Maths::PI, 800.f/600.f, 1.0f, 1000.0f);
+		SetLens(70, 800.f/600.f, 1.0f, 1000.0f);
 		m_poBuffer = new UploadBuffer<PassConstants>(GraphicsHandler::GetDevice(), 1, true);
 	}
 
 	void Camera::ChangeAspectRatio(float fWidth, float fHeight) {
-		SetLens(0.25f * Maths::PI, fWidth / fHeight, 1.0f, 1000.0f);
+		SetLens(70, fWidth / fHeight, 1.0f, 1000.0f);
 	}
 
 	void Camera::Update(float deltaTime) {

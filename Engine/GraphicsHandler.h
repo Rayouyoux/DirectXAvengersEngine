@@ -3,6 +3,7 @@
 #include <wrl.h>
 #include <DirectXColors.h>
 #include <DirectXMath.h>
+#include <windows.h>
 
 #pragma region Direct3D Forward Declarations
 class IDXGIFactory4;
@@ -72,8 +73,6 @@ namespace ave {
 		D3D_DRIVER_TYPE m_eDriverType;
 		DXGI_FORMAT m_eBackBufferFormat;
 		DXGI_FORMAT m_eDepthStencilFormat;
-
-		DirectX::XMMATRIX m_view;
 
 	protected:
 		GraphicsHandler();
@@ -163,6 +162,7 @@ namespace ave {
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
 
 		ID3D12DescriptorHeap* GetCbvDescriptor() { return m_poCbvHeap; };
+		//HWND GetWindow();
 
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
