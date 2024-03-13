@@ -119,7 +119,7 @@ namespace ave {
 		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox"};
 		for (int i = 0; i < sizeof(names)/sizeof(names[0]); i++) {
 			Mesh* poMesh = new Mesh();
-			FXMVECTOR oColor = {0.4f, 0.2f, 0.1f, 1.0f};
+			FXMVECTOR oColor = {0.1f, 0.2f, 0.9f, 1.0f};
 			poMesh->BuildBoxGeometry<VERTEX_COLOR>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i], &oColor);
 			m_poMeshs.insert(std::pair<std::string, Mesh*>(names[i], poMesh));
 

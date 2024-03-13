@@ -26,11 +26,10 @@ namespace ave {
 
 			Shape<T>* oShape = new Shape<T>();
 
-			XMVECTOR color = XMVectorSet(0.4f, 0.2f, 0.8f, 1.0f);
 			
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
-				{"cube", [oShape,color]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCube(&color,false);
+				{"cube", [oShape, oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateCube(oColor,false);
 				}},
 				{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
@@ -44,8 +43,8 @@ namespace ave {
 				{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreatePyramid(2.0f,3.0f);
 				}},
-				{"skybox", [oShape,color]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCube(nullptr,true);
+				{"skybox", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateCube(oColor,true);
 				}},
 
 			};
