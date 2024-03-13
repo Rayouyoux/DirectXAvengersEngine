@@ -2,6 +2,7 @@
 #include <d3d12.h>
 #include "Component.h"
 #include "UploadBuffer.h"
+#include <string>
 
 namespace ave {
 	class Mesh;
@@ -18,7 +19,7 @@ namespace ave {
 		void SetMesh(Mesh* poMesh);
 		void SetShader(Shader* SetShader);
 
-		void SetFirstTexture(Texture* poTexture);
+		void SetTexture(Texture* oTexture);
 
 		void Start() override;
 		void Update(float dT) override;
@@ -28,8 +29,9 @@ namespace ave {
 
 	protected:
 		Mesh* m_poMesh;
-		UploadBuffer<ObjectConstants>* m_poBuffer;
 		Texture* m_poTexture;
+		UploadBuffer<ObjectConstants>* m_poBuffer;
+		std::string m_oName;
 		Shader* m_poShader;
 	};
 }

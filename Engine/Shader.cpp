@@ -61,8 +61,6 @@ namespace ave {
     }
 
   
- 
-
 
 
     bool Shader::CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id, Texture* poTextures) {
@@ -179,14 +177,13 @@ namespace ave {
     }
     
 
-    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer) {
+    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture) {
         ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
         ////Root
         poList->SetGraphicsRootSignature(GetRootSignature());
 
         poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());
-
         ////Pipeline
         poList->SetPipelineState(GetPso("transparent"));
 
@@ -199,9 +196,13 @@ namespace ave {
         poList->IASetIndexBuffer(&oIndexBufferView);
 
         if (GetRootTexture() != -1 && m_poTextures)
-        { 
-            CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), tex);
+        {
+            //CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+            //auto test = std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName));
+            //std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName)) / 2
+            //tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName))/2, *m_poTextures->GetDescriptorSize());
+            
+            poList->SetGraphicsRootDescriptorTable(GetRootTexture(), *oTexture->GetDescriptorGpuHandle());
         }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());

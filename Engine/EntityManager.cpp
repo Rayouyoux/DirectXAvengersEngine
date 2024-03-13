@@ -27,8 +27,6 @@ namespace ave {
 		m_poGraphics = poGraphics;
 		m_poInput = new InputManager();
 		m_poInput->Init(poGraphics->GetWindow());
-		m_poTextures = new Texture();
-		m_poTextures->Init(poGraphics->GetDevice());
 
 		Entity* poCamera = NewEntity();
 		m_poMainCamera = poCamera->AddComponent<Camera>();
@@ -38,6 +36,10 @@ namespace ave {
 		CreateMesh();
 
 		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
+		NewTexture("bricks");
+		NewTexture("image");
+
+
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -114,7 +116,7 @@ namespace ave {
 	}
 
 	void EntityManager::CreateMesh() {
-		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid" };
+		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox"};
 		for (int i = 0; i < names->length(); i++) {
 			Mesh* poMesh = new Mesh();
 			poMesh->BuildBoxGeometry<VERTEX_COLOR>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i]);
@@ -134,9 +136,14 @@ namespace ave {
 		return m_poShaders.find(name)->second;
 	}
 
-	void EntityManager::NewTexture(std::string name, std::string filename) {
-		m_poTextures->LoadTexture(name, std::wstring(filename.begin(), filename.end()));
-		m_poTextures->BuildDescriptorHeaps(name, m_poGraphics->GetCbvDescriptor());
+	void EntityManager::NewTexture(std::string name) {
+
+		m_poTexture = new Texture();
+		m_poTextures.insert(std::make_pair(name, m_poTexture));
+		m_poTexture->Init(m_poGraphics->GetDevice());
+		m_poTexture->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds", m_poGraphics->GetCbvDescriptor());
+		m_poTexture->BuildSrvDesc(m_poGraphics->GetCbvDescriptor(), m_poTextures);
+
 	}
 
 	bool EntityManager::RegisterEntity(Entity* poEntity) {

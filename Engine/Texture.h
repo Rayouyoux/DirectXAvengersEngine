@@ -9,16 +9,19 @@ namespace ave {
 
 
 	protected:
-		std::string m_oName;
 
-		std::map<std::string, Texture*> m_mTextures;
+		std::map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>> m_mTextures;
 
 		ID3D12Device* m_poDevice;
 
-		Microsoft::WRL::ComPtr<ID3D12Resource> m_poRessource;
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_poUploadHeap;
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE m_pohDescriptor;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_poRessource;
+
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE m_poDescriptorCPU;
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE m_poDescriptorGPU;
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC m_poSrvDesc;
 
@@ -33,14 +36,14 @@ namespace ave {
 
 		void Init(ID3D12Device* poDevice);
 
-		void LoadTexture(std::string oName, std::wstring oFilename);
-		bool BuildDescriptorHeaps(std::string oName, ID3D12DescriptorHeap* CbvDescriptorHeap);
-		void Offset(std::string oName);
+		void LoadTexture(std::string oName, std::wstring oFilename, ID3D12DescriptorHeap* CbvDescriptorHeap);
+		bool BuildSrvDesc(ID3D12DescriptorHeap* CbvDescriptorHeap, std::map<std::string, Texture*> voTextures);
 
 		ID3D12DescriptorHeap* GetDescriptorHeap() { return m_poSrvDescriptorHeap; };
 		UINT* GetDescriptorSize() { return &m_oCbvSrvDescriptorSize; };
-		CD3DX12_CPU_DESCRIPTOR_HANDLE* GetDescriptorHandle() { return &m_pohDescriptor; };
-
+		CD3DX12_CPU_DESCRIPTOR_HANDLE* GetDescriptorHandle() { return &m_poDescriptorCPU; };
+		CD3DX12_GPU_DESCRIPTOR_HANDLE* GetDescriptorGpuHandle() { return &m_poDescriptorGPU; };
+		std::map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>>* GetTexture() { return &m_mTextures; };
 	};
 
 }

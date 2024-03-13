@@ -36,11 +36,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     ave::Entity* poCubeEntity = manager->NewEntity();
     ave::Entity* poCubeEntity2 = manager->NewEntity();
 
-    XMVECTOR posCube = XMVectorSet(5.0f, 0.0f, 0.0f, 0.0f);
+    XMVECTOR posCube = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
     poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
 
     ave::Entity* poCamera = manager->GetMainCamera()->GetEntity();
-    XMVECTOR pos = XMVectorSet(5.0f, 0.0f, 4.0f, 0.0f);
+    XMVECTOR pos = XMVectorSet(0.0f, 0.0f, 4.0f, 0.0f);
     poCamera->m_poTransform->SetVectorPosition(&pos);
 
     XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
@@ -51,12 +51,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
     poMeshRenderer->SetMesh(manager->GetMesh("cubeTexture"));
     poMeshRenderer->SetShader(manager->GetShader("Texture"));
+    poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
     poMeshRenderer2->SetMesh(manager->GetMesh("cubeTexture"));
     poMeshRenderer2->SetShader(manager->GetShader("Texture"));
+    poMeshRenderer2->SetTexture(manager->GetTexture("image"));
+    XMVECTOR scale = XMVectorSet(4.5f, 4.5f, 4.5f, 4.5f);
+    poCubeEntity2->m_poTransform->Scale(&scale);
 
     manager->RegisterEntity(poCubeEntity);
+
     manager->RegisterEntity(poCubeEntity2);
   
     int res = gameInstance->Run();

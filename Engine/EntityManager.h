@@ -26,8 +26,8 @@ namespace ave {
 		GraphicsHandler* m_poGraphics;
 		std::map<std::string, Mesh*> m_poMeshs;
 		std::map<std::string, Shader*> m_poShaders;
-		Texture* m_poTextures;
 		InputManager* m_poInput;
+		std::map<std::string, Texture*> m_poTextures;
 
 	public:
 
@@ -66,9 +66,11 @@ namespace ave {
 		Entity* NewEntity();
 		bool RegisterEntity(Entity* poEntity);
 		Camera* GetMainCamera();
+		Texture* GetTexture(std::string oName) { return m_poTextures.find(oName)->second; };
+		void NewTexture(std::string name);
 		Mesh* GetMesh(std::string name);
 		Shader* GetShader(std::string name);
-		void NewTexture(std::string name, std::string filename);
+		/*void NewTexture(std::string name, std::string filename);*/
 
 	protected:
 		void CreateShader();

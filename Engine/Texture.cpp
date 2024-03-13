@@ -7,6 +7,7 @@
 namespace ave {
 
 	Texture::Texture() {
+		m_poSrvDesc = {};
 
 		m_poDevice = nullptr;
 		m_poUploadHeap = nullptr;
@@ -21,53 +22,49 @@ namespace ave {
 		m_oCbvSrvDescriptorSize = m_poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
-	void Texture::LoadTexture(std::string oName, std::wstring oFilename) {
-
-		m_oName = oName;
+	void Texture::LoadTexture(std::string oName, std::wstring oFilename, ID3D12DescriptorHeap* CbvDescriptorHeap) {
 
 		if (FAILED(DirectX::CreateDDSTextureFromFile12(m_poDevice,
 			GraphicsHandler::GetCommandList(),oFilename.c_str(),
-			m_poRessource,m_poUploadHeap))) {
+			m_poRessource, m_poUploadHeap))) {
 			return;
 		}
-
-		m_mTextures[m_oName] = std::move(this);
-
 	}
 
-	bool Texture::BuildDescriptorHeaps(std::string oName, ID3D12DescriptorHeap* CbvDescriptorHeap) {
+	bool Texture::BuildSrvDesc(ID3D12DescriptorHeap* CbvDescriptorHeap, std::map<std::string, Texture*> voTextures) {
 
 		m_poSrvDescriptorHeap = CbvDescriptorHeap;
-		m_pohDescriptor = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-		auto texture = m_mTextures[oName]->m_poRessource;
+		m_poDescriptorCPU = m_poSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-		m_poSrvDesc = {};
+		m_poDescriptorCPU.Offset(voTextures.size()-1, m_oCbvSrvDescriptorSize);
+
 		m_poSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		m_poSrvDesc.Format = texture->GetDesc().Format;
+		m_poSrvDesc.Format = m_poRessource->GetDesc().Format;
 		m_poSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 		m_poSrvDesc.Texture2D.MostDetailedMip = 0;
-		m_poSrvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
+		m_poSrvDesc.Texture2D.MipLevels = m_poRessource->GetDesc().MipLevels;
 		m_poSrvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-
-
-		m_poDevice->CreateShaderResourceView(texture.Get(), &m_poSrvDesc, m_pohDescriptor);
+		m_poDevice->CreateShaderResourceView(m_poRessource.Get(), &m_poSrvDesc, m_poDescriptorCPU);
+		
+		m_poDescriptorGPU = m_poSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+		m_poDescriptorGPU.Offset(voTextures.size() - 1, m_oCbvSrvDescriptorSize);
 		
 		return true;
 	}
 
-	void Texture::Offset(std::string oName) {
+	/*void Texture::Offset(std::string oName) {
 
-		auto offset = m_mTextures[oName]->m_poRessource;
+		auto offset = m_mTextures[oName];
 
-		m_pohDescriptor.Offset(1, m_oCbvSrvDescriptorSize);
+		m_pohDescriptor.Offset(m_mTextures.size()-1, m_oCbvSrvDescriptorSize);
 		m_poSrvDesc.Format = offset->GetDesc().Format;
 		m_poSrvDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
 
 		m_poDevice->CreateShaderResourceView(offset.Get(), &m_poSrvDesc, m_pohDescriptor);
 
-	}
+	}*/
 
 	Texture::~Texture() {
 		m_mTextures.clear();
