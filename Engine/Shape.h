@@ -59,20 +59,20 @@ namespace ave {
 			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, -0.5f), vColor ? color : XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
 			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, -0.5f), vColor ? color : XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
 
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, +0.5f), vColor ? color : XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, +0.5f), vColor ? color : XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, +0.5f), vColor ? color : XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
 
 			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, -0.5f), vColor ? color : XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
 			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
 			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, +0.5f), vColor ? color : XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
 			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, -0.5f), vColor ? color : XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
 
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, -0.5f), vColor ? color : XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, -0.5f), vColor ? color : XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
-			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, -0.5f), vColor ? color : XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, -0.5f), vColor ? color : XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
 
 			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
 			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, +0.5f), vColor ? color : XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
