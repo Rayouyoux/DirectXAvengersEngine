@@ -16,6 +16,7 @@
 #include <d3d12sdklayers.h>
 #include <string>
 #include <vector>
+#include <map>
 #include "d3dx12.h"
 #include "D3DUtils.h"
 
