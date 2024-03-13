@@ -33,6 +33,8 @@ namespace ave {
 		void UpdateAABBAfterScale(const XMVECTOR& vScale);
 		void UpdateAABB(XMFLOAT3& vertex);
 
+		Mesh* GetMesh();
+
 		~MeshRenderer();
 
 	protected:

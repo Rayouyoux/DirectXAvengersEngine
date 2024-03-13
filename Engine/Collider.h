@@ -4,6 +4,7 @@
 namespace ave {
 
 	enum class CollideState {
+		Away,
 		Enter,
 		Stay,
 		Exit

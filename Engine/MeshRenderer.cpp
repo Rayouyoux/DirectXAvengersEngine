@@ -155,6 +155,10 @@ namespace ave {
 		oAABB.m_vMax.z = Maths::TakeHighest(oAABB.m_vMax.z, vertex.z);
 	}
 
+	Mesh* MeshRenderer::GetMesh() {
+		return m_poMesh;
+	}
+
 	MeshRenderer::~MeshRenderer() {
 		delete m_poBuffer;
 	}
