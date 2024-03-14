@@ -38,16 +38,43 @@ namespace ave {
             
             CollideState currentState = CollideState::Away;
             if (prevState == CollideState::Away) {
-                currentState = isColliding ? CollideState::Enter : CollideState::Away;
+                if (isColliding) {
+                    currentState = CollideState::Enter;
+                    m_mColliding[collider] = currentState;
+                }
+                else {
+                    currentState = CollideState::Away;
+                }
             }
             else if (prevState == CollideState::Enter) {
-                currentState = isColliding ? CollideState::Stay : CollideState::Exit;
+                if (isColliding) {
+                    currentState = CollideState::Stay;
+                    m_mColliding[collider] = currentState;
+                }
+                else {
+                    currentState = CollideState::Exit;
+                    m_mColliding[collider] = currentState;
+                }
             }
             else if (prevState == CollideState::Stay) {
-                currentState = isColliding ? CollideState::Stay : CollideState::Exit;
+                if (isColliding) {
+                    currentState = CollideState::Stay;
+                    m_mColliding[collider] = currentState;
+                }
+                else {
+                    currentState = CollideState::Exit;
+                    m_mColliding[collider] = currentState;
+                }
             }
             else if (prevState == CollideState::Exit) {
-                currentState = isColliding ? CollideState::Enter : CollideState::Away;
+                if (isColliding) {
+                    currentState = CollideState::Enter;
+                    m_mColliding[collider] = currentState;
+                }
+                else {
+                    currentState = CollideState::Away;
+                    m_mColliding.erase(collider);
+                }
             }
 
             switch (currentState) {
