@@ -35,7 +35,7 @@ namespace ave {
 
 		m_poShader = NewShader();
 		
-		m_poMesh = NewMesh("cube");
+		m_poMesh = NewMesh("sphere");
 
 		NewTexture("image");
 	}
@@ -63,11 +63,14 @@ namespace ave {
 	}*/
 
 	void EntityManager::Update(float fDeltaTime) {
-		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
-		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
+		/*float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
+		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);*/
 		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
 		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
+		XMVECTOR move = DirectX::XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f);
+		m_voAliveEntities[1]->m_poTransform->Move(&move);
+
 
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Update(fDeltaTime);

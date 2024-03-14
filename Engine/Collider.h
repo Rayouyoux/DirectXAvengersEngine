@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include <vector>
 
 namespace ave {
 
@@ -21,10 +22,6 @@ namespace ave {
 		void Update(float deltaTime) override;
 		void LateUpdate(float deltaTime) override;
 		void Render() override;
-
-		void OnCollisionEnter(Entity* collider) override;
-		void OnCollisionStay(Entity* collider) override;
-		void OnCollisionExit(Entity* collider) override;
 
 		static std::vector<Collider*> m_vCollidables;
 		std::map<Collider*, CollideState> m_mColliding;

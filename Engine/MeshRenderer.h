@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "UploadBuffer.h"
 #include <DirectXMath.h>
+#include "AABB.h"
 
 using namespace DirectX;
 
@@ -34,11 +35,15 @@ namespace ave {
 		void UpdateAABB(XMFLOAT3& vertex);
 
 		Mesh* GetMesh();
+		AABB GetAABB();
+		void SetAABB(AABB oAABB);
 
 		~MeshRenderer();
 
+
 	protected:
 		Mesh* m_poMesh;
+		AABB m_oContainingBox;
 		UploadBuffer<ObjectConstants>* m_poBuffer;
 		Texture* m_poTexture;
 		Shader* m_poShader;

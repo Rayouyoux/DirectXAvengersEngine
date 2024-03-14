@@ -95,9 +95,6 @@ namespace ave {
 		XMMATRIX mWorld = XMMatrixMultiply(XMMatrixMultiply(mScale, mRotation), mPosition);
 		XMStoreFloat4x4(&m_mTransformation, mWorld);
 		m_bHandleChange = false;
-		m_bRotated = false;
-		m_bMoved = false;
-		m_bScaled = false;
 	}
 
 	void Transform::SetVectorScale(FXMVECTOR* newScale) { 

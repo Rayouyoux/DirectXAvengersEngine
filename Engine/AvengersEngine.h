@@ -13,3 +13,4 @@
 #include "Shader.h"
 //#include "Vertex.h"
 #include "EntityManager.h"
+#include "Collider.h"

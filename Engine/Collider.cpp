@@ -7,6 +7,7 @@
 #include "MeshRenderer.h"
 
 namespace ave {
+    std::vector<Collider*> Collider::m_vCollidables;
 
     Collider::Collider() {
         m_vCollidables.push_back(this);
@@ -29,8 +30,8 @@ namespace ave {
 
             if (collider == this) continue;
 
-            AABB& AABB1 = *m_poEntity->GetComponent<MeshRenderer>()->GetMesh()->GetAABB();
-            AABB& AABB2 = *collider->m_poEntity->GetComponent<MeshRenderer>()->GetMesh()->GetAABB();
+            AABB AABB1 = m_poEntity->GetComponent<MeshRenderer>()->GetAABB();
+            AABB AABB2 = collider->m_poEntity->GetComponent<MeshRenderer>()->GetAABB();
             bool isColliding = CollisionDetection::CheckCollision(AABB1, AABB2);
             
             auto it = m_mColliding.find(collider);
@@ -93,26 +94,5 @@ namespace ave {
 
     void Collider::Render()
     {}
-
-    void Collider::OnCollisionEnter(Entity* collider) {
-        for (int i = 0; i < m_mColliding.size(); i++)
-        {
-
-        }
-    }
-
-    void Collider::OnCollisionStay(Entity* collider) {
-        for (int i = 0; i < m_mColliding.size(); i++)
-        {
-
-        }
-    }
-
-    void Collider::OnCollisionExit(Entity* collider) {
-        for (int i = 0; i < m_mColliding.size(); i++)
-        {
-            
-        }
-    }
 
 }

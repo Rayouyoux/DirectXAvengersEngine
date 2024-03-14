@@ -32,18 +32,21 @@ namespace ave {
 	}
 
 	void MeshRenderer::Start() {
-		
+		SetAABB(*m_poMesh->GetAABB());
 	}
 
 	void MeshRenderer::Update(float deltaTime) {
 		if (m_poEntity->m_poTransform->m_bMoved) {
 			UpdateAABBAfterTranslation(m_poEntity->m_poTransform->GetVectorPosition());
+			m_poEntity->m_poTransform->m_bMoved = false;
 		}
 		if (m_poEntity->m_poTransform->m_bRotated) {
 			UpdateAABBAfterRotation(m_poEntity->m_poTransform->GetMatrixRotation());
+			m_poEntity->m_poTransform->m_bRotated = false;
 		}
 		if (m_poEntity->m_poTransform->m_bScaled) {
 			UpdateAABBAfterScale(m_poEntity->m_poTransform->GetVectorScale());
+			m_poEntity->m_poTransform->m_bScaled = false;
 		}
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
@@ -111,7 +114,7 @@ namespace ave {
 		XMFLOAT3 translation;
 		XMStoreFloat3(&translation, vTranslation);
 
-		AABB oAABB = *m_poMesh->GetAABB();
+		AABB oAABB = GetAABB();
 
 		oAABB.m_vMin.x += translation.x;
 		oAABB.m_vMin.y += translation.y;
@@ -121,7 +124,7 @@ namespace ave {
 		oAABB.m_vMax.y += translation.y;
 		oAABB.m_vMax.z += translation.z;
 
-		m_poMesh->SetAABB(oAABB);
+		SetAABB(oAABB);
 	}
 
 	void MeshRenderer::UpdateAABBAfterScale(const XMVECTOR& vScale) {
@@ -129,7 +132,7 @@ namespace ave {
 		XMFLOAT3 scale;
 		XMStoreFloat3(&scale, vScale);
 
-		AABB oAABB = *m_poMesh->GetAABB();
+		AABB oAABB = GetAABB();
 
 		oAABB.m_vMin.x *= scale.x;
 		oAABB.m_vMin.y *= scale.y;
@@ -139,12 +142,12 @@ namespace ave {
 		oAABB.m_vMax.y *= scale.y;
 		oAABB.m_vMax.z *= scale.z;
 
-		m_poMesh->SetAABB(oAABB);
+		SetAABB(oAABB);
 	}
 
 	void MeshRenderer::UpdateAABB(XMFLOAT3& vertex) {
 
-		AABB oAABB = *m_poMesh->GetAABB();
+		AABB oAABB = GetAABB();
 
 		oAABB.m_vMin.x = Maths::TakeLowest(oAABB.m_vMin.x, vertex.x);
 		oAABB.m_vMin.y = Maths::TakeLowest(oAABB.m_vMin.y, vertex.y);
@@ -157,6 +160,16 @@ namespace ave {
 
 	Mesh* MeshRenderer::GetMesh() {
 		return m_poMesh;
+	}
+
+	AABB MeshRenderer::GetAABB()
+	{
+		return m_oContainingBox;
+	}
+
+	void MeshRenderer::SetAABB(AABB oAABB)
+	{
+		m_oContainingBox = oAABB;
 	}
 
 	MeshRenderer::~MeshRenderer() {
