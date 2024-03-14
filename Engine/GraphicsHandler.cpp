@@ -268,6 +268,10 @@ namespace ave {
 		RenderBegin();
 
 		m_poEntityManager->Render();
+		auto currentBuffer = CurrentBackBufferView();
+		m_poCommandList->OMSetRenderTargets(1, &currentBuffer, true, nullptr);
+		m_poEntityManager->Render2D();
+
 		RenderCease();
 	}
 

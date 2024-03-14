@@ -46,6 +46,9 @@ namespace ave {
 				{"skybox", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCube(oColor,true);
 				}},
+				{"plane", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreatePlane(oColor);
+				}},
 
 			};
 

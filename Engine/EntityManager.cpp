@@ -34,9 +34,6 @@ namespace ave {
 		CreateShader();
 		CreateMesh();
 
-		
-	
-
 
 	}
 
@@ -70,19 +67,19 @@ namespace ave {
 
 		if (m_poInput->GetKeyDown(ave::KeyCode::Z)) {
 			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -0.5f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 		else if (m_poInput->GetKeyDown(ave::KeyCode::S)) {
 			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, 0.5f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 		else if (m_poInput->GetKeyDown(ave::KeyCode::Q)) {
 			XMVECTOR pos = DirectX::XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 		else if (m_poInput->GetKeyDown(ave::KeyCode::D)) {
 			XMVECTOR pos = DirectX::XMVectorSet(-0.5f, 0.0f, 0.0f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 
 		/*m_poInput->UpdateKeyStates();*/
@@ -105,12 +102,13 @@ namespace ave {
 		for (int i = 0; i < m_voEntities.size(); i++) {
 			m_voEntities[i]->Render();
 		}
+	}
 
+	void EntityManager::Render2D() {
 		for (int i = 0; i < m_voEntities.size(); i++) {
 			m_voEntities[i]->Render2D();
 		}
 	}
-
 	Camera* EntityManager::GetMainCamera()
 	{
 		return m_poMainCamera;
@@ -133,7 +131,7 @@ namespace ave {
 	} 
 
 	void EntityManager::CreateMesh() {
-		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox"};
+		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox","plane"};
 		for (int i = 0; i < sizeof(names)/sizeof(names[0]); i++) {
 			Mesh* poMesh = new Mesh();
 			XMVECTOR oColor = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

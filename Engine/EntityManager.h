@@ -47,6 +47,7 @@ namespace ave {
 		void Update(float iDeltaTime);
 		void LateUpdate();
 		void Render();
+		void Render2D();
 
 		// Returns a vector of Entities that have the given Component
 		template <typename Comp>

@@ -69,13 +69,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     XMVECTOR scale = XMVectorSet(4.5f, 4.5f, 4.5f, 4.5f);
     poCubeEntity2->m_poTransform->Scale(&scale);
 
-    //ave::UI::SpriteRenderer* spriteRenderer = poCubeEntity->AddComponent<ave::UI::SpriteRenderer>();
-    //XMVECTOR pixelPos = XMVectorSet(0, 0, 0, 0);
-    //XMVECTOR pixelSize = XMVectorSet(100, 100, 0, 0);
-    //spriteRenderer->SetPixelPosition(pixelPos);
-    //spriteRenderer->SetPixelSize(pixelSize);
-    //spriteRenderer->SetMesh(manager->GetMesh());
-    //spriteRenderer->SetShader(manager->GetShader());
+    ave::UI::SpriteRenderer* spriteRenderer = poCubeEntity->AddComponent<ave::UI::SpriteRenderer>();
+    XMVECTOR pixelPos = XMVectorSet(0, 0, 0, 0);
+    XMVECTOR pixelSize = XMVectorSet(100, 100, 0, 0);
+    spriteRenderer->SetPixelPosition(pixelPos);
+    spriteRenderer->SetPixelSize(pixelSize);
+    spriteRenderer->SetMesh(manager->GetMesh("planeTexture"));
+    spriteRenderer->SetShader(manager->GetShader("Texture"));
 
     manager->RegisterEntity(poCubeEntity);
 

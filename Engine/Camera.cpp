@@ -49,6 +49,7 @@ namespace ave {
 	{
 		SetLens(70, 800.f/600.f, 1.0f, 1000.0f);
 		m_poBuffer = new UploadBuffer<PassConstants>(GraphicsHandler::GetDevice(), 1, true);
+		m_poBufferSprite = new UploadBuffer<PassConstants>(GraphicsHandler::GetDevice(), 1, true);
 	}
 
 	void Camera::ChangeAspectRatio(float fWidth, float fHeight) {
@@ -74,7 +75,7 @@ namespace ave {
 		PassConstants opassConstants;
 		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
 		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voOrthographicProj)));
-		m_poBuffer->CopyData(0, opassConstants);
+		m_poBufferSprite->CopyData(0, opassConstants);
 	}
 
 	DirectX::XMMATRIX Camera::GetProjectionMatrix() const

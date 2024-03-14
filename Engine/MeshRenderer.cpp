@@ -54,7 +54,7 @@ namespace ave {
 	}
 
 	void MeshRenderer::Render() {
-		m_poShader->Draw(m_poMesh, m_poBuffer);
+		m_poShader->Draw(m_poMesh, m_poBuffer, m_poTexture);
 	}
 
 	MeshRenderer::~MeshRenderer() {

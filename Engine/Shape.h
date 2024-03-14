@@ -128,7 +128,22 @@ namespace ave {
 			m_aShapes.push_back(std::make_pair(vertices, indices));
 			return m_aShapes;
 		}
-		
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreatePlane() {
+
+			vertices.push_back(T({ XMFLOAT3(-0.5f, -0.5f, 0.f), XMFLOAT4(0.0f, 1.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(-0.5f, +0.5f, 0.f), XMFLOAT4(0.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+0.5f, +0.5f, 0.f), XMFLOAT4(1.0f, 0.0f,0.0f,0.0f) }));
+			vertices.push_back(T({ XMFLOAT3(+0.5f, -0.5f, 0.f), XMFLOAT4(1.0f, 1.0f,0.0f,0.0f) }));
+
+			indices.push_back(0);
+			indices.push_back(1);
+			indices.push_back(2);
+			indices.push_back(0);
+			indices.push_back(2);
+			indices.push_back(3);
+			m_aShapes.push_back(std::make_pair(vertices, indices));
+			return m_aShapes;
+		}
 		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>>CreateCylinder(float fHeight, float fStackCount,float fBottomRadius,float fTopRadius, FXMVECTOR* vColor = nullptr) {
 
 			XMFLOAT4 color;

@@ -28,6 +28,8 @@ namespace ave {
 		DirectX::XMMATRIX GetProjectionMatrix() const;
 
 		UploadBuffer<PassConstants>* m_poBuffer;
+		UploadBuffer<PassConstants>* m_poBufferSprite;
+
 
 	private:
 
