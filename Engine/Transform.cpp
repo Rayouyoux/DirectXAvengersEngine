@@ -198,9 +198,20 @@ namespace ave {
 	};
 
 	void Transform::LookTo(FXMVECTOR* poDirection) {
-		XMMATRIX mRot = XMMatrixLookToLH(XMVectorZero(), *poDirection, XMLoadFloat3(&m_vUp));
-		mRot = XMMatrixInverse(nullptr, mRot);
-		XMStoreFloat4x4(&m_mRotation, mRot);
+		XMVECTOR R2 = XMVector3Normalize(*poDirection);
+
+		XMVECTOR R0 = XMVector3Cross(XMLoadFloat3(&m_vUp), R2);
+		R0 = XMVector3Normalize(R0);
+
+		XMVECTOR R1 = XMVector3Cross(R2, R0);
+		XMMATRIX M;
+		M.r[0] = R0;
+		M.r[1] = R1;
+		M.r[2] = R2;
+		M.r[3] = g_XMIdentityR3.v;
+
+		M = XMMatrixTranspose(M);
+		XMStoreFloat4x4(&m_mRotation, M);
 
 		XMStoreFloat4(&m_qRotation, XMQuaternionRotationMatrix(XMLoadFloat4x4(&m_mRotation)));
 

@@ -551,9 +551,9 @@ namespace ave {
 		return m_poDsvHeap->GetCPUDescriptorHandleForHeapStart();
 	}
 
-	/*HWND GraphicsHandler::GetWindow() {
+	HWND GraphicsHandler::GetWindow() {
 		return m_poAve->GetWindow(); 
-	};*/
+	};
 
 #pragma endregion
 

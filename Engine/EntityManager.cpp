@@ -25,7 +25,7 @@ namespace ave {
 	void EntityManager::Init(GraphicsHandler* poGraphics) {
 		m_poGraphics = poGraphics;
 		m_poInput = new InputManager();
-		/*m_poInput->Init(poGraphics->GetWindow());*/
+		m_poInput->Init(poGraphics->GetWindow());
 
 		Entity* poCamera = NewEntity();
 		m_poMainCamera = poCamera->AddComponent<Camera>();
@@ -34,9 +34,10 @@ namespace ave {
 		CreateShader();
 		CreateMesh();
 
-		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
-		NewTexture("bricks");
-		NewTexture("image");
+		
+	
+
+
 	}
 
 	/*EntityManager* EntityManager::Create() {
@@ -65,6 +66,24 @@ namespace ave {
 		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
 		m_voEntities[1]->m_poTransform->RotateOnUp(rot);
 
+		m_poInput->UpdateKeyStates();
+
+		if (m_poInput->GetKeyDown(ave::KeyCode::Z)) {
+			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -0.5f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
+		else if (m_poInput->GetKeyDown(ave::KeyCode::S)) {
+			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, 0.5f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
+		else if (m_poInput->GetKeyDown(ave::KeyCode::Q)) {
+			XMVECTOR pos = DirectX::XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
+		else if (m_poInput->GetKeyDown(ave::KeyCode::D)) {
+			XMVECTOR pos = DirectX::XMVectorSet(-0.5f, 0.0f, 0.0f, 0.0f);
+			m_voAliveEntities[0]->m_poTransform->Move(&pos);
+		}
 
 		/*m_poInput->UpdateKeyStates();*/
 		for (int i = 0; i < m_voEntities.size(); i++) {
@@ -109,15 +128,17 @@ namespace ave {
 		m_poShaders.insert(std::pair<std::string, Shader*>("Color", poShader));
 
 		Shader* poShaderTexture = new Shader();
-		poShader->CreateShader(m_poGraphics, m_poMainCamera, 2);
-		m_poShaders.insert(std::pair<std::string, Shader*>("Texture", poShader));
-	}
+		poShaderTexture->CreateShader(m_poGraphics, m_poMainCamera, 2);
+		m_poShaders.insert(std::pair<std::string, Shader*>("Texture", poShaderTexture));
+	} 
 
 	void EntityManager::CreateMesh() {
 		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox"};
 		for (int i = 0; i < sizeof(names)/sizeof(names[0]); i++) {
 			Mesh* poMesh = new Mesh();
-			poMesh->BuildBoxGeometry<VERTEX_COLOR>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i]);
+			XMVECTOR oColor = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+			//FXMVECTOR oColor = {1.0f, 1.0f, 1.0f, 1.0f};
+			poMesh->BuildBoxGeometry<VERTEX_COLOR>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i], &oColor);
 			m_poMeshs.insert(std::pair<std::string, Mesh*>(names[i], poMesh));
 
 			Mesh* poMeshTexture = new Mesh();
@@ -134,12 +155,12 @@ namespace ave {
 		return m_poShaders.find(name)->second;
 	}
 
-	void EntityManager::NewTexture(std::string name) {
+	void EntityManager::NewTexture(std::string name, std::string filename) {
 
 		Texture* poTexture = new Texture();
 		m_poTextures.insert(std::make_pair(name, poTexture));
 		poTexture->Init(m_poGraphics->GetDevice());
-		poTexture->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds", m_poGraphics->GetCbvDescriptor());
+		poTexture->LoadTexture(name,std::wstring(filename.begin(), filename.end()), m_poGraphics->GetCbvDescriptor(),m_poGraphics);
 		poTexture->BuildSrvDesc(m_poGraphics->GetCbvDescriptor(), m_poTextures.size());
 	}
 
