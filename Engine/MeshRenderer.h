@@ -5,6 +5,7 @@
 #include <string>
 
 namespace ave {
+	struct AABB{};
 	class Mesh;
 	class Shader;
 	struct ObjectConstants;
@@ -28,6 +29,9 @@ namespace ave {
 		void Render() override;
 		~MeshRenderer();
 
+		AABB GetAABB();
+		void SetAABB(AABB oAABB);
+
 	protected:
 		Mesh* m_poMesh;
 		Texture* m_poTexture;
@@ -36,6 +40,13 @@ namespace ave {
 		Shader* m_poShader;
 
 		DirectX::XMFLOAT4 m_oColor;
+
+		AABB m_oContainingBox;
+
+		void UpdateAABBAfterRotation(const XMMATRIX& vRotationMatrix);
+		void UpdateAABBAfterTranslation(const XMVECTOR& vTranslation);
+		void UpdateAABBAfterScale(const XMVECTOR& vScale);
+		void UpdateAABB(XMFLOAT3& vertex);
 	};
 }
 

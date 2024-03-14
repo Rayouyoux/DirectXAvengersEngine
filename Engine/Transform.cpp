@@ -8,6 +8,9 @@ namespace ave {
 
 	Transform::Transform(){
 		m_bHandleChange = false;
+		m_bRotated = false;
+		m_bMoved = false;
+		m_bScaled = false;
 		Identity();
 	}
 
@@ -32,6 +35,7 @@ namespace ave {
 		XMStoreFloat3(&pvPos, *pvPosition);
 		Move(pvPos.x, pvPos.y, pvPos.z);
 		m_bHandleChange = true;
+		m_bMoved = true;
 	}
 
 	void Transform::Move(float fX, float fY, float fZ) {
@@ -46,6 +50,7 @@ namespace ave {
 		XMStoreFloat3(&pvScl, *pvScale);
 		Scale(pvScl.x, pvScl.y, pvScl.z);
 		m_bHandleChange = true;
+		m_bScaled = true;
 	}
 
 	void Transform::Scale(float fX, float fY, float fZ) {
@@ -60,6 +65,7 @@ namespace ave {
 		XMStoreFloat3(&pvRot, *pvRotate);
 		Rotate(pvRot.x, pvRot.y, pvRot.z);
 		m_bHandleChange = true;
+		m_bRotated = true;
 	}
 
 	void Transform::Rotate(float fPitch, float fRoll, float fYaw) {
@@ -97,6 +103,8 @@ namespace ave {
 	void Transform::SetVectorScale(FXMVECTOR* newScale) { 
 		XMStoreFloat3(&m_vScale, *newScale); 
 		XMStoreFloat4x4(&m_mScale, XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z));
+		m_bHandleChange = true;
+		m_bScaled = true;
 	};
 
 	void Transform::SetMatrixScale(FXMMATRIX* newMatrixScale) { 
@@ -105,12 +113,14 @@ namespace ave {
 		m_vScale.y = m_mScale._22;
 		m_vScale.z = m_mScale._33;
 		m_bHandleChange = true;
+		m_bScaled = true;
 	};
 
 	void Transform::SetVectorPosition(FXMVECTOR* newPosition) { 
 		XMStoreFloat3(&m_vPosition, *newPosition);
 		XMStoreFloat4x4(&m_mPosition, XMMatrixTranslation(m_vPosition.x, m_vPosition.y, m_vPosition.z));
 		m_bHandleChange = true;
+		m_bMoved = true;
 	};
 
 	void Transform::SetMatrixPosition(FXMMATRIX* newMatrixPosition) { 
@@ -119,6 +129,7 @@ namespace ave {
 		m_vPosition.y = m_mPosition._42;
 		m_vPosition.z = m_mPosition._43;
 		m_bHandleChange = true;
+		m_bMoved = true;
 	};
 
 	void Transform::RotateOnDir(float fRoll) {
@@ -133,6 +144,7 @@ namespace ave {
 		m_vDir.y = m_mRotation._32;
 		m_vDir.z = m_mRotation._33;
 		m_bHandleChange = true;
+		m_bRotated = true;
 	};
 
 	void Transform::RotateOnUp(float fYaw) {
@@ -147,6 +159,7 @@ namespace ave {
 		m_vUp.y = m_mRotation._22;
 		m_vUp.z = m_mRotation._23;
 		m_bHandleChange = true;
+		m_bRotated = true;
 	};
 
 	void Transform::RotateOnRight(float fPitch) {
@@ -161,6 +174,7 @@ namespace ave {
 		m_vRight.y = m_mRotation._12;
 		m_vRight.z = m_mRotation._13; 
 		m_bHandleChange = true;
+		m_bRotated = true;
 	};
 
 	void Transform::SetQuatRotation(FXMVECTOR* newRotation) { 
@@ -178,6 +192,7 @@ namespace ave {
 		m_vDir.y = m_mRotation._32;
 		m_vDir.z = m_mRotation._33;
 		m_bHandleChange = true;
+		m_bRotated = true;
 	};
 
 	void Transform::SetMatrixRotation(FXMMATRIX* newMatrixRotation) { 
@@ -195,6 +210,7 @@ namespace ave {
 		m_vDir.y = m_mRotation._32;
 		m_vDir.z = m_mRotation._33;
 		m_bHandleChange = true;
+		m_bRotated = true;
 	};
 
 	void Transform::LookTo(FXMVECTOR* poDirection) {
@@ -226,6 +242,7 @@ namespace ave {
 		m_vDir.z = m_mRotation._33;
 
 		m_bHandleChange = true;
+		m_bRotated = true;
 	}
 
 	Transform::~Transform()

@@ -27,5 +27,8 @@ namespace ave
 				return minInclusive + (rand() % (int)(maxInclusive - minInclusive + 1));
 			}
 		};
+
+		float TakeLowest(float a, float b);
+		float TakeHighest(float a, float b);
 	};
 }

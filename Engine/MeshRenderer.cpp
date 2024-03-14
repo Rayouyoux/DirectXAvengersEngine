@@ -11,6 +11,7 @@
 #include "Entity.h"
 #include "Transform.h"
 #include "Texture.h"
+#include "AABB.h"
 
 namespace ave {
 	MeshRenderer::MeshRenderer() : Component(){
@@ -33,11 +34,22 @@ namespace ave {
 	}
 
 	void MeshRenderer::Start() {
-		
+		SetAABB(*m_poMesh->GetAABB());
 	}
 
 	void MeshRenderer::Update(float deltaTime) {
-
+		if (m_poEntity->m_poTransform->m_bMoved) {
+			UpdateAABBAfterTranslation(m_poEntity->m_poTransform->GetVectorPosition());
+			m_poEntity->m_poTransform->m_bMoved = false;
+		}
+		if (m_poEntity->m_poTransform->m_bRotated) {
+			UpdateAABBAfterRotation(m_poEntity->m_poTransform->GetMatrixRotation());
+			m_poEntity->m_poTransform->m_bRotated = false;
+		}
+		if (m_poEntity->m_poTransform->m_bScaled) {
+			UpdateAABBAfterScale(m_poEntity->m_poTransform->GetVectorScale());
+			m_poEntity->m_poTransform->m_bScaled = false;
+		}
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
 		objConstants.Color = m_oColor;
@@ -52,6 +64,68 @@ namespace ave {
 			m_oColor.y /= 255;
 			m_oColor.z /= 255;
 		};
+	}
+
+	void MeshRenderer::UpdateAABBAfterRotation(const XMMATRIX& vRotationMatrix) {
+
+		XMFLOAT4X4 rotationMatrix;
+		XMStoreFloat4x4(&rotationMatrix, vRotationMatrix);
+
+		for (auto& vertex : m_poMesh->GetVertices()) {
+			XMVECTOR transformedVertex = XMVector3Transform(XMLoadFloat3(&vertex), XMLoadFloat4x4(&rotationMatrix));
+			XMFLOAT3 transformedVertexFloat3;
+			XMStoreFloat3(&transformedVertexFloat3, transformedVertex);
+			UpdateAABB(transformedVertexFloat3);
+		}
+	}
+
+	void MeshRenderer::UpdateAABBAfterTranslation(const XMVECTOR& vTranslation) {
+
+		XMFLOAT3 translation;
+		XMStoreFloat3(&translation, vTranslation);
+
+		AABB oAABB = GetAABB();
+
+		oAABB.m_vMin.x += translation.x;
+		oAABB.m_vMin.y += translation.y;
+		oAABB.m_vMin.z += translation.z;
+
+		oAABB.m_vMax.x += translation.x;
+		oAABB.m_vMax.y += translation.y;
+		oAABB.m_vMax.z += translation.z;
+
+		SetAABB(oAABB);
+	}
+
+	void MeshRenderer::UpdateAABBAfterScale(const XMVECTOR& vScale) {
+
+		XMFLOAT3 scale;
+		XMStoreFloat3(&scale, vScale);
+
+		AABB oAABB = GetAABB();
+
+		oAABB.m_vMin.x *= scale.x;
+		oAABB.m_vMin.y *= scale.y;
+		oAABB.m_vMin.z *= scale.z;
+
+		oAABB.m_vMax.x *= scale.x;
+		oAABB.m_vMax.y *= scale.y;
+		oAABB.m_vMax.z *= scale.z;
+
+		SetAABB(oAABB);
+	}
+
+	void MeshRenderer::UpdateAABB(XMFLOAT3& vertex) {
+
+		AABB oAABB = GetAABB();
+
+		oAABB.m_vMin.x = Maths::TakeLowest(oAABB.m_vMin.x, vertex.x);
+		oAABB.m_vMin.y = Maths::TakeLowest(oAABB.m_vMin.y, vertex.y);
+		oAABB.m_vMin.z = Maths::TakeLowest(oAABB.m_vMin.z, vertex.z);
+
+		oAABB.m_vMax.x = Maths::TakeHighest(oAABB.m_vMax.x, vertex.x);
+		oAABB.m_vMax.y = Maths::TakeHighest(oAABB.m_vMax.y, vertex.y);
+		oAABB.m_vMax.z = Maths::TakeHighest(oAABB.m_vMax.z, vertex.z);
 	}
 
 	void MeshRenderer::Render() {
@@ -93,6 +167,16 @@ namespace ave {
 		//poList->IASetIndexBuffer(&oIndexBufferView);
 		
 		m_poShader->Draw(m_poMesh, m_poBuffer, m_poTexture);
+	}
+
+	AABB MeshRenderer::GetAABB()
+	{
+		return m_oContainingBox;
+	}
+
+	void MeshRenderer::SetAABB(AABB oAABB)
+	{
+		m_oContainingBox = oAABB;
 	}
 
 	MeshRenderer::~MeshRenderer() {

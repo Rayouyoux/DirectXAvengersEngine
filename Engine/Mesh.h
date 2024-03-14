@@ -8,6 +8,7 @@
 #include <functional>
 
 namespace ave {
+	struct AABB{};
 	class Mesh
 	{
 	public:
@@ -17,6 +18,14 @@ namespace ave {
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
 
 		UINT GetIndexCount();
+
+		AABB* GetAABB();
+		void SetAABB(XMFLOAT3 vMin, XMFLOAT3 vMax);
+		void SetAABB(AABB oAABB);
+		void SetVertice(XMFLOAT3 vVertice);
+		std::vector<XMFLOAT3> GetVertices();
+
+		std::vector<XMFLOAT3> m_vVertices;
 		
 		~Mesh();
 
@@ -106,6 +115,8 @@ namespace ave {
 		UINT m_oIndexBufferByteSize;
 
 		UINT m_oIndexCount;
+
+		AABB m_oContainingBox;
 	};
 
 

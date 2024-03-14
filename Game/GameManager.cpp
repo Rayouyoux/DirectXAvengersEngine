@@ -61,9 +61,8 @@ void GameManager::InitComponents() {
 	m_poRotCube->m_poTransform->SetVectorPosition(&posCube);
 
 	ave::MeshRenderer* cubeRenderer = m_poRotCube->AddComponent<ave::MeshRenderer>();
-	cubeRenderer->SetMesh(m_poManager->GetMesh("cubeTexture"));
-	cubeRenderer->SetShader(m_poManager->GetShader("Texture"));
-	cubeRenderer->SetTexture(m_poManager->GetTexture("image"));
+	cubeRenderer->SetMesh(m_poManager->GetMesh("cube"));
+	cubeRenderer->SetShader(m_poManager->GetShader("Color"));
 
 	ave::MeshRenderer* skyboxRenderer = m_poSkybox->AddComponent<ave::MeshRenderer>();
 	skyboxRenderer->SetMesh(m_poManager->GetMesh("skyboxTexture"));
