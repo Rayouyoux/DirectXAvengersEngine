@@ -4,6 +4,7 @@
 #include "GameTime.h"
 #include "Logger.h"
 #include "Maths.h"
+#include <time.h>
 
 namespace ave {
 	AvengersEngine::AvengersEngine() {
@@ -58,6 +59,8 @@ namespace ave {
 		m_poTimer->Initialize();
 
 		m_poGraphics->OnResize();
+
+		srand(time(NULL));
 
 		return true;
 	}

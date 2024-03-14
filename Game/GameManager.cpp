@@ -37,6 +37,7 @@ void GameManager::InitResources() {
 	m_poManager->NewTexture("image", "../Engine/Textures/image.dds");
 	m_poManager->NewTexture("default_particle", "../Engine/Textures/default_particle.dds");
 	m_poManager->NewTexture("bricks", "../Engine/Textures/bricks.dds");
+	m_poManager->NewTexture("blue_particle", "Textures/blue_particle.dds");
 }
 
 void GameManager::InitEntities() {
@@ -54,7 +55,7 @@ void GameManager::InitComponents() {
 	healthActor->SetMaxHealth(100);
 
 	// Camera
-	DirectX::XMVECTOR camPos = XMVectorSet(0.0f, 0.0f, 4.0f, 0.0f);
+	DirectX::XMVECTOR camPos = XMVectorSet(0.0f, 0.0f, 2.0f, 0.0f);
 	m_poMainCam->m_poTransform->SetVectorPosition(&camPos);
 
 	DirectX::XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
@@ -77,16 +78,33 @@ void GameManager::InitComponents() {
 	//m_poSkybox->m_poTransform->Scale(&skyboxScale);
 
 	m_poDefaultBehaviour = new ave::Particles::ParticleBehaviour();
+	m_poDefaultBehaviour->EmissionType = ave::Particles::ParticleEmissionType::Burst;
+	m_poDefaultBehaviour->BurstAmount = 60;
+	m_poDefaultBehaviour->Size = .4f;
+	m_poDefaultBehaviour->SizeOverTime = true;
+	m_poDefaultBehaviour->EndSize = 0;
+	m_poDefaultBehaviour->Scale = XMFLOAT3(1, 1, 1);
+	m_poDefaultBehaviour->ScaleOverTime = false;
+	m_poDefaultBehaviour->RotateOverTime = false;
+	m_poDefaultBehaviour->RotSpeed = 0;
+	m_poDefaultBehaviour->SpeedOverTime = true;
+	m_poDefaultBehaviour->Speed = 3.f;
+	m_poDefaultBehaviour->EndSpeed = 0.f;
+	m_poDefaultBehaviour->MaxLifetime = 0.5f;
+	m_poDefaultBehaviour->SpeedVariation = 0.4f;
+	m_poDefaultBehaviour->LifetimeVariation = 1;
+	m_poDefaultBehaviour->SizeVariation = .7;
+
 	ave::Particles::ParticleSystem* particleSystem = m_poParticleSystemEx->AddComponent<ave::Particles::ParticleSystem>();
 	particleSystem->SetBehaviour(m_poDefaultBehaviour);
-	particleSystem->Initialize(m_poGraphics, 10, 200);
+	particleSystem->Initialize(m_poGraphics);
 	particleSystem->SetShader(m_poManager->GetShader("Texture"));
-	particleSystem->SetTexture(m_poManager->GetTexture("bricks"));
+	particleSystem->SetTexture(m_poManager->GetTexture("blue_particle"));
 }
 
 void GameManager::RegisterEntities() {
 	m_poManager->RegisterEntity(m_poPlayer);
-	m_poManager->RegisterEntity(m_poRotCube);
+	//m_poManager->RegisterEntity(m_poRotCube);
 	m_poManager->RegisterEntity(m_poSkybox);
 	m_poManager->RegisterEntity(m_poParticleSystemEx);
 }

@@ -22,25 +22,39 @@ namespace ave {
 			TowardsCamera,
 		};
 
+		enum ParticleEmissionType {
+			EmissionRate,
+			Burst
+		};
+
 		struct ParticleBehaviour {
+			ParticleEmissionType EmissionType = ParticleEmissionType::EmissionRate;
+			float EmissionRate = 5.0f;
+			int BurstAmount = 25;
+
 			int MaxParticle = 500;
 			float MaxLifetime = 0.8;
+			float LifetimeVariation = 0.2f;
 
 			float Speed = 6;
+			float SpeedVariation = 0.2f;
 			bool SpeedOverTime = false;
 			float EndSpeed = 2;
+			float EndSpeedVariation = 0.2f;
 
 			float RotSpeed = 20;
 			bool RotateOverTime = false;
 			float EndRotSpeed = 100;
 
-			const DirectX::XMFLOAT3 Scale = { 0.2f, 0.2f, 1.f };
+			DirectX::XMFLOAT3 Scale = { 0.2f, 0.2f, 1.f };
 			bool ScaleOverTime = false;
-			const DirectX::XMFLOAT3 EndScale = { 1, 1, 1 };
+			DirectX::XMFLOAT3 EndScale = { 1, 1, 1 };
 
 			float Size = 0.5f;
+			float SizeVariation = 0.2f;
 			bool SizeOverTime = true;
 			float EndSize = 0;
+			float EndSizeVariation = 0.2f;
 		};
 
 		class Particle {
@@ -48,6 +62,12 @@ namespace ave {
 			Transform* m_poTransform;
 			float m_iLifetime;
 			ParticleBehaviour* m_poBehaviour;
+
+			float m_fMaxLifetime;
+			float m_fSpeed;
+			float m_fEndSpeed;
+			float m_fSize;
+			float m_fEndSize;
 
 		public:
 			Particle();
@@ -65,7 +85,7 @@ namespace ave {
 		private:
 			ObjectPooling::ObjectPool* m_poParticlePool;
 			int m_iCapacity;
-			float m_iEmissionRate;
+
 
 			ParticleBehaviour* m_poBehaviour;
 			Shader* m_poShader;
@@ -94,11 +114,13 @@ namespace ave {
 			ParticleSystem();
 			~ParticleSystem();
 
-			void Initialize(GraphicsHandler* graphics, float iRate, int iCapacity);
+			void Initialize(GraphicsHandler* graphics);
 
 			void SetBehaviour(ParticleBehaviour* behaviour);
 			void SetShader(Shader* shader);
 			void SetTexture(Texture* texture);
+
+			void SpawnNewParticle();
 
 			void Start() override;
 			void Update(float deltaTime) override;

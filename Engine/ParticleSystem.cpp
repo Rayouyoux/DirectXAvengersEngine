@@ -44,6 +44,12 @@ namespace ave {
 
 		void Particle::SetBehaviour(ParticleBehaviour* behaviour) {
 			m_poBehaviour = behaviour;
+
+			m_fMaxLifetime = m_poBehaviour->MaxLifetime * Random::Range(-m_poBehaviour->LifetimeVariation, m_poBehaviour->LifetimeVariation);
+			m_fSpeed = m_poBehaviour->Speed * (1 + Random::Range(-m_poBehaviour->SpeedVariation, m_poBehaviour->SpeedVariation));
+			m_fEndSpeed = m_poBehaviour->EndSpeed * (1 + Random::Range(-m_poBehaviour->EndSpeedVariation, m_poBehaviour->EndSpeedVariation));
+			m_fSize = m_poBehaviour->Size * (1 + Random::Range(-m_poBehaviour->SizeVariation, m_poBehaviour->SizeVariation));
+			m_fEndSize = m_poBehaviour->EndSize * (1 + Random::Range(-m_poBehaviour->EndSizeVariation, m_poBehaviour->EndSizeVariation));
 		}
 
 		//void Particle::OnAcquire() {
@@ -66,7 +72,7 @@ namespace ave {
 		//}
 
 		void Particle::Update(float deltaTime) {
-			float alpha = m_iLifetime / m_poBehaviour->MaxLifetime;
+			float alpha = m_iLifetime / m_fMaxLifetime;
 			bool isMatrixDirty = true;
 
 			// Update size along lifetime
@@ -83,10 +89,10 @@ namespace ave {
 
 				float size;
 				if (m_poBehaviour->SizeOverTime) {
-					size = Lerp<float>(m_poBehaviour->Size, m_poBehaviour->EndSize, alpha);
+					size = Lerp<float>(m_fSize, m_fEndSize, alpha);
 				}
 				else {
-					size = m_poBehaviour->Size;
+					size = m_fSize;
 				}
 				XMVECTOR newScale = scale * size;
 				m_poTransform->SetVectorScale(&newScale);
@@ -107,12 +113,12 @@ namespace ave {
 			// Update position based on Speed along Dir
 			float speed;
 			if (m_poBehaviour->SpeedOverTime) {
-				speed = Lerp<float>(m_poBehaviour->Speed,
-					m_poBehaviour->EndSpeed, alpha);
+				speed = Lerp<float>(m_fSpeed,
+					m_fEndSpeed, alpha);
 			} else
-				speed = m_poBehaviour->Speed;
+				speed = m_fSpeed;
 
-			if (m_poBehaviour->Speed != 0) {
+			if (speed != 0) {
 				XMVECTOR dir = m_poTransform->GetVectorDir();
 				XMVECTOR offset = dir * speed * deltaTime;
 				m_poTransform->Move(&offset);
@@ -133,7 +139,6 @@ namespace ave {
 		ParticleSystem::ParticleSystem() {
 			//m_poParticlePool = ObjectPooling::ObjectPool::Create();
 			m_iCapacity = 0;
-			m_iEmissionRate = 0;
 			m_fRateDebounce = 0.0f;
 			m_lVerticesBuffer.resize(500*4);
 			m_lIndicesBuffer.resize(500*6);
@@ -150,11 +155,8 @@ namespace ave {
 			delete m_poBuffer;
 		}
 
-		void ParticleSystem::Initialize(GraphicsHandler* graphics,
-			float iRate, int iCapacity) {
-			m_iCapacity = iCapacity;
-			m_iEmissionRate = iRate;
-			m_fRateDebounce = 1 / m_iEmissionRate;
+		void ParticleSystem::Initialize(GraphicsHandler* graphics) {
+			m_fRateDebounce = 1 / m_poBehaviour->EmissionRate;
 			//m_poParticlePool->Initialize<Particle>(iCapacity);
 			m_poBuffer = new UploadBuffer<ObjectConstants>(
 				GraphicsHandler::GetDevice(), 1, true);
@@ -201,30 +203,41 @@ namespace ave {
 
 		void ParticleSystem::Start(){
 			ObjectConstants objConstants;
-			XMFLOAT4X4 floatIdentity = Maths::MatriceIdentity();
-			XMMATRIX id = XMLoadFloat4x4(&floatIdentity);
-			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(id));
+			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
 			m_poBuffer->CopyData(0, objConstants);
+
+			if (m_poBehaviour->EmissionType != ParticleEmissionType::Burst)
+				return;
+
+			for (int i = 0; i < m_poBehaviour->BurstAmount; i++) {
+				SpawnNewParticle();
+			}
+		}
+
+		void ParticleSystem::SpawnNewParticle() {
+			Particle* particle = new Particle();
+			particle->Init();
+			XMVECTOR pos = m_poEntity->m_poTransform->GetVectorPosition();
+			particle->m_poTransform->SetVectorPosition(&pos);
+			particle->SetBehaviour(m_poBehaviour);
+
+			m_lActiveParticles.push_back(particle);
 		}
 
 		void ParticleSystem::Update(float deltaTime) {
-			m_fRateDebounce += deltaTime;
-			if (m_fRateDebounce >= 1 / m_iEmissionRate) {
-				m_fRateDebounce = 0;
-				Particle* particle = new Particle();
-				particle->Init();
-				XMVECTOR pos = m_poEntity->m_poTransform->GetVectorPosition();
-				particle->m_poTransform->SetVectorPosition(&pos);
-				particle->SetBehaviour(m_poBehaviour);
-
-				m_lActiveParticles.push_back(particle);
+			if (m_poBehaviour->EmissionType == ParticleEmissionType::EmissionRate) {
+				m_fRateDebounce += deltaTime;
+				if (m_fRateDebounce >= 1 / m_poBehaviour->EmissionRate) {
+					m_fRateDebounce = 0;
+					SpawnNewParticle();
+				}
 			}
 
 			for (int i = m_lActiveParticles.size()-1; i >= 0; i--) {
 				Particle* particle = m_lActiveParticles[i];
 				particle->m_iLifetime += deltaTime;
 
-				if (particle->m_iLifetime >= particle->m_poBehaviour->MaxLifetime) {
+				if (particle->m_iLifetime >= particle->m_fMaxLifetime) {
 					m_lActiveParticles.erase(m_lActiveParticles.begin() + i);
 					delete particle;
 				}
@@ -250,18 +263,20 @@ namespace ave {
 				// Rotate towards the camera
 				XMVECTOR pos = particle->m_poTransform->GetVectorPosition();
 				XMVECTOR cameraDir = camPos - pos;
-				cameraDir = XMVector3Normalize(cameraDir);
-				particle->m_poTransform->LookTo(&cameraDir);
+				cameraDir = XMVector3Normalize(-cameraDir);
+
+				Transform tmp = *particle->m_poTransform;
+				tmp.LookTo(&cameraDir);
 
 				XMFLOAT3 fPos, fSize;
-				XMVECTOR vPos = particle->m_poTransform->GetVectorPosition();
+				XMVECTOR vPos = tmp.GetVectorPosition();
 				XMStoreFloat3(&fPos, vPos);
 
-				XMVECTOR vSize = particle->m_poTransform->GetVectorScale();
+				XMVECTOR vSize = tmp.GetVectorScale() * 0.5f;
 				XMStoreFloat3(&fSize, vSize);
 
-				XMVECTOR up = particle->m_poTransform->GetVectorUp();
-				XMVECTOR right = particle->m_poTransform->GetVectorRight();
+				XMVECTOR up = tmp.GetVectorUp();
+				XMVECTOR right = tmp.GetVectorRight();
 
 				// Calculate vertices positions
 				XMFLOAT3 fBottomLeft, fTopLeft, fTopRight, fBottomRight;
@@ -277,31 +292,31 @@ namespace ave {
 				//// Populate the vertices buffer ////
 				// Bottom Left
 				m_lVerticesBuffer.push_back(
-					VERTEX_UV({ fBottomLeft, XMFLOAT4(0.f, 1.f, 0.f, 0.f) })
+					VERTEX_UV({ fBottomLeft, XMFLOAT4(0.f, 0.f, 0.f, 0.f) })
 				);
 
 				// Top Left
 				m_lVerticesBuffer.push_back(
-					VERTEX_UV({ fTopLeft, XMFLOAT4(0.f, 0.f, 0.f, 0.f) })
+					VERTEX_UV({ fTopLeft, XMFLOAT4(1.f, 0.f, 0.f, 0.f) })
 				);
 
 				// Top Right
 				m_lVerticesBuffer.push_back(
-					VERTEX_UV({ fTopRight, XMFLOAT4(0.f, 1.f, 0.f, 0.f) })
+					VERTEX_UV({ fTopRight, XMFLOAT4(1.f, 1.f, 0.f, 0.f) })
 				);
 
 				// Bottom Right
 				m_lVerticesBuffer.push_back(
-					VERTEX_UV({ fBottomRight, XMFLOAT4(1.f, 1.f, 0.f, 0.f) })
+					VERTEX_UV({ fBottomRight, XMFLOAT4(0.f, 1.f, 0.f, 0.f) })
 				);
-
+				
 				//// Populate the indices buffer ////
-				m_lIndicesBuffer.push_back(0);
-				m_lIndicesBuffer.push_back(1);
-				m_lIndicesBuffer.push_back(3);
-				m_lIndicesBuffer.push_back(1);
-				m_lIndicesBuffer.push_back(3);
-				m_lIndicesBuffer.push_back(2);
+				m_lIndicesBuffer.push_back(i*4);
+				m_lIndicesBuffer.push_back(i*4+1);
+				m_lIndicesBuffer.push_back(i*4+2);
+				m_lIndicesBuffer.push_back(i*4);
+				m_lIndicesBuffer.push_back(i*4+2);
+				m_lIndicesBuffer.push_back(i*4+3);
 			}
 
 			void* data;
@@ -310,7 +325,7 @@ namespace ave {
 			m_poVertexBufferUploader->Unmap(0, nullptr);
 
 			m_poIndexBufferUploader->Map(0, nullptr, &data);
-			memcpy(data, m_lIndicesBuffer.data(), m_lIndicesBuffer.size()*2);
+			memcpy(data, m_lIndicesBuffer.data(), m_lIndicesBuffer.size()*4);
 			m_poIndexBufferUploader->Unmap(0, nullptr);
 
 			UINT indexCount = (UINT)m_lIndicesBuffer.size();
@@ -323,7 +338,7 @@ namespace ave {
 			ibv.BufferLocation = m_poIndexBufferUploader->GetGPUVirtualAddress();
 			ibv.Format = m_eIndexFormat;
 			ibv.SizeInBytes = m_iIndexBufferByteSize;
-
+			
 			m_poShader->Draw(vbv, ibv, indexCount, m_poBuffer, m_poTexture);
 		}
 	}
