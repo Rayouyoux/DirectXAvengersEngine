@@ -20,7 +20,7 @@ namespace ave {
 		void SetShader(Shader* SetShader);
 
 		void SetTexture(Texture* oTexture);
-		DirectX::XMFLOAT4 SetColor(DirectX::FXMVECTOR* vColor);
+		void SetColor(DirectX::FXMVECTOR* vColor);
 
 		void Start() override;
 		void Update(float dT) override;
@@ -34,6 +34,8 @@ namespace ave {
 		UploadBuffer<ObjectConstants>* m_poBuffer;
 		std::string m_oName;
 		Shader* m_poShader;
+
+		DirectX::XMFLOAT4 m_oColor;
 	};
 }
 

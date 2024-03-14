@@ -6,6 +6,7 @@
 #include <crtdbg.h>
 #endif
 
+
 //using namespace ave::ObjectPooling;
 //
 //class Particle : public IPullable {
@@ -53,6 +54,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     poMeshRenderer->SetMesh(manager->GetMesh("cube"));
     poMeshRenderer->SetShader(manager->GetShader("Color"));
     //poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
+    XMVECTOR test = XMVectorSet(0.0f, 255.0f, 255.0f, 1.0f);
+    poMeshRenderer->SetColor(&test);
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
     poMeshRenderer2->SetMesh(manager->GetMesh("skyboxTexture"));
