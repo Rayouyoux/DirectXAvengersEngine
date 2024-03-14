@@ -51,11 +51,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     manager->NewTexture("image", "../Engine/Textures/image.dds");
 
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer->SetMesh(manager->GetMesh("cube"));
+    poMeshRenderer->SetMesh(manager->GetMesh("pyramid"));
     poMeshRenderer->SetShader(manager->GetShader("Color"));
     //poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
-    XMVECTOR test = XMVectorSet(0.0f, 255.0f, 255.0f, 1.0f);
-    poMeshRenderer->SetColor(&test);
+  /*  XMVECTOR test = XMVectorSet(0.0f, 255.0f, 255.0f, 1.0f);
+    poMeshRenderer->SetColor(&test);*/
 
     ave::MeshRenderer* poMeshRenderer2 = poCubeEntity2->AddComponent<ave::MeshRenderer>();
     poMeshRenderer2->SetMesh(manager->GetMesh("skyboxTexture"));

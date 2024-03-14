@@ -31,17 +31,17 @@ namespace ave {
 				{"cube", [oShape, oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCube(oColor,false);
 				}},
-				{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
+				{"cylindre", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f,oColor);
 				}},
-				{"sphere", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateSphere(1.0f,50.0f);
+				{"sphere", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateSphere(1.0f,50.0f,oColor);
 				}},
-				{"cone", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCone(1.0f,16.0f);
+				{"cone", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateCone(1.0f,16.0f,oColor);
 				}},
-				{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreatePyramid(2.0f,3.0f);
+				{"pyramid", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreatePyramid(2.0f,3.0f,oColor);
 				}},
 				{"skybox", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCube(oColor,true);

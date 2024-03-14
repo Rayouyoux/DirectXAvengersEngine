@@ -15,7 +15,13 @@ namespace ave {
 	public:
 		Shape() {};
 
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateSphere(float fRadius, float fNumSubDivisions) {
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateSphere(float fRadius, float fNumSubDivisions, FXMVECTOR* vColor = nullptr) {
+			XMFLOAT4 color;
+
+			if (vColor != nullptr) {
+				XMStoreFloat4(&color, *vColor);
+			}
+
 			for (int i = 0; i <= fNumSubDivisions; i++) {
 				float phi = DirectX::XM_PI * i / fNumSubDivisions;
 				for (int j = 0; j <= fNumSubDivisions; j++) {
@@ -28,7 +34,7 @@ namespace ave {
 					float u = static_cast<float>(j) / fNumSubDivisions;
 					float v = static_cast<float>(i) / fNumSubDivisions;
 
-					T vertex = { DirectX::XMFLOAT3(x,y,z), DirectX::XMFLOAT4(u,v,0.0f,0.0f) };
+					T vertex = { DirectX::XMFLOAT3(x,y,z), vColor ? color : DirectX::XMFLOAT4(u,v,0.0f,0.0f) };
 					vertices.push_back(vertex);
 				}
 			}
@@ -106,8 +112,13 @@ namespace ave {
 			return m_aShapes;
 		}
 		
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>>CreateCylinder(float fHeight, float fStackCount,float fBottomRadius,float fTopRadius) {
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>>CreateCylinder(float fHeight, float fStackCount,float fBottomRadius,float fTopRadius, FXMVECTOR* vColor = nullptr) {
 
+			XMFLOAT4 color;
+
+			if (vColor != nullptr) {
+				XMStoreFloat4(&color, *vColor);
+			}
 
 			float stackHeight = fHeight / fStackCount;
 
@@ -137,7 +148,7 @@ namespace ave {
 					float u = (float)j / sliceCount;
 					float v  = 1.0f - (float)i / fStackCount;
 
-					vertices.push_back(T{ XMFLOAT3(r * c, y, r * s), XMFLOAT4(u,v,0.0f,0.0f) });
+					vertices.push_back(T{ XMFLOAT3(r * c, y, r * s),vColor ? color : XMFLOAT4(u,v,0.0f,0.0f) });
 				}
 			}
 
@@ -160,14 +171,20 @@ namespace ave {
 				}
 			}
 			
-			CreateBottomDisque(fHeight, sliceCount, fBottomRadius);
-			CreateUpDisque(fHeight, sliceCount, fTopRadius);
+			CreateBottomDisque(fHeight, sliceCount, fBottomRadius, vColor);
+			CreateUpDisque(fHeight, sliceCount, fTopRadius, vColor);
 			m_aShapes.push_back(std::make_pair(vertices, indices));
 			return m_aShapes;
 		}
 	
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCone(float fRadius, float fNumSubDivisions) {
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreateCone(float fRadius, float fNumSubDivisions, FXMVECTOR* vColor = nullptr) {
 			
+			XMFLOAT4 color;
+
+			if (vColor != nullptr) {
+				XMStoreFloat4(&color, *vColor);
+			}
+
 			float fHeight = 2.0f;
 
 			for (int i = 0; i < fNumSubDivisions; i++) {
@@ -177,14 +194,14 @@ namespace ave {
 				float u = static_cast<float>(i) / (fNumSubDivisions - 1); // Ajustement des coordonnées de texture
 				float v = 1.0f;
 
-				vertices.push_back(T{ XMFLOAT3(x, y, 0.0f), XMFLOAT4(u,v,0.0f,0.0f)});
+				vertices.push_back(T{ XMFLOAT3(x, y, 0.0f),vColor ? color : XMFLOAT4(u,v,0.0f,0.0f)});
 			}
 
 			// Ajouter le sommet du cône
-			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, fHeight), XMFLOAT4(0.5f,0.5f,0.0f,0.0f)});
+			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, fHeight), vColor ? color : XMFLOAT4(0.5f,0.5f,0.0f,0.0f)});
 
 			// Ajouter le centre du disque du bas
-			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f)});
+			vertices.push_back(T{XMFLOAT3(0.0f, 0.0f, 0.0f), vColor ? color : XMFLOAT4(0.5f,0.5f,0.0f,0.0f)});
 
 			for (int i = 0; i < fNumSubDivisions; ++i) {
 
@@ -207,13 +224,20 @@ namespace ave {
 			return m_aShapes;
 		}
 
-		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreatePyramid(float fBaseLength, float fHeight) {
+		std::vector < std::pair<std::vector<T>, std::vector<uint16_t>>> CreatePyramid(float fBaseLength, float fHeight, FXMVECTOR* vColor = nullptr) {
+			
+			XMFLOAT4 color;
+
+			if (vColor != nullptr) {
+				XMStoreFloat4(&color, *vColor);
+			}
+
 			// Calcul des coordonnées des vertices
-			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, -fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,1.0f,0.0f,0.0f)});
-			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, -fBaseLength / 2, 0.0f), XMFLOAT4(1.0f,1.0f,0.0f,0.0f) });
-			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,1.0f,0.0f,0.0f) });
-			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, fBaseLength / 2, 0.0f), XMFLOAT4(0.0f,0.0f,0.0f,0.0f) });
-			vertices.push_back(T{ DirectX::XMFLOAT3(0.0f, 0.0f, fHeight), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, -fBaseLength / 2, 0.0f),vColor ? color : XMFLOAT4(0.0f,1.0f,0.0f,0.0f)});
+			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, -fBaseLength / 2, 0.0f),vColor ? color : XMFLOAT4(1.0f,1.0f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(fBaseLength / 2, fBaseLength / 2, 0.0f),vColor ? color : XMFLOAT4(0.0f,1.0f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(-fBaseLength / 2, fBaseLength / 2, 0.0f),vColor ? color : XMFLOAT4(0.0f,0.0f,0.0f,0.0f) });
+			vertices.push_back(T{ DirectX::XMFLOAT3(0.0f, 0.0f, fHeight),vColor ? color : XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
 
 			// Indices pour former les faces de la pyramide
 			indices.push_back(0);
@@ -249,8 +273,13 @@ namespace ave {
 		~Shape();
 
 	protected:
-			void CreateBottomDisque(float fHeight, float fSliceCount, float fBottomRadius) {
+			void CreateBottomDisque(float fHeight, float fSliceCount, float fBottomRadius, FXMVECTOR* vColor = nullptr) {
 
+				XMFLOAT4 color;
+
+				if (vColor != nullptr) {
+					XMStoreFloat4(&color, *vColor);
+				}
 				//Disque du haut
 				UINT32 baseIndex = (UINT32)vertices.size();
 
@@ -268,11 +297,11 @@ namespace ave {
 					float u = x / fHeight + 0.5f;
 					float v = z / fHeight + 0.5f;
 
-					vertices.push_back(T{ XMFLOAT3(x,yBottomDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
+					vertices.push_back(T{ XMFLOAT3(x,yBottomDisque,z),vColor ? color : XMFLOAT4(u,v,0.0f,0.0f) });
 				}
 
 				// Cap center vertex.
-				vertices.push_back(T{ XMFLOAT3(0.0f,yBottomDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
+				vertices.push_back(T{ XMFLOAT3(0.0f,yBottomDisque,0.0f),vColor ? color : XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
 
 				// Index of center vertex.
 				UINT32 centerIndex = (UINT32)vertices.size() - 1;
@@ -284,7 +313,14 @@ namespace ave {
 					indices.push_back(baseIndex + i + 1);
 				}
 			}
-			void CreateUpDisque(float fHeight, float fSliceCount, float fTopRadius) {
+			void CreateUpDisque(float fHeight, float fSliceCount, float fTopRadius, FXMVECTOR* vColor = nullptr) {
+
+				XMFLOAT4 color;
+
+				if (vColor != nullptr) {
+					XMStoreFloat4(&color, *vColor);
+				}
+
 				//Disque du haut
 				UINT32 baseIndex = (UINT32)vertices.size();
 
@@ -302,11 +338,11 @@ namespace ave {
 					float u = x / fHeight + 0.5f;
 					float v = z / fHeight + 0.5f;
 
-					vertices.push_back(T{ XMFLOAT3(x,yDisque,z), XMFLOAT4(u,v,0.0f,0.0f) });
+					vertices.push_back(T{ XMFLOAT3(x,yDisque,z), vColor ? color : XMFLOAT4(u,v,0.0f,0.0f) });
 				}
 
 				// Cap center vertex.
-				vertices.push_back(T{ XMFLOAT3(0.0f,yDisque,0.0f), XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
+				vertices.push_back(T{ XMFLOAT3(0.0f,yDisque,0.0f), vColor ? color : XMFLOAT4(0.5f,0.5f,0.0f,0.0f) });
 
 				// Index of center vertex.
 				UINT32 centerIndex = (UINT32)vertices.size() - 1;
