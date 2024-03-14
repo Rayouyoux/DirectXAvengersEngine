@@ -37,9 +37,6 @@ namespace ave {
 		/*NewTexture("bricks", "../Engine/Textures/bricks.dds");
 		NewTexture("image", "../Engine/Textures/image.dds");*/
 		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
-	
-
-
 	}
 
 	/*EntityManager* EntityManager::Create() {

@@ -34,7 +34,6 @@ namespace ave {
 		ID3DBlob* m_poPS;
 		std::vector<D3D12_INPUT_ELEMENT_DESC> m_oInputLayout;
 		std::map<const char*, ID3D12PipelineState*> m_dPSOs;
-		Camera* m_poCamera;
 
 		int m_iIdRootSignature;
 		int m_iRootTexture;
@@ -53,6 +52,7 @@ namespace ave {
 		void End();
 		/*void AddObject();*/
 		bool CreateShader(GraphicsHandler* poGraphicsHandler, Camera* poCamera, int id);
+		void Draw(D3D12_VERTEX_BUFFER_VIEW& vertexBuffer, D3D12_INDEX_BUFFER_VIEW& indicesBuffer, UINT indexCount, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture);
 		void Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture);
 		/*void UpdateObject();*/
 		bool CreateRootSignature(int id);
@@ -71,6 +71,7 @@ namespace ave {
 		ID3D12PipelineState* GetPso(const char* blend);
 
 
+		Camera* m_poCamera;
 
 		static std::vector<CD3DX12_STATIC_SAMPLER_DESC> GetStaticSamplers();
 

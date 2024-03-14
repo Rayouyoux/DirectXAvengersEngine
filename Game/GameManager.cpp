@@ -18,7 +18,7 @@ GameManager::GameManager() {
 }
 
 GameManager::~GameManager() {
-
+	delete m_poDefaultBehaviour;
 }
 
 void GameManager::Initialize(ave::AvengersEngine* engine) {
@@ -34,7 +34,9 @@ void GameManager::Start() {
 }
 
 void GameManager::InitResources() {
-	m_poManager->NewTexture("image", "../Engine/Textures/bricks.dds");
+	m_poManager->NewTexture("image", "../Engine/Textures/image.dds");
+	m_poManager->NewTexture("default_particle", "../Engine/Textures/default_particle.dds");
+	m_poManager->NewTexture("bricks", "../Engine/Textures/bricks.dds");
 }
 
 void GameManager::InitEntities() {
@@ -42,6 +44,7 @@ void GameManager::InitEntities() {
 	m_poPlayer = m_poManager->NewEntity();
 	m_poRotCube = m_poManager->NewEntity();
 	m_poSkybox = m_poManager->NewEntity();
+	m_poParticleSystemEx = m_poManager->NewEntity();
 }
 
 void GameManager::InitComponents() {
@@ -65,19 +68,27 @@ void GameManager::InitComponents() {
 	cubeRenderer->SetShader(m_poManager->GetShader("Texture"));
 	cubeRenderer->SetTexture(m_poManager->GetTexture("image"));
 
-	ave::MeshRenderer* skyboxRenderer = m_poSkybox->AddComponent<ave::MeshRenderer>();
-	skyboxRenderer->SetMesh(m_poManager->GetMesh("skyboxTexture"));
-	skyboxRenderer->SetShader(m_poManager->GetShader("Texture"));
-	skyboxRenderer->SetTexture(m_poManager->GetTexture("image"));
+	//ave::MeshRenderer* skyboxRenderer = m_poSkybox->AddComponent<ave::MeshRenderer>();
+	//skyboxRenderer->SetMesh(m_poManager->GetMesh("skyboxTexture"));
+	//skyboxRenderer->SetShader(m_poManager->GetShader("Texture"));
+	//skyboxRenderer->SetTexture(m_poManager->GetTexture("image"));
 
-	DirectX::XMVECTOR skyboxScale = XMVectorSet(1.0f, 1.0f, 1.f, 0.f) * 100;
-	m_poSkybox->m_poTransform->Scale(&skyboxScale);
+	//DirectX::XMVECTOR skyboxScale = XMVectorSet(1.0f, 1.0f, 1.f, 0.f) * 100;
+	//m_poSkybox->m_poTransform->Scale(&skyboxScale);
+
+	m_poDefaultBehaviour = new ave::Particles::ParticleBehaviour();
+	ave::Particles::ParticleSystem* particleSystem = m_poParticleSystemEx->AddComponent<ave::Particles::ParticleSystem>();
+	particleSystem->SetBehaviour(m_poDefaultBehaviour);
+	particleSystem->Initialize(m_poGraphics, 10, 200);
+	particleSystem->SetShader(m_poManager->GetShader("Texture"));
+	particleSystem->SetTexture(m_poManager->GetTexture("bricks"));
 }
 
 void GameManager::RegisterEntities() {
 	m_poManager->RegisterEntity(m_poPlayer);
 	m_poManager->RegisterEntity(m_poRotCube);
 	m_poManager->RegisterEntity(m_poSkybox);
+	m_poManager->RegisterEntity(m_poParticleSystemEx);
 }
 
 void GameManager::Update(float dT) {

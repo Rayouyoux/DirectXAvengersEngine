@@ -6,6 +6,10 @@ namespace ave {
 	class GraphicsHandler;
 	class EntityManager;
 	class Entity;
+
+	namespace Particles {
+		struct ParticleBehaviour;
+	}
 }
 
 class GameManager : public ave::Script {
@@ -17,6 +21,10 @@ private:
 
 	ave::Entity* m_poRotCube;
 	ave::Entity* m_poSkybox;
+
+	ave::Entity* m_poParticleSystemEx;
+
+	ave::Particles::ParticleBehaviour* m_poDefaultBehaviour;
 
 public:
 	GameManager();

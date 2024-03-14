@@ -12,8 +12,6 @@
 #include <iostream>
 #include "ConstantsStruct.h"
 
-
-
 namespace ave {
     
     Shader::Shader(){
@@ -175,8 +173,7 @@ namespace ave {
         return true;
     }
     
-
-    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture) {
+    void Shader::Draw(D3D12_VERTEX_BUFFER_VIEW& vertexBuffer, D3D12_INDEX_BUFFER_VIEW& indexBuffer, UINT indexCount, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture) {
         ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
         ////Root
@@ -189,10 +186,8 @@ namespace ave {
         ////Topology
         poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        auto oVertexBufferView = pMesh->VertexBufferView();
-        auto oIndexBufferView = pMesh->IndexBufferView();
-        poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
-        poList->IASetIndexBuffer(&oIndexBufferView);
+        poList->IASetVertexBuffers(0, 1, &vertexBuffer);
+        poList->IASetIndexBuffer(&indexBuffer);
 
         if (GetRootTexture() != -1 && oTexture)
         {
@@ -200,13 +195,19 @@ namespace ave {
             //auto test = std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName));
             //std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName)) / 2
             //tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName))/2, *m_poTextures->GetDescriptorSize());
-            
+
             poList->SetGraphicsRootDescriptorTable(GetRootTexture(), *oTexture->GetDescriptorGpuHandle());
         }
 
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());
 
-        poList->DrawIndexedInstanced(pMesh->GetIndexCount(), 1, 0, 0, 0);
+        poList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
+    }
+
+    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture) {
+        D3D12_VERTEX_BUFFER_VIEW vertexBufferView = pMesh->VertexBufferView();
+        D3D12_INDEX_BUFFER_VIEW indexBufferView = pMesh->IndexBufferView();
+        Draw(vertexBufferView, indexBufferView, pMesh->GetIndexCount(), poBuffer, oTexture);
     }
 
     ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {

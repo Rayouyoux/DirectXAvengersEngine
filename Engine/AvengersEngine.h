@@ -13,3 +13,4 @@
 #include "Shader.h"
 #include "EntityManager.h"
 #include "Script.h"
+#include "ParticleSystem.h"

@@ -5,24 +5,25 @@
 #include "ObjectPooler.h"
 #include "UploadBuffer.h"
 #include "ConstantsStruct.h"
+#include "Vertex.h"
+#include <dxgi.h>
+
+class ID3D12Resource;
+class ID3D10Blob;
 
 namespace ave {
 	class Transform;
 	class Shader;
-	class Mesh;
+	class Texture;
+	class GraphicsHandler;
 
 	namespace Particles {
 		enum ParticleOrientation {
 			TowardsCamera,
 		};
 
-		enum ParticleRenderingType {
-			Mesh,
-			Texture,
-			Flipbook
-		};
-
 		struct ParticleBehaviour {
+			int MaxParticle = 500;
 			float MaxLifetime = 0.8;
 
 			float Speed = 6;
@@ -40,16 +41,11 @@ namespace ave {
 			float Size = 0.5f;
 			bool SizeOverTime = true;
 			float EndSize = 0;
-
-			ParticleRenderingType RenderingType = Mesh;
 		};
 
-		class Particle : public ObjectPooling::IPullable {
+		class Particle {
 		public:
 			Transform* m_poTransform;
-			Shader* m_poShader;
-			UploadBuffer<ObjectConstants>* m_poBuffer;
-			ave::Mesh* m_poMesh;
 			float m_iLifetime;
 			ParticleBehaviour* m_poBehaviour;
 
@@ -57,18 +53,12 @@ namespace ave {
 			Particle();
 			~Particle();
 
-			virtual void OnInstantiation() override;
-			virtual void OnAcquire() override;
-			virtual void OnRelease() override;
+			void Init();
 
 			void SetBehaviour(ParticleBehaviour* behaviour);
-			void SetMesh(ave::Mesh* poMesh);
-			void SetShader(Shader* poShader);
 
 			virtual void Update(float deltaTime);
 			virtual void Render();
-
-			virtual void HandleMeshRendering();
 		};
 
 		class ParticleSystem : public Component {
@@ -78,22 +68,37 @@ namespace ave {
 			float m_iEmissionRate;
 
 			ParticleBehaviour* m_poBehaviour;
-			ave::Mesh* m_poMesh;
 			Shader* m_poShader;
+			Texture* m_poTexture;
 
 			float m_fRateDebounce;
+			UploadBuffer<ObjectConstants>* m_poBuffer;
 
 			std::vector<Particle*> m_lActiveParticles;
+			std::vector<VERTEX_UV> m_lVerticesBuffer;
+			std::vector<uint16_t> m_lIndicesBuffer;
+
+			ID3D12Resource* m_poVertexBufferGPU;
+			ID3D12Resource* m_poIndexBufferGPU;
+
+			ID3D12Resource* m_poVertexBufferUploader;
+			ID3D12Resource* m_poIndexBufferUploader;
+
+			UINT m_iVertexByteStride;
+			UINT m_iVertexBufferByteSize;
+
+			DXGI_FORMAT m_eIndexFormat;
+			UINT m_iIndexBufferByteSize;
 
 		public:
 			ParticleSystem();
 			~ParticleSystem();
 
-			void Initialize(float iRate, int iCapacity);
+			void Initialize(GraphicsHandler* graphics, float iRate, int iCapacity);
 
 			void SetBehaviour(ParticleBehaviour* behaviour);
-			void SetMesh(ave::Mesh* mesh);
 			void SetShader(Shader* shader);
+			void SetTexture(Texture* texture);
 
 			void Start() override;
 			void Update(float deltaTime) override;
