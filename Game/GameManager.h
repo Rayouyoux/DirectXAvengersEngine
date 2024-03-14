@@ -26,6 +26,7 @@ public:
 	void Start() override;
 	void Update(float dT) override;
 
+	void InitResources();
 	void InitEntities();
 	void InitComponents();
 	void RegisterEntities();
