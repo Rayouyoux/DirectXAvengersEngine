@@ -25,6 +25,7 @@ private:
 	ave::Entity* m_poParticleSystemEx;
 
 	ave::Particles::ParticleBehaviour* m_poDefaultBehaviour;
+	//ave::Particles::ParticleBehaviour* m_poDestructionBehaviour;
 
 public:
 	GameManager();

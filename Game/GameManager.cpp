@@ -77,24 +77,6 @@ void GameManager::InitComponents() {
 	//DirectX::XMVECTOR skyboxScale = XMVectorSet(1.0f, 1.0f, 1.f, 0.f) * 100;
 	//m_poSkybox->m_poTransform->Scale(&skyboxScale);
 
-	m_poDefaultBehaviour = new ave::Particles::ParticleBehaviour();
-	m_poDefaultBehaviour->EmissionType = ave::Particles::ParticleEmissionType::Burst;
-	m_poDefaultBehaviour->BurstAmount = 60;
-	m_poDefaultBehaviour->Size = .4f;
-	m_poDefaultBehaviour->SizeOverTime = true;
-	m_poDefaultBehaviour->EndSize = 0;
-	m_poDefaultBehaviour->Scale = XMFLOAT3(1, 1, 1);
-	m_poDefaultBehaviour->ScaleOverTime = false;
-	m_poDefaultBehaviour->RotateOverTime = false;
-	m_poDefaultBehaviour->RotSpeed = 0;
-	m_poDefaultBehaviour->SpeedOverTime = true;
-	m_poDefaultBehaviour->Speed = 3.f;
-	m_poDefaultBehaviour->EndSpeed = 0.f;
-	m_poDefaultBehaviour->MaxLifetime = 0.5f;
-	m_poDefaultBehaviour->SpeedVariation = 0.4f;
-	m_poDefaultBehaviour->LifetimeVariation = 1;
-	m_poDefaultBehaviour->SizeVariation = .7;
-
 	ave::Particles::ParticleSystem* particleSystem = m_poParticleSystemEx->AddComponent<ave::Particles::ParticleSystem>();
 	particleSystem->SetBehaviour(m_poDefaultBehaviour);
 	particleSystem->Initialize(m_poGraphics);
@@ -104,11 +86,12 @@ void GameManager::InitComponents() {
 
 void GameManager::RegisterEntities() {
 	m_poManager->RegisterEntity(m_poPlayer);
-	//m_poManager->RegisterEntity(m_poRotCube);
+	m_poManager->RegisterEntity(m_poRotCube);
 	m_poManager->RegisterEntity(m_poSkybox);
 	m_poManager->RegisterEntity(m_poParticleSystemEx);
 }
 
 void GameManager::Update(float dT) {
-
+	XMVECTOR offset = XMVectorSet(1, 0, 0, 0) * dT;
+	m_poParticleSystemEx->m_poTransform->Move(&offset);
 }
