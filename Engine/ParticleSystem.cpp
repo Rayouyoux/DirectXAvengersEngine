@@ -306,11 +306,11 @@ namespace ave {
 
 			void* data;
 			m_poVertexBufferUploader->Map(0, nullptr, &data);
-			memcpy(data, m_lVerticesBuffer.data(), m_lVerticesBuffer.size());
+			memcpy(data, m_lVerticesBuffer.data(), m_lVerticesBuffer.size()*sizeof(VERTEX_UV));
 			m_poVertexBufferUploader->Unmap(0, nullptr);
 
 			m_poIndexBufferUploader->Map(0, nullptr, &data);
-			memcpy(data, m_lIndicesBuffer.data(), m_lIndicesBuffer.size());
+			memcpy(data, m_lIndicesBuffer.data(), m_lIndicesBuffer.size()*2);
 			m_poIndexBufferUploader->Unmap(0, nullptr);
 
 			UINT indexCount = (UINT)m_lIndicesBuffer.size();
