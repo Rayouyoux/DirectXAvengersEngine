@@ -99,8 +99,6 @@ namespace ave {
 			void Update(float deltaTime) override;
 			void LateUpdate(float deltaTime) override;
 			void Render() override;
-
-			static int GetComponentID();
 		};
 	}
 }

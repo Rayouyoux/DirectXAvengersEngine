@@ -18,7 +18,7 @@ GameManager::GameManager() {
 }
 
 GameManager::~GameManager() {
-	delete GameManager::Instance;
+
 }
 
 void GameManager::Initialize(ave::AvengersEngine* engine) {
@@ -45,6 +45,9 @@ void GameManager::InitComponents() {
 	HealthActor* healthActor = m_poPlayer->AddComponent<HealthActor>();
 	healthActor->SetMaxHealth(100);
 	MeshRenderer* playerRenderer = m_poPlayer->AddComponent<MeshRenderer>();
+	playerRenderer->SetMesh(m_poManager->GetMesh("cubeTexture"));
+	playerRenderer->SetShader(m_poManager->GetShader("Texture"));
+	playerRenderer->SetTexture(m_poManager->GetTexture("image"));
 
 	// Camera
 	DirectX::XMVECTOR camPos = XMVectorSet(0.0f, 0.0f, 4.0f, 0.0f);

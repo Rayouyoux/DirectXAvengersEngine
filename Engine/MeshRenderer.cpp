@@ -26,6 +26,7 @@ namespace ave {
 		m_poShader = poShader;
 		m_poBuffer = new UploadBuffer<ObjectConstants>(m_poShader->GetDevice(), 1, true);
 	}
+
 	void MeshRenderer::SetTexture(Texture* oTexture) {
 		m_poTexture = oTexture;
 	}
