@@ -108,15 +108,6 @@ namespace ave {
 #endif
 		m_poAve = poAve;
 
-		/*Entity* poParticuleEntity = m_poEntityManager->NewEntity();*/
-
-		/*m_poBehaviour = new Particles::ParticleBehaviour();
-		m_poParticleSystem = poParticuleEntity->AddComponent<Particles::ParticleSystem>();
-		m_poParticleSystem->SetBehaviour(m_poBehaviour);
-		m_poParticleSystem->SetMesh(m_poMesh);
-		m_poParticleSystem->SetShader(m_poShader);
-		m_poParticleSystem->Initialize(10, 1);*/
-
 		bool test = CreateFactory()
 			&& CreateDevice()
 			&& CreateFence()
@@ -129,18 +120,9 @@ namespace ave {
 			return false;
 		} 
 
-		/*m_poTexture->Init(m_poDevice);
-		m_poTexture->LoadTexture("wall", L"..\\Engine\\Textures\\image.dds");
-		bool test2 = m_poShader->CreateShader(this, ROOTSIGNATURE_VERTEX_UV)
-			&& m_poMesh->BuildBoxGeometry(GetDevice(), GetCommandList(), "pyramid")
-			&& m_poTexture->BuildDescriptorHeaps("wall", m_poCbvHeap);*/
 		m_poEntityManager = new EntityManager();
 		m_poEntityManager->Init(this);
 
-		/*m_poEntityManager->RegisterEntity(poCameraEntity);
-		m_poEntityManager->RegisterEntity(poCubeEntity);
-		m_poEntityManager->RegisterEntity(poCubeEntity2);
-		m_poEntityManager->RegisterEntity(poParticuleEntity);*/
 
 		CloseCommandList();
 		QueueCommandList();

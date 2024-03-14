@@ -172,19 +172,67 @@ namespace ave {
             return false;
         }
 
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC oUIPSO = oOpaquePSO;
+
+        D3D12_RASTERIZER_DESC rasterizerDesc = {};
+        rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+        rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+        rasterizerDesc.FrontCounterClockwise = FALSE;
+        rasterizerDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
+        rasterizerDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
+        rasterizerDesc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+        rasterizerDesc.DepthClipEnable = FALSE; // Désactive le clipping basé sur la profondeur
+        rasterizerDesc.MultisampleEnable = FALSE;
+        rasterizerDesc.AntialiasedLineEnable = FALSE;
+        rasterizerDesc.ForcedSampleCount = 0;
+        rasterizerDesc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
+
+        D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
+        depthStencilDesc.DepthEnable = FALSE;
+        depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+        depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+        depthStencilDesc.StencilEnable = FALSE;
+        depthStencilDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+        depthStencilDesc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+        const D3D12_DEPTH_STENCILOP_DESC defaultStencilOp =
+        { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
+        depthStencilDesc.FrontFace = defaultStencilOp;
+        depthStencilDesc.BackFace = defaultStencilOp;
+
+        oUIPSO.DepthStencilState = depthStencilDesc;
+        oUIPSO.RasterizerState = rasterizerDesc;
+        if (m_poDevice->CreateGraphicsPipelineState(
+            &oUIPSO, IID_PPV_ARGS(&m_dPSOs["UI"]))) {
+            Destroy();
+            return false;
+        }
+
         return true;
     }
     
 
-    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture) {
+    void Shader::Draw(Mesh* pMesh, UploadBuffer<ObjectConstants>* poBuffer, Texture* oTexture, int id) {
         ID3D12GraphicsCommandList* poList = GraphicsHandler::GetCommandList();
 
         ////Root
         poList->SetGraphicsRootSignature(GetRootSignature());
 
-        poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());
+        /*poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());*/
+        if (id == 1) {
+            poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBufferSprite->Resource()->GetGPUVirtualAddress());
+        }
+        else {
+            poList->SetGraphicsRootConstantBufferView(GetRootPass(), m_poCamera->m_poBuffer->Resource()->GetGPUVirtualAddress());
+        }
+
         ////Pipeline
-        poList->SetPipelineState(GetPso("transparent"));
+        if (id == 1) {
+            poList->SetPipelineState(GetPso("UI"));
+        }
+        else {
+            poList->SetPipelineState(GetPso("transparent"));
+        }
+        
 
         ////Topology
         poList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -194,12 +242,7 @@ namespace ave {
         poList->IASetVertexBuffers(0, 1, &oVertexBufferView);
         poList->IASetIndexBuffer(&oIndexBufferView);
 
-        if (GetRootTexture() != -1 && oTexture)
-        {
-            //CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_poTextures->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-            //auto test = std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName));
-            //std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName)) / 2
-            //tex.Offset(std::distance(m_poTextures->GetTexture()->begin(), m_poTextures->GetTexture()->find(oName))/2, *m_poTextures->GetDescriptorSize());
+        if (GetRootTexture() != -1 && oTexture) {
             
             poList->SetGraphicsRootDescriptorTable(GetRootTexture(), *oTexture->GetDescriptorGpuHandle());
         }
@@ -207,6 +250,7 @@ namespace ave {
         poList->SetGraphicsRootConstantBufferView(GetRootObject(), poBuffer->Resource()->GetGPUVirtualAddress());
 
         poList->DrawIndexedInstanced(pMesh->GetIndexCount(), 1, 0, 0, 0);
+        
     }
 
     ID3DBlob* Shader::CompileShader(const std::wstring& oBuffer, const std::string& oEntryPoint,const std::string& oTarget) {

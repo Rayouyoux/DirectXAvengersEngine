@@ -73,8 +73,8 @@ namespace ave {
 
 	void Camera::Render2D() {
 		PassConstants opassConstants;
-		m_voViewIdentity = Maths::MatriceIdentity();
-		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(XMLoadFloat4x4(&m_voViewIdentity)));
+		XMFLOAT4X4 voViewIdentity = Maths::MatriceIdentity();
+		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(XMLoadFloat4x4(&voViewIdentity)));
 		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voOrthographicProj)));
 		m_poBufferSprite->CopyData(0, opassConstants);
 	}

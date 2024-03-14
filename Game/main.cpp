@@ -77,8 +77,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     spriteRenderer->SetMesh(manager->GetMesh("planeTexture"));
     spriteRenderer->SetShader(manager->GetShader("Texture"));
     spriteRenderer->SetSprite(manager->GetTexture("one"));
-    XMVECTOR pixelPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-    XMVECTOR pixelSize = XMVectorSet(2000, 2000, 0.0f, 0.0f);
+    XMVECTOR pixelPos = XMVectorSet(200.0f, 200.0f, 0.0f, 0.0f);
+    XMVECTOR pixelSize = XMVectorSet(20.f, 20.f, 0.0f, 0.0f);
     spriteRenderer->SetPixelPosition(pixelPos);
     spriteRenderer->SetPixelSize(pixelSize);
 

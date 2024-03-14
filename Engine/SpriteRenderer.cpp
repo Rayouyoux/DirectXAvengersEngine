@@ -33,7 +33,7 @@ namespace ave {
 			);
 
 			m_poEntity->m_poTransform->SetVectorPosition(&posScale);
-			//m_poEntity->m_poTransform->SetVectorScale(&sizeScale);
+			m_poEntity->m_poTransform->SetVectorScale(&sizeScale);
 
 			m_poBuffer = new UploadBuffer<ObjectConstants>(GraphicsHandler::GetDevice(), 1, true);
 		}
@@ -45,7 +45,7 @@ namespace ave {
 		}
 
 		void SpriteRenderer::Render2D() {
-			m_poShader->Draw(m_poPlane, m_poBuffer, m_poSprite);
+			m_poShader->Draw(m_poPlane, m_poBuffer, m_poSprite, 1);
 		}
 	}
 }

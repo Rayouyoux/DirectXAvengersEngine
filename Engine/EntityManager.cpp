@@ -69,19 +69,19 @@ namespace ave {
 		m_poInput->UpdateKeyStates();
 
 		if (m_poInput->GetKeyDown(ave::KeyCode::Z)) {
-			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -0.5f, 0.0f);
+			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -0.005f, 0.0f);
 			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 		else if (m_poInput->GetKeyDown(ave::KeyCode::S)) {
-			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, 0.5f, 0.0f);
+			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, 0.005f, 0.0f);
 			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 		else if (m_poInput->GetKeyDown(ave::KeyCode::Q)) {
-			XMVECTOR pos = DirectX::XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f);
+			XMVECTOR pos = DirectX::XMVectorSet(0.005f, 0.0f, 0.0f, 0.0f);
 			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 		else if (m_poInput->GetKeyDown(ave::KeyCode::D)) {
-			XMVECTOR pos = DirectX::XMVectorSet(-0.5f, 0.0f, 0.0f, 0.0f);
+			XMVECTOR pos = DirectX::XMVectorSet(-0.005f, 0.0f, 0.0f, 0.0f);
 			m_voEntities[0]->m_poTransform->Move(&pos);
 		}
 
