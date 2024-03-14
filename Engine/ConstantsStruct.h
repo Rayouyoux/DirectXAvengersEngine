@@ -6,7 +6,7 @@ namespace ave {
 	struct ObjectConstants
 	{
 		DirectX::XMFLOAT4X4 World = Maths::MatriceIdentity();
-		//DirectX::XMFLOAT4 Color;
+		DirectX::XMFLOAT4 Color;
 	};
 
 	struct PassConstants
