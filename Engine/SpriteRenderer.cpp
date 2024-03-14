@@ -18,7 +18,7 @@ namespace ave {
 		{}
 
 		void SpriteRenderer::Start() {
-			XMFLOAT2 arbSize = { 1600, 900 };
+			XMFLOAT2 arbSize = { 800, 600 };
 
 			XMVECTOR posScale = XMVectorSet(
 				m_vPositionPx.x / arbSize.x,
@@ -33,7 +33,7 @@ namespace ave {
 			);
 
 			m_poEntity->m_poTransform->SetVectorPosition(&posScale);
-			m_poEntity->m_poTransform->SetVectorScale(&sizeScale);
+			//m_poEntity->m_poTransform->SetVectorScale(&sizeScale);
 
 			m_poBuffer = new UploadBuffer<ObjectConstants>(GraphicsHandler::GetDevice(), 1, true);
 		}

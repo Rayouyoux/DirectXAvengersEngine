@@ -61,7 +61,7 @@ namespace ave {
 			return Entities;
 		}
 
-		
+
 
 		// Main Methods
 		Entity* NewEntity();
@@ -78,4 +78,3 @@ namespace ave {
 	};
 
 }
-

@@ -41,7 +41,7 @@ namespace ave {
 		XMMATRIX P = XMMatrixPerspectiveFovLH(m_fFOV, m_fAspect, m_fNearZ, m_fFarZ);
 		XMStoreFloat4x4(&m_voPerspectiveProj, P);
 
-		XMMATRIX O = XMMatrixOrthographicLH(m_fNearWindowWidth, m_fNearWindowHeight, m_fNearZ, m_fFarZ);
+		XMMATRIX O = XMMatrixOrthographicLH( 800.0f, 600.0f, m_fNearZ, m_fFarZ);
 		XMStoreFloat4x4(&m_voOrthographicProj, O);
 	}
 
@@ -73,7 +73,8 @@ namespace ave {
 
 	void Camera::Render2D() {
 		PassConstants opassConstants;
-		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
+		m_voViewIdentity = Maths::MatriceIdentity();
+		XMStoreFloat4x4(&opassConstants.View, XMMatrixTranspose(XMLoadFloat4x4(&m_voViewIdentity)));
 		XMStoreFloat4x4(&opassConstants.Proj, XMMatrixTranspose(XMLoadFloat4x4(&m_voOrthographicProj)));
 		m_poBufferSprite->CopyData(0, opassConstants);
 	}

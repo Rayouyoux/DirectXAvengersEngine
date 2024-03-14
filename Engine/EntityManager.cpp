@@ -13,11 +13,11 @@
 namespace ave {
 
 	EntityManager::EntityManager() {
-		
+
 	}
 
-	EntityManager::~EntityManager(){
-		for (int i = m_voEntities.size()-1; i >= 0; i--) {
+	EntityManager::~EntityManager() {
+		for (int i = m_voEntities.size() - 1; i >= 0; i--) {
 			delete m_voEntities[i];
 		}
 	}
@@ -33,6 +33,9 @@ namespace ave {
 
 		CreateShader();
 		CreateMesh();
+
+
+
 
 
 	}
@@ -103,12 +106,12 @@ namespace ave {
 			m_voEntities[i]->Render();
 		}
 	}
-
 	void EntityManager::Render2D() {
 		for (int i = 0; i < m_voEntities.size(); i++) {
 			m_voEntities[i]->Render2D();
 		}
 	}
+
 	Camera* EntityManager::GetMainCamera()
 	{
 		return m_poMainCamera;
@@ -128,11 +131,11 @@ namespace ave {
 		Shader* poShaderTexture = new Shader();
 		poShaderTexture->CreateShader(m_poGraphics, m_poMainCamera, 2);
 		m_poShaders.insert(std::pair<std::string, Shader*>("Texture", poShaderTexture));
-	} 
+	}
 
 	void EntityManager::CreateMesh() {
 		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox","plane"};
-		for (int i = 0; i < sizeof(names)/sizeof(names[0]); i++) {
+		for (int i = 0; i < sizeof(names) / sizeof(names[0]); i++) {
 			Mesh* poMesh = new Mesh();
 			XMVECTOR oColor = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 			//FXMVECTOR oColor = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -158,7 +161,7 @@ namespace ave {
 		Texture* poTexture = new Texture();
 		m_poTextures.insert(std::make_pair(name, poTexture));
 		poTexture->Init(m_poGraphics->GetDevice());
-		poTexture->LoadTexture(name,std::wstring(filename.begin(), filename.end()), m_poGraphics->GetCbvDescriptor(),m_poGraphics);
+		poTexture->LoadTexture(name, std::wstring(filename.begin(), filename.end()), m_poGraphics->GetCbvDescriptor(), m_poGraphics);
 		poTexture->BuildSrvDesc(m_poGraphics->GetCbvDescriptor(), m_poTextures.size());
 	}
 

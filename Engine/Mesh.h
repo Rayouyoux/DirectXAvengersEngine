@@ -17,7 +17,7 @@ namespace ave {
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
 
 		UINT GetIndexCount();
-		
+
 		~Mesh();
 
 		template <typename T>
@@ -26,7 +26,7 @@ namespace ave {
 
 			Shape<T>* oShape = new Shape<T>();
 
-			
+
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
 				{"cube", [oShape, oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCube(oColor,false);
@@ -53,7 +53,7 @@ namespace ave {
 			};
 
 			std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> aShapes;
-			
+
 			auto it = shapeCreators.find(nameShape);
 			if (it != shapeCreators.end()) {
 				aShapes = it->second();  // Appel de la fonction de création
@@ -61,7 +61,7 @@ namespace ave {
 			else {
 				std::cout << "Invalid shape type." << std::endl;
 			}
-	
+
 			const UINT vbByteSize = (UINT)aShapes[0].first.size() * sizeof(T);
 			const UINT ibByteSize = (UINT)aShapes[0].second.size() * sizeof(std::uint16_t);
 
@@ -92,7 +92,7 @@ namespace ave {
 		};
 
 	protected:
-		
+
 		ID3DBlob* m_poVertexBufferCPU;
 		ID3DBlob* m_poIndexBufferCPU;
 

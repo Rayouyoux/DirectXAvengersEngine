@@ -41,6 +41,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 
     ave::Entity* poCubeEntity = manager->NewEntity();
     ave::Entity* poCubeEntity2 = manager->NewEntity();
+    ave::Entity* poSprite = manager->NewEntity();
+
 
     XMVECTOR posCube = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
     poCubeEntity->m_poTransform->SetVectorPosition(&posCube);
@@ -54,9 +56,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 
     manager->NewTexture("bricks", "../Engine/Textures/bricks.dds");
     manager->NewTexture("image", "../Engine/Textures/image.dds");
+    manager->NewTexture("one", "../Engine/Textures/one.dds");
+
 
     ave::MeshRenderer* poMeshRenderer = poCubeEntity->AddComponent<ave::MeshRenderer>();
-    poMeshRenderer->SetMesh(manager->GetMesh("pyramid"));
+    poMeshRenderer->SetMesh(manager->GetMesh("cube"));
     poMeshRenderer->SetShader(manager->GetShader("Color"));
     //poMeshRenderer->SetTexture(manager->GetTexture("bricks"));
   /*  XMVECTOR test = XMVectorSet(0.0f, 255.0f, 255.0f, 1.0f);
@@ -69,17 +73,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
     XMVECTOR scale = XMVectorSet(4.5f, 4.5f, 4.5f, 4.5f);
     poCubeEntity2->m_poTransform->Scale(&scale);
 
-    ave::UI::SpriteRenderer* spriteRenderer = poCubeEntity->AddComponent<ave::UI::SpriteRenderer>();
-    XMVECTOR pixelPos = XMVectorSet(0, 0, 0, 0);
-    XMVECTOR pixelSize = XMVectorSet(100, 100, 0, 0);
-    spriteRenderer->SetPixelPosition(pixelPos);
-    spriteRenderer->SetPixelSize(pixelSize);
+    ave::UI::SpriteRenderer* spriteRenderer = poSprite->AddComponent<ave::UI::SpriteRenderer>();
     spriteRenderer->SetMesh(manager->GetMesh("planeTexture"));
     spriteRenderer->SetShader(manager->GetShader("Texture"));
+    spriteRenderer->SetSprite(manager->GetTexture("one"));
+    XMVECTOR pixelPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+    XMVECTOR pixelSize = XMVectorSet(2000, 2000, 0.0f, 0.0f);
+    spriteRenderer->SetPixelPosition(pixelPos);
+    spriteRenderer->SetPixelSize(pixelSize);
 
     manager->RegisterEntity(poCubeEntity);
 
     manager->RegisterEntity(poCubeEntity2);
+    manager->RegisterEntity(poSprite);
+
 
     int res = gameInstance->Run();
 

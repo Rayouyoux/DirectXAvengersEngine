@@ -47,7 +47,9 @@ namespace ave {
 		float m_fNearWindowHeight;
 		float m_fFarWindowHeight;
 
+
 		// View Matrix
+		DirectX::XMFLOAT4X4 m_voViewIdentity;
 		DirectX::XMFLOAT4X4 m_voPerspectiveProj;
 		DirectX::XMFLOAT4X4 m_voOrthographicProj;
 
