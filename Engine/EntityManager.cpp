@@ -34,9 +34,10 @@ namespace ave {
 		CreateShader();
 		CreateMesh();
 
+		/*NewTexture("bricks", "../Engine/Textures/bricks.dds");
+		NewTexture("image", "../Engine/Textures/image.dds");*/
 		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
-		NewTexture("bricks");
-		NewTexture("image");
+	
 
 
 	}
@@ -127,15 +128,16 @@ namespace ave {
 		m_poShaders.insert(std::pair<std::string, Shader*>("Color", poShader));
 
 		Shader* poShaderTexture = new Shader();
-		poShader->CreateShader(m_poGraphics, m_poMainCamera, 2);
-		m_poShaders.insert(std::pair<std::string, Shader*>("Texture", poShader));
-	}
+		poShaderTexture->CreateShader(m_poGraphics, m_poMainCamera, 2);
+		m_poShaders.insert(std::pair<std::string, Shader*>("Texture", poShaderTexture));
+	} 
 
 	void EntityManager::CreateMesh() {
 		std::string names[] = { "cube", "sphere", "cylindre", "cone", "pyramid", "skybox"};
 		for (int i = 0; i < sizeof(names)/sizeof(names[0]); i++) {
 			Mesh* poMesh = new Mesh();
-			poMesh->BuildBoxGeometry<VERTEX_COLOR>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i]);
+			FXMVECTOR oColor = {0.1f, 0.2f, 0.9f, 1.0f};
+			poMesh->BuildBoxGeometry<VERTEX_COLOR>(m_poGraphics->GetDevice(), m_poGraphics->GetCommandList(), names[i], &oColor);
 			m_poMeshs.insert(std::pair<std::string, Mesh*>(names[i], poMesh));
 
 			Mesh* poMeshTexture = new Mesh();
@@ -152,12 +154,12 @@ namespace ave {
 		return m_poShaders.find(name)->second;
 	}
 
-	void EntityManager::NewTexture(std::string name) {
+	void EntityManager::NewTexture(std::string name, std::string filename) {
 
 		Texture* poTexture = new Texture();
 		m_poTextures.insert(std::make_pair(name, poTexture));
 		poTexture->Init(m_poGraphics->GetDevice());
-		poTexture->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds", m_poGraphics->GetCbvDescriptor());
+		poTexture->LoadTexture(name, L"..\\Engine\\Textures\\" + std::wstring(name.begin(), name.end()) + L".dds", m_poGraphics->GetCbvDescriptor(),m_poGraphics);
 		poTexture->BuildSrvDesc(m_poGraphics->GetCbvDescriptor(), m_poTextures.size());
 	}
 

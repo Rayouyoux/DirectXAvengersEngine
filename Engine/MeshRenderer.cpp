@@ -16,6 +16,7 @@ namespace ave {
 	MeshRenderer::MeshRenderer() : Component(){
 		m_poMesh = nullptr;
 		m_poShader = nullptr;
+		m_oColor = { 0.0f,0.0f,0.0f,0.0f };
 	}
 
 	void MeshRenderer::SetMesh(Mesh* poMesh) {
@@ -35,9 +36,21 @@ namespace ave {
 	}
 
 	void MeshRenderer::Update(float deltaTime) {
+
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
+		objConstants.Color = m_oColor;
 		m_poBuffer->CopyData(0, objConstants);
+	};
+
+	void MeshRenderer::SetColor(DirectX::FXMVECTOR* vColor) {
+		
+		if (vColor != nullptr) {
+			XMStoreFloat4(&m_oColor, *vColor);
+			m_oColor.x /= 255;
+			m_oColor.y /= 255;
+			m_oColor.z /= 255;
+		};
 	}
 
 	void MeshRenderer::Render() {

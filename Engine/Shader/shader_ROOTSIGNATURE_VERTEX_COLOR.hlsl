@@ -4,12 +4,18 @@ SamplerState gSampler : register(s0);
 cbuffer cbPerObject : register(b0)
 {
     float4x4 gWorld;
+    float4 colorPass;
 };
 
 cbuffer cbPerPass : register(b1)
 {
     float4x4 gView;
     float4x4 gProj;
+}
+
+bool IsFloat4Empty(float4 fColor)
+{
+    return (fColor.x == 0.0f && fColor.y == 0.0f && fColor.z == 0.0f && fColor.w == 0.0f);
 }
 
 struct VertexIn
@@ -31,7 +37,14 @@ VertexOut VS(VertexIn vin)
     //Transform to homogeneous to space
     float4 pos = mul(float4(vin.pos, 1.0f), gWorld);
     vout.pos = mul(pos, mul(gView, gProj));
-    vout.color = vin.color;
+    if (IsFloat4Empty(colorPass))
+    {
+        vout.color = vin.color;
+    }
+    else
+    {
+        vout.color = colorPass;
+    }
     
     return vout;
 }

@@ -22,13 +22,26 @@ namespace ave {
 		m_oCbvSrvDescriptorSize = m_poDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
-	void Texture::LoadTexture(std::string oName, std::wstring oFilename, ID3D12DescriptorHeap* CbvDescriptorHeap) {
+	void Texture::LoadTexture(std::string oName, std::wstring oFilename, ID3D12DescriptorHeap* CbvDescriptorHeap, GraphicsHandler* oGraphics) {
+
+		if (FAILED(oGraphics->GetCommandList()->Reset(oGraphics->GetCommandAlloc(), nullptr))) {
+			return;
+		}
 
 		if (FAILED(DirectX::CreateDDSTextureFromFile12(m_poDevice,
-			GraphicsHandler::GetCommandList(),oFilename.c_str(),
+			oGraphics->GetCommandList(), oFilename.c_str(),
 			m_poRessource, m_poUploadHeap))) {
 			return;
 		}
+		/*if (FAILED(oGraphics->GetCommandList()->Close())) {
+			return;
+		}
+		ID3D12CommandList* cmdsLists[] = { oGraphics->GetCommandList() };
+		oGraphics->GetCommandQueu()->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);*/
+
+		oGraphics->CloseCommandList();
+		oGraphics->QueueCommandList();
+		oGraphics->FlushCommandQueue();
 	}
 
 	bool Texture::BuildSrvDesc(ID3D12DescriptorHeap* CbvDescriptorHeap, int size) {
@@ -48,6 +61,7 @@ namespace ave {
 
 		m_poDevice->CreateShaderResourceView(m_poRessource.Get(), &m_poSrvDesc, m_poDescriptorCPU);
 		
+
 		m_poDescriptorGPU = m_poSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 		m_poDescriptorGPU.Offset(size- 1, m_oCbvSrvDescriptorSize);
 		
@@ -67,7 +81,7 @@ namespace ave {
 	}*/
 
 	Texture::~Texture() {
-		m_mTextures.clear();
+
 		m_poDevice->Release();
 		m_poSrvDescriptorHeap->Release();
 	}

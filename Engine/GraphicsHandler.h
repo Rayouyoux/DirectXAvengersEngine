@@ -160,6 +160,8 @@ namespace ave {
 
 		static ID3D12Device* GetDevice() { return m_poDevice; }
 		static ID3D12GraphicsCommandList* GetCommandList() { return GraphicsHandler::m_poCommandList; };
+		ID3D12CommandQueue* GetCommandQueu() { return m_poCommandQueue; };
+		ID3D12CommandAllocator* GetCommandAlloc() { return m_poDirectCmdListAlloc; };
 
 		ID3D12DescriptorHeap* GetCbvDescriptor() { return m_poCbvHeap; };
 		HWND GetWindow();

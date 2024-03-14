@@ -21,17 +21,15 @@ namespace ave {
 		~Mesh();
 
 		template <typename T>
-		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape) {
+		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape, FXMVECTOR* oColor = nullptr) {
 
 
 			Shape<T>* oShape = new Shape<T>();
 
-			XMVECTOR color = XMVectorSet(0.2f, 0.2f, 0.8f, 1.0f);
 			
-
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
-				{"cube", [oShape,color]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCube(nullptr,false);
+				{"cube", [oShape, oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateCube(oColor,false);
 				}},
 				{"cylindre", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreateCylinder(2.0f,5.0f,1.0f,1.0f);
@@ -45,13 +43,14 @@ namespace ave {
 				{"pyramid", [oShape]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
 					return oShape->CreatePyramid(2.0f,3.0f);
 				}},
-				{"skybox", [oShape,color]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
-					return oShape->CreateCube(nullptr,true);
+				{"skybox", [oShape,oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
+					return oShape->CreateCube(oColor,true);
 				}},
 
 			};
 
 			std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> aShapes;
+			
 			auto it = shapeCreators.find(nameShape);
 			if (it != shapeCreators.end()) {
 				aShapes = it->second();  // Appel de la fonction de création
@@ -59,7 +58,7 @@ namespace ave {
 			else {
 				std::cout << "Invalid shape type." << std::endl;
 			}
-
+	
 			const UINT vbByteSize = (UINT)aShapes[0].first.size() * sizeof(T);
 			const UINT ibByteSize = (UINT)aShapes[0].second.size() * sizeof(std::uint16_t);
 
