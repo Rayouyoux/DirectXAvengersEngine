@@ -109,6 +109,10 @@ namespace ave {
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Render();
 		}
+
+		for (int i = 0; i < m_voAliveEntities.size(); i++) {
+			m_voAliveEntities[i]->Render2D();
+		}
 	}
 
 	Camera* EntityManager::GetMainCamera()

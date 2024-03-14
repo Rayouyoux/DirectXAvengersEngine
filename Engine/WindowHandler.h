@@ -1,6 +1,7 @@
 #pragma once
 
 #include <windows.h>
+#include "GraphicsHandler.h"
 
 // Enable more details for debugging
 #if defined(DEBUG) || defined(_DEBUG)
@@ -10,6 +11,7 @@
 
 namespace ave {
 	class GraphicsHandler;
+	class EntityManager;
 	class GameTime;
 
 	class AvengersEngine
@@ -59,6 +61,7 @@ namespace ave {
 		HWND GetWindow() const { return m_oMainWnd; }
 
 		GraphicsHandler* GetGraphics() const { return m_poGraphics; }
+		EntityManager* GetManager() const { return m_poGraphics->m_poEntityManager; }
 
 		int GetWindowWidth() const { return m_iClientWidth; }
 		int GetWindowHeight() const { return m_iClientHeight; }

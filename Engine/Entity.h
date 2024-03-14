@@ -25,6 +25,11 @@ namespace ave {
 		void Start();
 		void Update(float iDeltaTime);
 		void Render();
+		void Render2D();
+
+		void OnCollisionEnter(Entity* collider);
+		void OnCollisionStay(Entity* collider);
+		void OnCollisionExit(Entity* collider);
 
 		// Adds a Component to the Entity
 		template <typename Comp>
@@ -32,7 +37,6 @@ namespace ave {
 			Comp* poComponent = new Comp();
 			m_loComponents.push_back(poComponent);
 			poComponent->BindEntity(this);
-			/*poComponent->Start();*/
 			return poComponent;
 		}
 

@@ -48,6 +48,30 @@ namespace ave {
 		}
 	}
 
+	void Entity::Render2D() {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->Render2D();
+		}
+	}
+
+	void Entity::OnCollisionEnter(Entity* collider) {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->OnCollisionEnter(collider);
+		}
+	}
+
+	void Entity::OnCollisionStay(Entity* collider) {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->OnCollisionStay(collider);
+		}
+	}
+
+	void Entity::OnCollisionExit(Entity* collider) {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->OnCollisionExit(collider);
+		}
+	}
+
 	bool Entity::GetIsAlive() {
 		return m_bIsAlive;
 	}
