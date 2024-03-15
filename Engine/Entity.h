@@ -24,6 +24,7 @@ namespace ave {
 		// SUR Methods
 		void Start();
 		void Update(float iDeltaTime);
+		void LateUpdate(float iDeltaTime);
 		void Render();
 		void Render2D();
 

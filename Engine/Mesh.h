@@ -6,9 +6,10 @@
 #include "Shape.h"
 #include <unordered_map>
 #include <functional>
+#include "AABB.h"
 
 namespace ave {
-	struct AABB{};
+
 	class Mesh
 	{
 	public:
@@ -20,7 +21,9 @@ namespace ave {
 		UINT GetIndexCount();
 
 		AABB* GetAABB();
+
 		void SetAABB(XMFLOAT3 vMin, XMFLOAT3 vMax);
+
 		void SetAABB(AABB oAABB);
 		void SetVertice(XMFLOAT3 vVertice);
 		std::vector<XMFLOAT3> GetVertices();

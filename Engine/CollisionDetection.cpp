@@ -4,7 +4,8 @@
 namespace ave {
 
     namespace CollisionDetection {
-        bool CheckCollision(const AABB& aabb1, const AABB& aabb2) {
+
+        bool CheckCollision(AABB aabb1, AABB aabb2) {
 
             if (aabb1.m_vMax.x < aabb2.m_vMin.x || aabb1.m_vMin.x > aabb2.m_vMax.x) return false;
             if (aabb1.m_vMax.y < aabb2.m_vMin.y || aabb1.m_vMin.y > aabb2.m_vMax.y) return false;

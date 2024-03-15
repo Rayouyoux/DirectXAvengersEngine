@@ -14,7 +14,7 @@ private:
 
 	ave::Entity* m_poMainCam;
 	ave::Entity* m_poPlayer;
-
+	ave::Entity* m_pocollide;
 	ave::Entity* m_poRotCube;
 	ave::Entity* m_poSkybox;
 

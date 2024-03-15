@@ -45,7 +45,7 @@ namespace ave {
 
 		// SUR Methods
 		void Update(float iDeltaTime);
-		void LateUpdate();
+		void LateUpdate(float fDeltaTime);
 		void Render();
 
 		// Returns a vector of Entities that have the given Component

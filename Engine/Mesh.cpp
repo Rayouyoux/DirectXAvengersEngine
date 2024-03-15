@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Mesh.h"
 #include "Vertex.h"
-#include "AABB.h"
 #include <array>
 
 
@@ -42,7 +41,7 @@ namespace ave {
 		return ibv;
 	}
 
-	ABBB* Mesh::GetAABB() {
+	AABB* Mesh::GetAABB() {
 		return &m_oContainingBox;
 	}
 

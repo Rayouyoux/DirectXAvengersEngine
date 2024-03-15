@@ -80,7 +80,7 @@ namespace ave {
 				if (m_bAppPaused == false) {
 					//CalculateFrameStats();
 					m_poGraphics->Update(m_poTimer->DeltaTime());
-					m_poGraphics->LateUpdate();
+					m_poGraphics->LateUpdate(m_poTimer->DeltaTime());
 					m_poGraphics->Render();
 				}
 				else {

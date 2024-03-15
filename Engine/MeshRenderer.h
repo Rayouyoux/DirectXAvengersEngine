@@ -3,9 +3,9 @@
 #include "Component.h"
 #include "UploadBuffer.h"
 #include <string>
+#include "AABB.h"
 
 namespace ave {
-	struct AABB{};
 	class Mesh;
 	class Shader;
 	struct ObjectConstants;

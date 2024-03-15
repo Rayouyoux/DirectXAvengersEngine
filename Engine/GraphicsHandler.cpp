@@ -273,8 +273,8 @@ namespace ave {
 		m_poEntityManager->Update(deltaTime);
 	}
 
-	void GraphicsHandler::LateUpdate() {
-		// Do with the Objects
+	void GraphicsHandler::LateUpdate(float deltaTime) {
+		m_poEntityManager->LateUpdate(deltaTime);
 	}
 
 	void GraphicsHandler::Render() {

@@ -4,7 +4,9 @@
 
 using namespace DirectX;
 
-struct AABB {
-    XMFLOAT3 m_vMin;
-    XMFLOAT3 m_vMax;
-};
+namespace ave {
+    struct AABB {
+        XMFLOAT3 m_vMin;
+        XMFLOAT3 m_vMax;
+    };
+}

@@ -42,6 +42,12 @@ namespace ave {
 		}
 	}
 
+	void Entity::LateUpdate(float iDeltaTime) {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->LateUpdate(iDeltaTime);
+		}
+	}
+
 	void Entity::Render() {
 		for (int i = 0; i < m_loComponents.size(); i++) {
 			m_loComponents[i]->Render();
