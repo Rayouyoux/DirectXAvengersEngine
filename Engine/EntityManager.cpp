@@ -33,59 +33,10 @@ namespace ave {
 
 		CreateShader();
 		CreateMesh();
-
-		/*NewTexture("bricks", "../Engine/Textures/bricks.dds");
-		NewTexture("image", "../Engine/Textures/image.dds");*/
-		/*NewTexture("victor", "..\\Engine\\Textures\\image.dds");*/
 	}
 
-	/*EntityManager* EntityManager::Create() {
-		return new EntityManager();
-	}*/
-
-	/*bool EntityManager::Initialize(HINSTANCE hInstance) {
-		m_poGameInstance = AvengersEngine::Create();
-		if (m_poGameInstance->Initialize(hInstance) == false) {
-			MessageBoxA(NULL, "Euh ça bug ?", "ALED", 0);
-			return false;
-		}
-
-		m_poGraphics = m_poGameInstance->GetGraphics();
-
-		Entity* poCamera = NewEntity();
-		m_poMainCamera = poCamera->AddComponent<Camera>();
-		RegisterEntity(poCamera);
-	}*/
-
-	/*int EntityManager::Run() {
-		return m_poGameInstance->Run();
-	}*/
-
 	void EntityManager::Update(float fDeltaTime) {
-		float rot = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
-		m_voAliveEntities[1]->m_poTransform->RotateOnUp(rot);
-		/*float rotCam = DirectX::XMConvertToRadians(45.0f * fDeltaTime);
-		XMVECTOR vec = XMVectorSet(rotCam, 0.0f, 0.0f, 0.0f);
-		m_voAliveEntities[0]->m_poTransform->Rotate(&vec);*/
-
 		m_poInput->UpdateKeyStates();
-
-		if (m_poInput->GetKeyDown(ave::KeyCode::Z)) {
-			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -0.5f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
-		}
-		else if (m_poInput->GetKeyDown(ave::KeyCode::S)) {
-			XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, 0.5f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
-		}
-		else if (m_poInput->GetKeyDown(ave::KeyCode::Q)) {
-			XMVECTOR pos = DirectX::XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
-		}
-		else if (m_poInput->GetKeyDown(ave::KeyCode::D)) {
-			XMVECTOR pos = DirectX::XMVectorSet(-0.5f, 0.0f, 0.0f, 0.0f);
-			m_voAliveEntities[0]->m_poTransform->Move(&pos);
-		}
 
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			m_voAliveEntities[i]->Update(fDeltaTime);

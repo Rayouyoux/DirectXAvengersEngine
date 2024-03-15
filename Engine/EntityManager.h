@@ -66,6 +66,7 @@ namespace ave {
 		Entity* NewEntity();
 		bool RegisterEntity(Entity* poEntity);
 		Camera* GetMainCamera();
+		InputManager* GetInputManager() { return m_poInput; }
 		Texture* GetTexture(std::string oName) { return m_poTextures.find(oName)->second; };
 		Mesh* GetMesh(std::string name);
 		Shader* GetShader(std::string name);
