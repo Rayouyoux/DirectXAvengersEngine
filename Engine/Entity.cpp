@@ -33,12 +33,12 @@ namespace ave {
 	}
 
 	void Entity::Update(float iDeltaTime) {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->Update(iDeltaTime);
+		}
 		if(m_poTransform->m_bHandleChange){
 			m_poTransform->UpdateMatrice();
 			m_poTransform->m_bHandleChange = false;
-		}
-		for (int i = 0; i < m_loComponents.size(); i++) {
-			m_loComponents[i]->Update(iDeltaTime);
 		}
 	}
 
