@@ -35,10 +35,8 @@ void GameManager::Start() {
 }
 
 void GameManager::InitResources() {
-	m_poManager->NewTexture("image", "../Engine/Textures/image.dds");
-	m_poManager->NewTexture("default_particle", "../Engine/Textures/default_particle.dds");
-	m_poManager->NewTexture("bricks", "../Engine/Textures/bricks.dds");
-	m_poManager->NewTexture("blue_particle", "Textures/blue_particle.dds");
+	m_poManager->NewTexture("nebula", "Textures/seamless_nebula.dds");
+	m_poManager->NewTexture("moon_rock", "Textures/moon_rock.dds");
 }
 
 void GameManager::InitEntities() {
@@ -55,35 +53,31 @@ void GameManager::InitComponents() {
 	HealthActor* healthActor = m_poPlayer->AddComponent<HealthActor>();
 	healthActor->SetMaxHealth(100);
 
-	// Camera
-	DirectX::XMVECTOR camPos = XMVectorSet(0.0f, 0.0f, 2.0f, 0.0f);
-	m_poMainCam->m_poTransform->SetVectorPosition(&camPos);
-
-	DirectX::XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
-	m_poMainCam->m_poTransform->LookTo(&direction);
+	//DirectX::XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+	//m_poMainCam->m_poTransform->LookTo(&direction);
 
 	DirectX::XMVECTOR posCube = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
 	m_poRotCube->m_poTransform->SetVectorPosition(&posCube);
 
-	ave::MeshRenderer* cubeRenderer = m_poRotCube->AddComponent<ave::MeshRenderer>();
-	cubeRenderer->SetMesh(m_poManager->GetMesh("cube"));
-	cubeRenderer->SetShader(m_poManager->GetShader("Color"));
+	// Skybox
+	ave::MeshRenderer* skyboxRenderer = m_poSkybox->AddComponent<ave::MeshRenderer>();
+	skyboxRenderer->SetMesh(m_poManager->GetMesh("skyboxTexture"));
+	skyboxRenderer->SetShader(m_poManager->GetShader("Texture"));
+	skyboxRenderer->SetTexture(m_poManager->GetTexture("nebula"));
 
-	m_poRotCube->AddComponent<ave::Collider>();
+	DirectX::XMVECTOR skyboxScale = XMVectorSet(1.0f, 1.0f, 1.f, 0.f) * 500;
+	m_poSkybox->m_poTransform->Scale(&skyboxScale);
 
-	//ave::MeshRenderer* skyboxRenderer = m_poSkybox->AddComponent<ave::MeshRenderer>();
-	//skyboxRenderer->SetMesh(m_poManager->GetMesh("skyboxTexture"));
-	//skyboxRenderer->SetShader(m_poManager->GetShader("Texture"));
-	//skyboxRenderer->SetTexture(m_poManager->GetTexture("image"));
+	// Cube
+	ave::MeshRenderer* meshRenderer = m_poRotCube->AddComponent<MeshRenderer>();
+	meshRenderer->SetMesh(m_poManager->GetMesh("sphereTexture"));
+	meshRenderer->SetShader(m_poManager->GetShader("Texture"));
+	meshRenderer->SetTexture(m_poManager->GetTexture("moon_rock"));
 
-	//DirectX::XMVECTOR skyboxScale = XMVectorSet(1.0f, 1.0f, 1.f, 0.f) * 100;
-	//m_poSkybox->m_poTransform->Scale(&skyboxScale);
-
-	ave::Particles::ParticleSystem* particleSystem = m_poParticleSystemEx->AddComponent<ave::Particles::ParticleSystem>();
-	particleSystem->SetBehaviour(m_poDefaultBehaviour);
-	particleSystem->Initialize(m_poGraphics);
-	particleSystem->SetShader(m_poManager->GetShader("Texture"));
-	particleSystem->SetTexture(m_poManager->GetTexture("blue_particle"));
+	ave::MeshRenderer* playerRenderer = m_poPlayer->AddComponent<MeshRenderer>();
+	playerRenderer->SetMesh(m_poManager->GetMesh("cubeTexture"));
+	playerRenderer->SetShader(m_poManager->GetShader("Texture"));
+	playerRenderer->SetTexture(m_poManager->GetTexture("moon_rock"));
 }
 
 void GameManager::RegisterEntities() {

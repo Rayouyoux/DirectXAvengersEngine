@@ -45,7 +45,7 @@ namespace ave {
 
 		// SUR Methods
 		void Update(float iDeltaTime);
-		void LateUpdate(float fDeltaTime);
+		void LateUpdate(float dT);
 		void Render();
 
 		// Returns a vector of Entities that have the given Component
@@ -60,12 +60,11 @@ namespace ave {
 			return Entities;
 		}
 
-		
-
 		// Main Methods
 		Entity* NewEntity();
 		bool RegisterEntity(Entity* poEntity);
 		Camera* GetMainCamera();
+		InputManager* GetInputManager() { return m_poInput; }
 		Texture* GetTexture(std::string oName) { return m_poTextures.find(oName)->second; };
 		Mesh* GetMesh(std::string name);
 		Shader* GetShader(std::string name);

@@ -14,3 +14,4 @@
 #include "EntityManager.h"
 #include "Script.h"
 #include "ParticleSystem.h"
+#include "InputManager.h"

@@ -146,6 +146,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="HealthActor.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="Shooter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="HealthActor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="Shooter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

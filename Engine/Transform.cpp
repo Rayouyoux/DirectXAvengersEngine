@@ -79,15 +79,15 @@ namespace ave {
 
 		XMStoreFloat4x4(&m_mRotation, XMMatrixRotationQuaternion(XMLoadFloat4(&m_qRotation)));
 
-		m_vRight.x = m_mRotation._11;
-		m_vRight.y = m_mRotation._12;
-		m_vRight.z = m_mRotation._13;
+		m_vDir.x = m_mRotation._11;
+		m_vDir.y = m_mRotation._12;
+		m_vDir.z = m_mRotation._13;
 		m_vUp.x = m_mRotation._21;
 		m_vUp.y = m_mRotation._22;
 		m_vUp.z = m_mRotation._23;
-		m_vDir.x = m_mRotation._31;
-		m_vDir.y = m_mRotation._32;
-		m_vDir.z = m_mRotation._33;
+		m_vRight.x = m_mRotation._31;
+		m_vRight.y = m_mRotation._32;
+		m_vRight.z = m_mRotation._33;
 	}
 
 	void Transform::UpdateMatrice() {

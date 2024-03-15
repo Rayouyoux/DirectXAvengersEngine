@@ -32,6 +32,8 @@ namespace ave {
 		void OnCollisionStay(Entity* collider);
 		void OnCollisionExit(Entity* collider);
 
+		void OnDestroy();
+
 		// Adds a Component to the Entity
 		template <typename Comp>
 		Comp* AddComponent() {
