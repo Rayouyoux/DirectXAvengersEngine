@@ -1,5 +1,6 @@
 #include "Shooter.h"
 #include "GameManager.h"
+#include "Bullet.h"
 
 const XMVECTOR PROJECTILE_COLOR = XMVectorSet(255, 0, 0, 1.f);
 
@@ -17,6 +18,7 @@ Shooter::~Shooter()
 void Shooter::Start() {
 	m_poManager = GameManager::Get()->m_poManager;
 	m_poInputManager = m_poManager->GetInputManager();
+	m_poCamera = m_poManager->GetMainCamera()->GetEntity();
 }
 
 void Shooter::Update(float dT) {
@@ -34,4 +36,18 @@ void Shooter::SpawnBullet() {
 	renderer->SetMesh(m_poManager->GetMesh("cylindre"));
 	renderer->SetShader(m_poManager->GetShader("Color"));
 	renderer->SetColor(&PROJECTILE_COLOR);
+	ave::Collider* collider = newBullet->AddComponent<ave::Collider>();
+	Bullet* bulletComp = newBullet->AddComponent<Bullet>();
+	XMVECTOR direction = m_poCamera->m_poTransform->GetVectorDir();
+	bulletComp->Init(direction);
+
+	XMVECTOR pos = m_poCamera->m_poTransform->GetVectorPosition();
+	newBullet->m_poTransform->SetVectorPosition(&pos);
+
+	XMVECTOR scale = XMVectorSet(0.1f, 0.1f, 0.7f, 0) * 1;
+	newBullet->m_poTransform->SetVectorScale(&scale);
+
+	newBullet->m_poTransform->LookTo(&direction);
+
+	m_poManager->RegisterEntity(newBullet);
 }

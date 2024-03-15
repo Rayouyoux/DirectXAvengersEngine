@@ -5,6 +5,7 @@ class Shooter : public ave::Script {
 protected:
 	ave::EntityManager* m_poManager;
 	ave::InputManager* m_poInputManager;
+	ave::Entity* m_poCamera;
 
 	float m_fAttackRate;
 	float m_fAttackDebounce;

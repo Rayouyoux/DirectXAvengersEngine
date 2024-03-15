@@ -10,7 +10,6 @@
 #include "Component.h"
 #include "MeshRenderer.h"
 #include "Camera.h"
-#include "Logger.h"
 #include "Transform.h"
 #include "Maths.h"
 #include "ConstantsStruct.h"

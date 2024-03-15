@@ -2,7 +2,6 @@
 #include "WindowHandler.h"
 #include "EntityManager.h"
 #include "GameTime.h"
-#include "Logger.h"
 #include "Maths.h"
 #include <time.h>
 
@@ -21,8 +20,8 @@ namespace ave {
 		m_poTimer = nullptr;
 
 		m_sMainWndCaption = L"Avengers Game";
-		m_iClientWidth = 800;
-		m_iClientHeight = 600;
+		m_iClientWidth = 1920;
+		m_iClientHeight = 1080;
 	}
 
 	AvengersEngine::~AvengersEngine() {

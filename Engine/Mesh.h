@@ -35,9 +35,41 @@ namespace ave {
 		template <typename T>
 		bool BuildBoxGeometry(ID3D12Device* poDevice, ID3D12GraphicsCommandList* poCommandList, std::string nameShape, FXMVECTOR* oColor = nullptr) {
 
-
 			Shape<T>* oShape = new Shape<T>();
 
+			float fCubeSidesSize = 0.5f;
+			float fSphereRadius = 1.0f;
+			float fSphereNumSubDivisions = 50.0f;
+			float fCylinderHeight = 2.0f;
+			float fCylinderStackCount = 5.0f;
+			float fCylinderBottomRadius = 1.0f;
+			float fCylinderTopRadius = fCylinderBottomRadius;
+			float fConeRadius = 1.0f;
+			float fConeNumSubDivisions = 16.0f;
+			float fConeHeight = 2.0f;
+			float fPyramidBaseLength = 2.0f;
+			float fPyramidHeight = 3.0f;
+
+			if (nameShape == "cube") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fCubeSidesSize, -fCubeSidesSize, -fCubeSidesSize);
+				m_oContainingBox.m_vMax = XMFLOAT3(fCubeSidesSize, fCubeSidesSize, fCubeSidesSize);
+			}
+			else if (nameShape == "cylindre") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fCylinderBottomRadius, -fCylinderHeight / 2, -fCylinderBottomRadius);
+				m_oContainingBox.m_vMax = XMFLOAT3(fCylinderBottomRadius, fCylinderHeight / 2, fCylinderBottomRadius);
+			}
+			else if (nameShape == "sphere") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fSphereRadius, -fSphereRadius, -fSphereRadius);
+				m_oContainingBox.m_vMax = XMFLOAT3(fSphereRadius, fSphereRadius, fSphereRadius);
+			}
+			else if (nameShape == "cone") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fConeRadius, 0.0f, -fConeRadius);
+				m_oContainingBox.m_vMax = XMFLOAT3(fConeRadius, fConeHeight, fConeRadius);
+			}
+			else if (nameShape == "pyramid") {
+				m_oContainingBox.m_vMin = XMFLOAT3(-fPyramidBaseLength / 2, 0.0f, -fPyramidBaseLength / 2);
+				m_oContainingBox.m_vMax = XMFLOAT3(fPyramidBaseLength, fPyramidHeight, fPyramidBaseLength);
+			}
 			
 			std::unordered_map<std::string, std::function<std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>>()>> shapeCreators = {
 				{"cube", [oShape, oColor]() -> std::vector<std::pair<std::vector<T>, std::vector<uint16_t>>> {
@@ -71,6 +103,10 @@ namespace ave {
 				std::cout << "Invalid shape type." << std::endl;
 			}
 	
+			for (int i = 0; i < aShapes.size(); i++) {
+				this->SetVertice(aShapes[i].first[0].pos);
+			}
+
 			const UINT vbByteSize = (UINT)aShapes[0].first.size() * sizeof(T);
 			const UINT ibByteSize = (UINT)aShapes[0].second.size() * sizeof(std::uint16_t);
 
@@ -121,6 +157,4 @@ namespace ave {
 
 		AABB m_oContainingBox;
 	};
-
-
 }

@@ -10,7 +10,6 @@
 #include "Entity.h"
 #include "ConstantsStruct.h"
 #include "UploadBuffer.h"
-#include "Logger.h"
 
 namespace ave {
 	using namespace Maths;
@@ -205,10 +204,9 @@ namespace ave {
 			ObjectConstants objConstants;
 			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(m_poEntity->m_poTransform->GetWorld()));
 			m_poBuffer->CopyData(0, objConstants);
+		}
 
-			if (m_poBehaviour->EmissionType != ParticleEmissionType::Burst)
-				return;
-
+		void ParticleSystem::Burst() {
 			for (int i = 0; i < m_poBehaviour->BurstAmount; i++) {
 				SpawnNewParticle();
 			}

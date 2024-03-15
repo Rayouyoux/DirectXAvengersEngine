@@ -88,7 +88,7 @@ namespace ave {
 		return m_bIsAlive;
 	}
 
-	void Entity::ToggleIsAlive() {
-		m_bIsAlive = !m_bIsAlive;
+	void Entity::Kill() {
+		m_bIsAlive = false;
 	}
 };

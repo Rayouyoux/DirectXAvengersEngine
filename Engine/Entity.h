@@ -78,7 +78,7 @@ namespace ave {
 
 		// Is Alive Methods
 		bool GetIsAlive();
-		void ToggleIsAlive();
+		void Kill();
 
 	public:
 

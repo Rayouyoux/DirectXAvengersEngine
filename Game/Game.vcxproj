@@ -141,18 +141,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="AsteroidSpawner.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="d3dUtils.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="HealthActor.h" />
+    <ClInclude Include="Debris.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Shooter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="AsteroidSpawner.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HealthActor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Debris.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Shooter.cpp" />
   </ItemGroup>

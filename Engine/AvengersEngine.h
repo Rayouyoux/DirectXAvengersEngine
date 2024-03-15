@@ -15,3 +15,4 @@
 #include "Script.h"
 #include "ParticleSystem.h"
 #include "InputManager.h"
+#include "Collider.h"

@@ -14,23 +14,23 @@ Bullet::~Bullet()
 
 void Bullet::Init(FXMVECTOR& vDir) {
 	XMStoreFloat3(&m_vDirection, vDir);
-	m_fSpeed = 10.f;
+	m_fSpeed = 150.f;
 }
 
 void Bullet::Update(float dT) {
 	m_fLifetime += dT;
 	if (m_fLifetime >= BULLET_LIFETIME) {
-		m_poEntity->ToggleIsAlive();
+		m_poEntity->Kill();
 		return;
 	}
 
 	XMVECTOR movement = XMLoadFloat3(&m_vDirection);
-	movement *= dT;
+	movement *= m_fSpeed * dT;
 	m_poEntity->m_poTransform->Move(&movement);
 }
 
 void Bullet::OnCollisionEnter(ave::Entity* collider) {
-	m_poEntity->ToggleIsAlive();
+	m_poEntity->Kill();
 	if (collider->HasComponent<HealthActor>() == false) return;
 	HealthActor* healthActor = collider->GetComponent<HealthActor>();
 	healthActor->TakeDamage(30);

@@ -1,7 +1,7 @@
 #pragma once
 #include <AvengersEngine.h>
 
-class Bullet : ave::Script {
+class Bullet : public ave::Script {
 protected:
 	XMFLOAT3 m_vDirection;
 	float m_fSpeed;

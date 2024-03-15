@@ -49,7 +49,7 @@ namespace ave {
 		}
 
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
-			m_voAliveEntities[i]->LateUpdate(fDeltaTime);
+			m_voAliveEntities[i]->LateUpdate(dT);
 			if (m_voAliveEntities[i]->GetIsAlive() == false) {
 				Entity* entityToDelete = m_voAliveEntities[i];
 				entityToDelete->OnDestroy();

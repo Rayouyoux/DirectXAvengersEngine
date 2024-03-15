@@ -18,14 +18,10 @@ private:
 
 	ave::Entity* m_poMainCam;
 	ave::Entity* m_poPlayer;
-	ave::Entity* m_pocollide;
-	ave::Entity* m_poRotCube;
 	ave::Entity* m_poSkybox;
+	ave::Entity* m_poAsteroidSpawner;
 
-	ave::Entity* m_poParticleSystemEx;
-
-	ave::Particles::ParticleBehaviour* m_poDefaultBehaviour;
-	//ave::Particles::ParticleBehaviour* m_poDestructionBehaviour;
+	ave::Particles::ParticleBehaviour* m_poDestructionBehaviour;
 
 public:
 	GameManager();

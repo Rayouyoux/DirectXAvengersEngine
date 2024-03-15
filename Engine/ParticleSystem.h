@@ -121,6 +121,7 @@ namespace ave {
 			void SetTexture(Texture* texture);
 
 			void SpawnNewParticle();
+			void Burst();
 
 			void Start() override;
 			void Update(float deltaTime) override;
