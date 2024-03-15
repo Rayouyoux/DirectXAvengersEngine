@@ -92,8 +92,9 @@ namespace ave {
 		}
 	}
 
-	void EntityManager::LateUpdate() {
+	void EntityManager::LateUpdate(float fDeltaTime) {
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
+			m_voAliveEntities[i]->LateUpdate(fDeltaTime);
 			if (m_voAliveEntities[i]->GetIsAlive() == false) {
 				Entity* EntityToDelete = m_voAliveEntities[i];
 				m_voAliveEntities.erase(m_voAliveEntities.begin() + i);

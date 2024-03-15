@@ -150,6 +150,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="AvengersEngine.h" />
@@ -159,6 +161,7 @@
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="ConstantsStruct.h" />
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Maths.h" />
@@ -182,6 +185,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="D3DUtils.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EntityManager.cpp" />

@@ -55,6 +55,10 @@ namespace ave{
 
 		bool m_bHandleChange;
 
+		bool m_bRotated;
+		bool m_bMoved;
+		bool m_bScaled;
+
 	private:
 		
 		XMFLOAT3 m_vScale;

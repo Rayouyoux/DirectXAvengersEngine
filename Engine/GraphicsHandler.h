@@ -151,7 +151,7 @@ namespace ave {
 		virtual void OnResize();
 
 		virtual void Update(float deltaTime);
-		virtual void LateUpdate();
+		virtual void LateUpdate(float deltaTime);
 		virtual void Render();
 
 		// Set & Getters
