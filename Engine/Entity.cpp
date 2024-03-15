@@ -42,6 +42,12 @@ namespace ave {
 		}
 	}
 
+	void Entity::LateUpdate(float dT) {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->LateUpdate(dT);
+		}
+	}
+
 	void Entity::Render() {
 		for (int i = 0; i < m_loComponents.size(); i++) {
 			m_loComponents[i]->Render();
@@ -69,6 +75,12 @@ namespace ave {
 	void Entity::OnCollisionExit(Entity* collider) {
 		for (int i = 0; i < m_loComponents.size(); i++) {
 			m_loComponents[i]->OnCollisionExit(collider);
+		}
+	}
+
+	void Entity::OnDestroy() {
+		for (int i = 0; i < m_loComponents.size(); i++) {
+			m_loComponents[i]->OnDestroy();
 		}
 	}
 

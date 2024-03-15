@@ -43,12 +43,17 @@ namespace ave {
 		}
 	}
 
-	void EntityManager::LateUpdate() {
+	void EntityManager::LateUpdate(float dT) {
+		for (int i = 0; i < m_voAliveEntities.size(); i++) {
+			m_voAliveEntities[i]->LateUpdate(dT);
+		}
+
 		for (int i = 0; i < m_voAliveEntities.size(); i++) {
 			if (m_voAliveEntities[i]->GetIsAlive() == false) {
-				Entity* EntityToDelete = m_voAliveEntities[i];
+				Entity* entityToDelete = m_voAliveEntities[i];
+				entityToDelete->OnDestroy();
 				m_voAliveEntities.erase(m_voAliveEntities.begin() + i);
-				delete EntityToDelete;
+				delete entityToDelete;
 			}
 		}
 	}

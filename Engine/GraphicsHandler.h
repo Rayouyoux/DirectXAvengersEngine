@@ -151,7 +151,7 @@ namespace ave {
 		virtual void OnResize();
 
 		virtual void Update(float deltaTime);
-		virtual void LateUpdate();
+		virtual void LateUpdate(float dT);
 		virtual void Render();
 
 		// Set & Getters
@@ -165,6 +165,8 @@ namespace ave {
 
 		ID3D12DescriptorHeap* GetCbvDescriptor() { return m_poCbvHeap; };
 		HWND GetWindow();
+		int GetWindowWidth();
+		int GetWindowHeight();
 
 		bool Get4xMsaaState() const { return m_b4xMsaaState; }
 		UINT Get4xMsaaQuality() const { return m_i4xMsaaQuality; }

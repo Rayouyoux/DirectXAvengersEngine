@@ -45,7 +45,7 @@ namespace ave {
 
 		// SUR Methods
 		void Update(float iDeltaTime);
-		void LateUpdate();
+		void LateUpdate(float dT);
 		void Render();
 
 		// Returns a vector of Entities that have the given Component
@@ -59,8 +59,6 @@ namespace ave {
 			}
 			return Entities;
 		}
-
-		
 
 		// Main Methods
 		Entity* NewEntity();

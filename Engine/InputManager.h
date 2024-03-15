@@ -14,6 +14,13 @@ namespace ave {
 
 	enum KeyCode {
 		// Alphabetical keys
+		LeftMouseButton = VK_LBUTTON,
+		RightMouseButton = VK_RBUTTON,
+		Cancel = VK_CANCEL,
+		MiddleMouseButton = VK_MBUTTON,
+		X1MouseButton = VK_XBUTTON1,
+		X2MouseButton = VK_XBUTTON2,
+
 		A = 0x41,
 		B = 0x42,
 		C = 0x43,

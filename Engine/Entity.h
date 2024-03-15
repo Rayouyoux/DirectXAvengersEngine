@@ -24,12 +24,15 @@ namespace ave {
 		// SUR Methods
 		void Start();
 		void Update(float iDeltaTime);
+		void LateUpdate(float iDeltaTime);
 		void Render();
 		void Render2D();
 
 		void OnCollisionEnter(Entity* collider);
 		void OnCollisionStay(Entity* collider);
 		void OnCollisionExit(Entity* collider);
+
+		void OnDestroy();
 
 		// Adds a Component to the Entity
 		template <typename Comp>

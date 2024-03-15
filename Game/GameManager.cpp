@@ -52,12 +52,8 @@ void GameManager::InitComponents() {
 	HealthActor* healthActor = m_poPlayer->AddComponent<HealthActor>();
 	healthActor->SetMaxHealth(100);
 
-	// Camera
-	DirectX::XMVECTOR camPos = XMVectorSet(0.0f, 0.0f, 2.0f, 0.0f);
-	m_poMainCam->m_poTransform->SetVectorPosition(&camPos);
-
-	DirectX::XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
-	m_poMainCam->m_poTransform->LookTo(&direction);
+	//DirectX::XMVECTOR direction = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+	//m_poMainCam->m_poTransform->LookTo(&direction);
 
 	DirectX::XMVECTOR posCube = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
 	m_poRotCube->m_poTransform->SetVectorPosition(&posCube);
@@ -76,6 +72,11 @@ void GameManager::InitComponents() {
 	meshRenderer->SetMesh(m_poManager->GetMesh("sphereTexture"));
 	meshRenderer->SetShader(m_poManager->GetShader("Texture"));
 	meshRenderer->SetTexture(m_poManager->GetTexture("moon_rock"));
+
+	ave::MeshRenderer* playerRenderer = m_poPlayer->AddComponent<MeshRenderer>();
+	playerRenderer->SetMesh(m_poManager->GetMesh("cubeTexture"));
+	playerRenderer->SetShader(m_poManager->GetShader("Texture"));
+	playerRenderer->SetTexture(m_poManager->GetTexture("moon_rock"));
 }
 
 void GameManager::RegisterEntities() {

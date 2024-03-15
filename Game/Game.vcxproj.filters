@@ -36,6 +36,9 @@
     <ClInclude Include="HealthActor.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Shooter.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="HealthActor.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Shooter.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>

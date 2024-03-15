@@ -32,5 +32,7 @@ namespace ave {
 		virtual void    OnCollisionEnter(Entity* collider) {};
 		virtual void    OnCollisionStay(Entity* collider) {};
 		virtual void    OnCollisionExit(Entity* collider) {};
+
+		virtual void	OnDestroy() {};
 	};
 };
